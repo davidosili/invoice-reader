@@ -63,6 +63,12 @@ export const Navbar: React.FC = () => {
           >
             Contact
           </a>
+          <Link
+            to="/app"
+            className="hover:text-[#202722] transition-colors font-medium"
+          >
+            Sign In
+          </Link>
 
           <a
             href={isAboutPage ? "/#early-access" : "#early-access"}
@@ -118,6 +124,13 @@ export const Navbar: React.FC = () => {
           >
             Contact
           </a>
+          <Link
+            to="/app"
+            onClick={closeMenu}
+            className="block py-2 text-[15px] font-medium text-[#202722] hover:text-[#176B50]"
+          >
+            Sign In
+          </Link>
           <div className="pt-2">
             <a
               href={isAboutPage ? "/#early-access" : "#early-access"}

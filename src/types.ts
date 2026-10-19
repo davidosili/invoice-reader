@@ -42,3 +42,41 @@ export interface InvoiceMockupData {
   bankAccount: string;
   bankName: string;
 }
+
+export type DocumentStatus =
+  | 'uploaded'
+  | 'queued'
+  | 'processing'
+  | 'review_required'
+  | 'approved'
+  | 'rejected'
+  | 'failed';
+
+export interface DocumentRecord {
+  id: string;
+  workspace_id: string;
+  uploaded_by: string;
+  original_filename: string;
+  storage_path: string;
+  mime_type: 'application/pdf' | 'image/jpeg' | 'image/png';
+  file_size_bytes: number;
+  status: DocumentStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Workspace {
+  id: string;
+  name: string;
+  created_by: string | null;
+  created_at: string;
+  role?: 'owner' | 'member';
+}
+
+export interface WorkspaceMember {
+  workspace_id: string;
+  user_id: string;
+  role: 'owner' | 'member';
+  created_at: string;
+}
+

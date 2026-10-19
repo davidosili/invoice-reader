@@ -1,21 +1,28 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
+import { AuthPage } from './pages/AuthPage';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { DocumentListPage } from './pages/DocumentListPage';
+import { DocumentDetailPage } from './pages/DocumentDetailPage';
+import { SettingsPage } from './pages/SettingsPage';
 
-export const App: React.FC = () => {
+export const AppContent: React.FC = () => {
   const location = useLocation();
+  const isAppRoute = location.pathname.startsWith('/app');
 
   useEffect(() => {
-    // Handle hash scroll navigation when hash exists
+    // Handle hash scroll navigation for in-page anchors
     if (location.hash) {
       const element = document.getElementById(location.hash.slice(1));
       if (element) {
         setTimeout(() => {
           element.scrollIntoView({ behavior: 'smooth' });
-        }, 50);
+        }, 60);
       }
     } else {
       window.scrollTo(0, 0);
@@ -24,17 +31,64 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FFFFFF] text-[#202722] selection:bg-[#EDF4EF] selection:text-[#176B50]">
-      <Navbar />
+      {/* Public Navbar shown only on public website */}
+      {!isAppRoute && <Navbar />}
+
       <div className="flex-grow">
         <Routes>
+          {/* Public Marketing Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
-          {/* Catch-all redirects to Home */}
-          <Route path="*" element={<HomePage />} />
+
+          {/* Authentication Entry */}
+          <Route path="/app/auth" element={<AuthPage />} />
+
+          {/* Protected Application Routes */}
+          <Route
+            path="/app"
+            element={<Navigate to="/app/documents" replace />}
+          />
+          <Route
+            path="/app/documents"
+            element={
+              <ProtectedRoute>
+                <DocumentListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/app/documents/:id"
+            element={
+              <ProtectedRoute>
+                <DocumentDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/app/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
-      <Footer />
+
+      {/* Public Footer shown only on public website */}
+      {!isAppRoute && <Footer />}
     </div>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 };
 
