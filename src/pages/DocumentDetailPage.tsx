@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { fetchDocumentById, createDocumentSignedUrl } from '../lib/api';
 import { DocumentRecord } from '../types';
 import {
@@ -15,6 +16,7 @@ import {
 
 export const DocumentDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { currentWorkspace } = useAuth();
   const [document, setDocument] = useState<DocumentRecord | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +29,7 @@ export const DocumentDetailPage: React.FC = () => {
     setIsLoading(true);
     setError(null);
 
-    fetchDocumentById(id)
+    fetchDocumentById(id, currentWorkspace?.id)
       .then((doc) => {
         if (!doc) {
           setError('Document not found or you do not have permission to view this workspace file.');
@@ -41,13 +43,13 @@ export const DocumentDetailPage: React.FC = () => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [id]);
+  }, [id, currentWorkspace?.id]);
 
   const handleDownloadOriginal = async () => {
     if (!document) return;
     setIsGeneratingUrl(true);
     try {
-      const signedUrl = await createDocumentSignedUrl(document.storage_path, 3600);
+      const signedUrl = await createDocumentSignedUrl(document.storage_path, currentWorkspace?.id, 3600);
       window.open(signedUrl, '_blank', 'noopener,noreferrer');
     } catch (err: any) {
       alert(`Could not generate secure download link: ${err.message}`);

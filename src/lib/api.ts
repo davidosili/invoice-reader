@@ -132,20 +132,25 @@ export async function fetchWorkspaceDocuments(
 }
 
 /**
- * Fetch a single document by ID
+ * Fetch a single document by ID within an authorized workspace
  */
-export async function fetchDocumentById(documentId: string): Promise<DocumentRecord | null> {
+export async function fetchDocumentById(documentId: string, workspaceId?: string): Promise<DocumentRecord | null> {
   if (!isSupabaseConfigured) return null;
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('documents')
     .select('*')
-    .eq('id', documentId)
-    .single();
+    .eq('id', documentId);
+
+  if (workspaceId) {
+    query = query.eq('workspace_id', workspaceId);
+  }
+
+  const { data, error } = await query.single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null; // Not found
-    throw new Error(`Failed to fetch document: ${error.message}`);
+    if (error.code === 'PGRST116') return null; // Not found or blocked by RLS
+    throw new Error('Failed to retrieve document record.');
   }
 
   return data as DocumentRecord;
@@ -199,7 +204,10 @@ export async function uploadInvoiceDocument(
     });
 
   if (storageError) {
-    throw new Error(`Storage upload failed: ${storageError.message}`);
+    if (storageError.message?.includes('row-level security') || (storageError as any)?.statusCode === '403') {
+      throw new Error('Upload permission denied: You are not authorized to upload documents to this workspace folder.');
+    }
+    throw new Error('Document storage upload failed. Please check your connection and try again.');
   }
 
   // 6. Insert metadata row into 'documents' table
@@ -221,18 +229,34 @@ export async function uploadInvoiceDocument(
   // 7. Safety Rollback: If metadata persistence fails, remove uploaded storage object to prevent orphans
   if (dbError) {
     await supabase.storage.from('invoices').remove([storagePath]);
-    throw new Error(`Document metadata registration failed: ${dbError.message}`);
+    if (dbError.code === '42501' || dbError.message?.includes('row-level security')) {
+      throw new Error('Permission denied: You are not authorized to register documents in this workspace.');
+    }
+    throw new Error('Document registration could not be completed. The upload has been safely cancelled.');
   }
 
   return documentRow as DocumentRecord;
 }
 
 /**
- * Generate a short-lived signed URL to securely download/view the private invoice
+ * Generate a short-lived signed URL to securely download/view the private invoice.
+ * Validates that the requested storage path belongs to the authorized workspace.
  */
-export async function createDocumentSignedUrl(storagePath: string, expiresIn = 3600): Promise<string> {
+export async function createDocumentSignedUrl(
+  storagePath: string,
+  workspaceId?: string,
+  expiresIn = 3600
+): Promise<string> {
   if (!isSupabaseConfigured) {
-    throw new Error('Supabase is not configured.');
+    throw new Error('Service is not configured.');
+  }
+
+  // Defense-in-depth: Storage path must strictly adhere to {workspaceId}/{documentId}.{ext}
+  if (workspaceId) {
+    const segments = storagePath.split('/');
+    if (segments.length < 2 || segments[0] !== workspaceId) {
+      throw new Error('Access denied: You are not authorized to access documents outside your active workspace.');
+    }
   }
 
   const { data, error } = await supabase.storage
@@ -240,7 +264,7 @@ export async function createDocumentSignedUrl(storagePath: string, expiresIn = 3
     .createSignedUrl(storagePath, expiresIn);
 
   if (error || !data?.signedUrl) {
-    throw new Error(`Failed to generate signed download link: ${error?.message || 'Unknown error'}`);
+    throw new Error('Failed to generate secure download link. Please verify that you have permission to view this file.');
   }
 
   return data.signedUrl;

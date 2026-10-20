@@ -41,7 +41,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
       } else {
         // User has no workspace yet; provision initial workspace atomically
-        const defaultName = `${targetUser.email?.split('@')[0] || 'My'} Operations`;
+        const requestedName = (targetUser.user_metadata as any)?.requested_workspace_name;
+        const defaultName = (typeof requestedName === 'string' && requestedName.trim())
+          ? requestedName.trim()
+          : `${targetUser.email?.split('@')[0] || 'Primary'} Operations`;
         try {
           const newId = await createWorkspace(defaultName);
           const reloaded = await fetchUserWorkspaces();

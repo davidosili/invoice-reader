@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { isSupabaseConfigured } from '../lib/supabase';
-import { SupabaseSetupNotice } from '../components/SupabaseSetupNotice';
+import { ServiceUnavailable } from '../components/ServiceUnavailable';
+import { sanitizeAuthError } from '../lib/authErrors';
 import { AlertCircle, CheckCircle2, ArrowRight } from 'lucide-react';
 
 export const AuthPage: React.FC = () => {
@@ -29,7 +30,7 @@ export const AuthPage: React.FC = () => {
   if (!isSupabaseConfigured) {
     return (
       <div className="min-h-screen bg-[#F7F8F6] p-4 sm:p-6 flex flex-col justify-center">
-        <SupabaseSetupNotice />
+        <ServiceUnavailable />
       </div>
     );
   }
@@ -68,7 +69,7 @@ export const AuthPage: React.FC = () => {
         }
       }
     } catch (err: any) {
-      setErrorMessage(err.message || 'Authentication failed. Please verify your credentials.');
+      setErrorMessage(sanitizeAuthError(err));
     } finally {
       setIsSubmitting(false);
     }

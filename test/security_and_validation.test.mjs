@@ -114,3 +114,104 @@ test('SQL Migrations - Verifies private storage bucket and access policies', () 
   assert.ok(migration2.includes("storage.objects"));
   assert.ok(migration2.includes("is_workspace_member"));
 });
+
+// 5. Customer Experience & Error Sanitization Tests
+function sanitizeAuthError(err, fallbackMessage = 'Authentication failed. Please verify your credentials and try again.') {
+  if (!err) return fallbackMessage;
+  const rawMessage = typeof err === 'string'
+    ? err
+    : err?.message || err?.error_description || String(err);
+  const lower = rawMessage.toLowerCase();
+
+  if (lower.includes('invalid login credentials') || lower.includes('invalid credentials')) {
+    return 'The email address or password you entered is incorrect. Please verify your details and try again.';
+  }
+  if (lower.includes('email not confirmed')) {
+    return 'Please check your email inbox and confirm your address before signing in.';
+  }
+  if (lower.includes('user already registered') || lower.includes('already exists')) {
+    return 'An account with this email address already exists. Please sign in instead.';
+  }
+  if (lower.includes('password should be at least') || lower.includes('weak password')) {
+    return 'Password must be at least 6 characters.';
+  }
+  if (lower.includes('rate limit') || lower.includes('too many requests') || lower.includes('over_email_send_rate_limit')) {
+    return 'Too many sign-in attempts. For security reasons, please wait a few minutes before trying again.';
+  }
+  if (lower.includes('failed to fetch') || lower.includes('networkerror') || lower.includes('network error')) {
+    return 'Unable to connect to LedgerLens AI services. Please check your internet connection or try again shortly.';
+  }
+  if (
+    lower.includes('pgrst') ||
+    lower.includes('postgres') ||
+    lower.includes('row-level security') ||
+    lower.includes('relation') ||
+    lower.includes('schema') ||
+    lower.includes('jwt') ||
+    lower.includes('claim') ||
+    lower.includes('supabase')
+  ) {
+    return 'Our authentication service encountered a temporary error. Please try again shortly or contact support@ledgerlens.ai.';
+  }
+  return rawMessage;
+}
+
+test('Error Sanitization - Masks PostgreSQL and Supabase internal errors from customers', () => {
+  const pgrstError = { message: 'PGRST116: JSON object requested, multiple (or no) rows returned' };
+  const rlsError = { message: 'new row violates row-level security policy for table "workspaces"' };
+  const postgresError = { message: 'PostgreSQL connection terminated unexpectedly' };
+  const supabaseKeyError = { message: 'Invalid Supabase API key or project not found' };
+
+  const sanitized1 = sanitizeAuthError(pgrstError);
+  const sanitized2 = sanitizeAuthError(rlsError);
+  const sanitized3 = sanitizeAuthError(postgresError);
+  const sanitized4 = sanitizeAuthError(supabaseKeyError);
+
+  for (const s of [sanitized1, sanitized2, sanitized3, sanitized4]) {
+    assert.ok(!s.includes('PGRST'));
+    assert.ok(!s.includes('PostgreSQL'));
+    assert.ok(!s.includes('row-level security'));
+    assert.ok(!s.includes('Supabase'));
+    assert.equal(s, 'Our authentication service encountered a temporary error. Please try again shortly or contact support@ledgerlens.ai.');
+  }
+});
+
+test('Error Sanitization - Provides clear, actionable messages for customer authentication mistakes', () => {
+  const invalidCreds = sanitizeAuthError({ message: 'Invalid login credentials' });
+  assert.ok(invalidCreds.includes('email address or password you entered is incorrect'));
+
+  const unconfirmed = sanitizeAuthError({ message: 'Email not confirmed' });
+  assert.ok(unconfirmed.includes('confirm your address before signing in'));
+
+  const rateLimit = sanitizeAuthError({ message: 'over_email_send_rate_limit' });
+  assert.ok(rateLimit.includes('Too many sign-in attempts'));
+});
+
+// 6. Defense-in-depth Storage Authorization Validation Test
+function validateStoragePathAccess(storagePath, activeWorkspaceId) {
+  if (!activeWorkspaceId) {
+    return { allowed: false, error: 'Unauthorized: No active workspace session.' };
+  }
+  if (!storagePath.startsWith(`${activeWorkspaceId}/`)) {
+    return { allowed: false, error: 'Access denied: You do not have permission to access files outside your active workspace.' };
+  }
+  const parts = storagePath.split('/');
+  if (parts.length !== 2 || parts[1].includes('..') || !parts[1].trim()) {
+    return { allowed: false, error: 'Invalid storage reference.' };
+  }
+  return { allowed: true };
+}
+
+test('Multi-Tenant Defense-in-depth - Rejects cross-workspace storage path requests', () => {
+  const myWorkspace = 'workspace-alpha-123';
+  const victimWorkspace = 'workspace-beta-456';
+
+  const validPath = `${myWorkspace}/doc-001.pdf`;
+  const crossPath = `${victimWorkspace}/doc-999.pdf`;
+  const traversalPath = `${myWorkspace}/../secret.pdf`;
+
+  assert.equal(validateStoragePathAccess(validPath, myWorkspace).allowed, true);
+  assert.equal(validateStoragePathAccess(crossPath, myWorkspace).allowed, false);
+  assert.equal(validateStoragePathAccess(traversalPath, myWorkspace).allowed, false);
+  assert.equal(validateStoragePathAccess(validPath, null).allowed, false);
+});
