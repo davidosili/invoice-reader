@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useTransition } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { fetchWorkspaceDocuments } from '../lib/api';
+import { fetchWorkspaceDocuments, fetchApprovedInvoicesForExport } from '../lib/api';
 import { DocumentRecord } from '../types';
 import { DocumentUploadModal } from '../components/DocumentUploadModal';
+import { generateApprovedInvoicesCsv, downloadCsvFile } from '../lib/exportCsv';
 import {
   UploadCloud,
   Search,
@@ -12,17 +13,44 @@ import {
   AlertCircle,
   Eye,
   Filter,
+  Download,
+  CheckCircle2,
 } from 'lucide-react';
 
 export const DocumentListPage: React.FC = () => {
   const { currentWorkspace, user } = useAuth();
   const [documents, setDocuments] = useState<DocumentRecord[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isExporting, setIsExporting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [exportNotice, setExportNotice] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
   const [, startTransition] = useTransition();
+
+  const handleExportCsv = async () => {
+    if (!currentWorkspace) return;
+    setIsExporting(true);
+    setExportNotice(null);
+
+    try {
+      const exportRows = await fetchApprovedInvoicesForExport(currentWorkspace.id);
+      if (exportRows.length === 0) {
+        setExportNotice('No approved invoices found in this workspace to export. Only certified/approved invoices are exported.');
+        setTimeout(() => setExportNotice(null), 5000);
+        return;
+      }
+
+      const csvString = generateApprovedInvoicesCsv(exportRows);
+      const safeFilename = `ledgerlens_approved_invoices_${currentWorkspace.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`;
+      downloadCsvFile(csvString, safeFilename);
+    } catch (err: any) {
+      setError(err.message || 'Failed to export invoices to CSV.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const loadDocuments = async () => {
     if (!currentWorkspace) return;
@@ -127,7 +155,7 @@ export const DocumentListPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 flex-wrap">
           <button
             type="button"
             onClick={loadDocuments}
@@ -140,6 +168,17 @@ export const DocumentListPage: React.FC = () => {
 
           <button
             type="button"
+            onClick={handleExportCsv}
+            disabled={isExporting}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-[#202722] bg-[#FFFFFF] hover:bg-[#F7F8F6] border border-[#E2E6E1] rounded-[4px] transition-colors focus-ring disabled:opacity-50"
+            title="Export certified approved invoices to CSV"
+          >
+            <Download className="w-4 h-4 text-[#626B64]" />
+            <span>{isExporting ? 'Generating CSV...' : 'Export CSV'}</span>
+          </button>
+
+          <button
+            type="button"
             onClick={() => setIsUploadModalOpen(true)}
             className="inline-flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors focus-ring"
           >
@@ -148,6 +187,16 @@ export const DocumentListPage: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Export Alert Notice */}
+      {exportNotice && (
+        <div className="p-3 bg-[#EDF4EF] border border-[#176B50]/30 rounded-[4px] text-[13px] text-[#176B50] flex items-center justify-between">
+          <span>{exportNotice}</span>
+          <button type="button" onClick={() => setExportNotice(null)} className="text-xs font-bold opacity-70 hover:opacity-100">
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#FFFFFF] p-3 border border-[#E2E6E1] rounded-[4px]">
@@ -269,10 +318,20 @@ export const DocumentListPage: React.FC = () => {
                     <td className="py-3 px-4 text-right">
                       <Link
                         to={`/app/documents/${doc.id}`}
-                        className="inline-flex items-center gap-1 text-[12px] font-medium text-[#176B50] hover:text-[#12563F] hover:underline"
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[3px] text-[12px] font-medium transition-colors ${
+                          doc.status === 'review_required'
+                            ? 'bg-[#FFFBEB] text-[#B45309] border border-[#FDE68A] hover:bg-[#FEF3C7]'
+                            : doc.status === 'approved'
+                            ? 'bg-[#EDF4EF] text-[#176B50] hover:bg-[#E2ECE5]'
+                            : 'text-[#176B50] hover:text-[#12563F] hover:underline'
+                        }`}
                       >
-                        <Eye className="w-3.5 h-3.5" />
-                        <span>Inspect</span>
+                        {doc.status === 'approved' ? (
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#176B50]" />
+                        ) : (
+                          <Eye className="w-3.5 h-3.5" />
+                        )}
+                        <span>{doc.status === 'review_required' ? 'Review & Verify' : doc.status === 'approved' ? 'Certified' : 'Inspect'}</span>
                       </Link>
                     </td>
                   </tr>
@@ -285,7 +344,7 @@ export const DocumentListPage: React.FC = () => {
         {/* Table Footer Summary */}
         <div className="px-4 py-2.5 bg-[#F7F8F6] border-t border-[#E2E6E1] text-[12px] text-[#626B64] flex items-center justify-between">
           <span>Total records: <strong className="text-[#202722]">{documents.length}</strong></span>
-          <span className="font-mono text-[11px]">Phase 1 Storage & Metadata Active</span>
+          <span className="font-mono text-[11px] text-[#176B50]">Phase 2 Invoice Intelligence & Verification Active</span>
         </div>
       </div>
 

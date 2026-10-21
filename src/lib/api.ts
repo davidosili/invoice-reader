@@ -1,5 +1,15 @@
 import { supabase, isSupabaseConfigured } from './supabase';
-import { DocumentRecord, Workspace } from '../types';
+import {
+  DocumentRecord,
+  Workspace,
+  InvoiceExtractionRecord,
+  InvoiceValidationIssue,
+  InvoiceAuditEvent,
+  ProcessInvoiceResponse,
+} from '../types';
+import { runInvoiceIntelligencePipeline, isPermittedTransition } from './intelligence/pipeline';
+import { ExistingInvoiceRecord } from './intelligence/duplicates';
+import { ExportableInvoiceRow } from './exportCsv';
 
 /**
  * Validates file magic bytes (signatures) in the browser
@@ -269,3 +279,456 @@ export async function createDocumentSignedUrl(
 
   return data.signedUrl;
 }
+
+// ============================================================================
+// Phase 2: Invoice Intelligence & Processing Operations
+// ============================================================================
+
+/**
+ * Fetch the latest extraction record for a document.
+ */
+export async function fetchInvoiceExtraction(
+  documentId: string,
+  workspaceId: string
+): Promise<InvoiceExtractionRecord | null> {
+  if (!isSupabaseConfigured) return null;
+
+  const { data, error } = await supabase
+    .from('invoice_extractions')
+    .select('*')
+    .eq('document_id', documentId)
+    .eq('workspace_id', workspaceId)
+    .eq('is_latest', true)
+    .maybeSingle();
+
+  if (error && error.code !== 'PGRST116') {
+    throw new Error(`Failed to load extraction: ${error.message}`);
+  }
+
+  return (data || null) as InvoiceExtractionRecord | null;
+}
+
+/**
+ * Fetch validation issues for a document.
+ */
+export async function fetchInvoiceValidationIssues(
+  documentId: string,
+  workspaceId: string
+): Promise<InvoiceValidationIssue[]> {
+  if (!isSupabaseConfigured) return [];
+
+  const { data, error } = await supabase
+    .from('invoice_validation_issues')
+    .select('*')
+    .eq('document_id', documentId)
+    .eq('workspace_id', workspaceId)
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    throw new Error(`Failed to load validation issues: ${error.message}`);
+  }
+
+  return (data || []) as InvoiceValidationIssue[];
+}
+
+/**
+ * Fetch append-only audit event trail for a document.
+ */
+export async function fetchInvoiceAuditEvents(
+  documentId: string,
+  workspaceId: string
+): Promise<InvoiceAuditEvent[]> {
+  if (!isSupabaseConfigured) return [];
+
+  const { data, error } = await supabase
+    .from('invoice_audit_events')
+    .select('*')
+    .eq('document_id', documentId)
+    .eq('workspace_id', workspaceId)
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    throw new Error(`Failed to load audit history: ${error.message}`);
+  }
+
+  return (data || []) as InvoiceAuditEvent[];
+}
+
+/**
+ * Initiates the invoice intelligence processing lifecycle:
+ * 1. Checks permitted state transition (uploaded/failed/review_required -> queued -> processing)
+ * 2. Fetches the binary invoice from storage
+ * 3. Runs extraction, validation, and duplicate detection
+ * 4. Persists extraction, issues, and audit events atomically
+ * 5. Updates status to 'review_required' (or 'failed')
+ */
+export async function queueAndProcessInvoice(
+  documentId: string,
+  workspaceId: string
+): Promise<ProcessInvoiceResponse> {
+  if (!isSupabaseConfigured) {
+    throw new Error('Supabase is not configured.');
+  }
+
+  // 1. Fetch document and verify permission & status
+  const document = await fetchDocumentById(documentId, workspaceId);
+  if (!document) {
+    throw new Error('Document not found or access denied.');
+  }
+
+  if (!isPermittedTransition(document.status, 'queued')) {
+    throw new Error(`Cannot process document in status "${document.status}".`);
+  }
+
+  // 2. Set status to 'queued' via RPC or direct update
+  await supabase
+    .from('documents')
+    .update({ status: 'queued', updated_at: new Date().toISOString() })
+    .eq('id', documentId)
+    .eq('workspace_id', workspaceId);
+
+  // Log queued audit event
+  await supabase
+    .from('invoice_audit_events')
+    .insert({
+      document_id: documentId,
+      workspace_id: workspaceId,
+      actor_id: (await supabase.auth.getUser()).data.user?.id || null,
+      event_type: document.status === 'review_required' || document.status === 'failed' ? 'reprocessed' : 'processing_queued',
+      details: { previous_status: document.status },
+    });
+
+  // 3. Transition to 'processing'
+  await supabase
+    .from('documents')
+    .update({ status: 'processing', updated_at: new Date().toISOString() })
+    .eq('id', documentId)
+    .eq('workspace_id', workspaceId);
+
+  await supabase
+    .from('invoice_audit_events')
+    .insert({
+      document_id: documentId,
+      workspace_id: workspaceId,
+      actor_id: (await supabase.auth.getUser()).data.user?.id || null,
+      event_type: 'processing_started',
+      details: { engine: 'heuristic_ocr_v1' },
+    });
+
+  try {
+    // 4. Download file from private storage
+    const { data: fileBlob, error: downloadError } = await supabase.storage
+      .from('invoices')
+      .download(document.storage_path);
+
+    if (downloadError || !fileBlob) {
+      throw new Error(`Could not access file in storage: ${downloadError?.message || 'Storage error'}`);
+    }
+
+    const arrayBuffer = await fileBlob.arrayBuffer();
+    const fileBytes = new Uint8Array(arrayBuffer);
+
+    // 5. Query existing workspace extractions for duplicate matching
+    const { data: existingRows } = await supabase
+      .from('invoice_extractions')
+      .select('id, document_id, workspace_id, supplier_name, invoice_number, grand_total, currency, invoice_date')
+      .eq('workspace_id', workspaceId)
+      .eq('is_latest', true);
+
+    const existingRecords: ExistingInvoiceRecord[] = (existingRows || []).map((r: any) => ({
+      id: r.id,
+      document_id: r.document_id,
+      workspace_id: r.workspace_id,
+      supplier_name: r.supplier_name,
+      invoice_number: r.invoice_number,
+      grand_total: r.grand_total,
+      currency: r.currency || 'USD',
+      invoice_date: r.invoice_date,
+    }));
+
+    // 6. Run the intelligence pipeline
+    const pipelineResult = await runInvoiceIntelligencePipeline(
+      fileBytes,
+      document,
+      existingRecords
+    );
+
+    // 7. Archive any previous extraction versions
+    await supabase
+      .from('invoice_extractions')
+      .update({ is_latest: false })
+      .eq('document_id', documentId);
+
+    // 8. Persist new extraction row
+    const user = (await supabase.auth.getUser()).data.user;
+    const { data: newExtraction, error: extInsertError } = await supabase
+      .from('invoice_extractions')
+      .insert({
+        document_id: documentId,
+        workspace_id: workspaceId,
+        version: 1,
+        ...pipelineResult.extraction,
+        is_latest: true,
+      })
+      .select()
+      .single();
+
+    if (extInsertError) {
+      throw new Error(`Failed to save extraction results: ${extInsertError.message}`);
+    }
+
+    // 9. Replace validation issues
+    await supabase
+      .from('invoice_validation_issues')
+      .delete()
+      .eq('document_id', documentId);
+
+    if (pipelineResult.issues.length > 0) {
+      const issuesToInsert = pipelineResult.issues.map((issue) => ({
+        document_id: documentId,
+        workspace_id: workspaceId,
+        issue_type: issue.issue_type,
+        severity: issue.severity,
+        field_key: issue.field_key,
+        message: issue.message,
+        details: issue.details || null,
+        resolved: false,
+      }));
+
+      await supabase.from('invoice_validation_issues').insert(issuesToInsert);
+    }
+
+    // 10. Update document status to 'review_required'
+    await supabase
+      .from('documents')
+      .update({ status: 'review_required', updated_at: new Date().toISOString() })
+      .eq('id', documentId);
+
+    // 11. Log completion audit event
+    await supabase
+      .from('invoice_audit_events')
+      .insert({
+        document_id: documentId,
+        workspace_id: workspaceId,
+        actor_id: user?.id || null,
+        event_type: 'extraction_completed',
+        details: {
+          extraction_id: newExtraction.id,
+          issues_count: pipelineResult.issues.length,
+          fields_extracted: Object.keys(pipelineResult.extraction.field_metadata).length,
+        },
+      });
+
+    return {
+      success: true,
+      documentId,
+      status: 'review_required',
+      extraction: newExtraction as InvoiceExtractionRecord,
+      issues: pipelineResult.issues as any[],
+    };
+  } catch (err: any) {
+    // On failure, transition to 'failed' and log audit event
+    await supabase
+      .from('documents')
+      .update({ status: 'failed', updated_at: new Date().toISOString() })
+      .eq('id', documentId);
+
+    await supabase
+      .from('invoice_audit_events')
+      .insert({
+        document_id: documentId,
+        workspace_id: workspaceId,
+        actor_id: (await supabase.auth.getUser()).data.user?.id || null,
+        event_type: 'processing_failed',
+        details: { error: err.message },
+      });
+
+    return {
+      success: false,
+      documentId,
+      status: 'failed',
+      error: err.message || 'Processing failed',
+    };
+  }
+}
+
+/**
+ * Save manual human reviewer corrections to extracted invoice fields.
+ */
+export async function saveInvoiceCorrections(
+  documentId: string,
+  workspaceId: string,
+  updatedFields: Partial<InvoiceExtractionRecord>
+): Promise<void> {
+  if (!isSupabaseConfigured) {
+    throw new Error('Supabase is not configured.');
+  }
+
+  const user = (await supabase.auth.getUser()).data.user;
+
+  // Clean payload before updating
+  const { id, document_id, workspace_id, created_at, updated_at, ...cleanFields } = updatedFields;
+
+  const { error } = await supabase
+    .from('invoice_extractions')
+    .update({
+      ...cleanFields,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('document_id', documentId)
+    .eq('workspace_id', workspaceId)
+    .eq('is_latest', true);
+
+  if (error) {
+    throw new Error(`Failed to save invoice corrections: ${error.message}`);
+  }
+
+  // Log reviewer correction audit event
+  await supabase
+    .from('invoice_audit_events')
+    .insert({
+      document_id: documentId,
+      workspace_id: workspaceId,
+      actor_id: user?.id || null,
+      event_type: 'field_corrected',
+      details: { modified_fields: Object.keys(cleanFields) },
+    });
+}
+
+/**
+ * Approve an invoice after human review.
+ */
+export async function approveInvoiceDocument(
+  documentId: string,
+  workspaceId: string,
+  notes?: string
+): Promise<void> {
+  if (!isSupabaseConfigured) {
+    throw new Error('Supabase is not configured.');
+  }
+
+  const document = await fetchDocumentById(documentId, workspaceId);
+  if (!document) throw new Error('Document not found.');
+
+  if (document.status !== 'review_required') {
+    throw new Error(`Cannot approve invoice: Current status is "${document.status}". Review is required.`);
+  }
+
+  const user = (await supabase.auth.getUser()).data.user;
+
+  const { error } = await supabase
+    .from('documents')
+    .update({ status: 'approved', updated_at: new Date().toISOString() })
+    .eq('id', documentId)
+    .eq('workspace_id', workspaceId);
+
+  if (error) {
+    throw new Error(`Failed to approve invoice: ${error.message}`);
+  }
+
+  await supabase
+    .from('invoice_audit_events')
+    .insert({
+      document_id: documentId,
+      workspace_id: workspaceId,
+      actor_id: user?.id || null,
+      event_type: 'approved',
+      details: { notes: notes || null },
+    });
+}
+
+/**
+ * Reject an invoice record.
+ */
+export async function rejectInvoiceDocument(
+  documentId: string,
+  workspaceId: string,
+  reason?: string
+): Promise<void> {
+  if (!isSupabaseConfigured) {
+    throw new Error('Supabase is not configured.');
+  }
+
+  const document = await fetchDocumentById(documentId, workspaceId);
+  if (!document) throw new Error('Document not found.');
+
+  if (document.status !== 'review_required' && document.status !== 'uploaded' && document.status !== 'failed') {
+    throw new Error(`Cannot reject document with status "${document.status}".`);
+  }
+
+  const user = (await supabase.auth.getUser()).data.user;
+
+  const { error } = await supabase
+    .from('documents')
+    .update({ status: 'rejected', updated_at: new Date().toISOString() })
+    .eq('id', documentId)
+    .eq('workspace_id', workspaceId);
+
+  if (error) {
+    throw new Error(`Failed to reject invoice: ${error.message}`);
+  }
+
+  await supabase
+    .from('invoice_audit_events')
+    .insert({
+      document_id: documentId,
+      workspace_id: workspaceId,
+      actor_id: user?.id || null,
+      event_type: 'rejected',
+      details: { reason: reason || 'Rejected by reviewer' },
+    });
+}
+
+/**
+ * Fetch all approved invoices in the workspace paired with their latest extractions for CSV export.
+ */
+export async function fetchApprovedInvoicesForExport(
+  workspaceId: string
+): Promise<ExportableInvoiceRow[]> {
+  if (!isSupabaseConfigured) return [];
+
+  const { data: docs, error: docError } = await supabase
+    .from('documents')
+    .select('*')
+    .eq('workspace_id', workspaceId)
+    .eq('status', 'approved')
+    .order('created_at', { ascending: false });
+
+  if (docError) {
+    throw new Error(`Failed to fetch approved invoices: ${docError.message}`);
+  }
+
+  if (!docs || docs.length === 0) return [];
+
+  const docIds = docs.map((d: any) => d.id);
+  const { data: extractions } = await supabase
+    .from('invoice_extractions')
+    .select('*')
+    .in('document_id', docIds)
+    .eq('is_latest', true);
+
+  const extractionMap = new Map<string, InvoiceExtractionRecord>();
+  if (extractions) {
+    for (const ext of extractions) {
+      extractionMap.set(ext.document_id, ext as InvoiceExtractionRecord);
+    }
+  }
+
+  // Log export audit event
+  const user = (await supabase.auth.getUser()).data.user;
+  if (user && docs.length > 0) {
+    await supabase.from('invoice_audit_events').insert({
+      document_id: docs[0].id,
+      workspace_id: workspaceId,
+      actor_id: user.id,
+      event_type: 'exported',
+      details: { total_exported: docs.length },
+    });
+  }
+
+  return docs.map((doc: any) => ({
+    document: doc as DocumentRecord,
+    extraction: extractionMap.get(doc.id) || null,
+  }));
+}
+
