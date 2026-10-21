@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "test:live": "node test/live_security_gate.mjs && node test/security_constraints_gate.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
