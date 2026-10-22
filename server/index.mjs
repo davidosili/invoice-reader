@@ -2,6 +2,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { createClient } from '@supabase/supabase-js';
+import { runServerExtractionPipeline } from './intelligence.mjs';
 
 // Load environment variables from .env and .env.server safely
 function loadEnv() {
@@ -29,6 +30,7 @@ const env = loadEnv();
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || env.VITE_SUPABASE_URL || env.SUPABASE_URL;
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_ROLE_KEY;
 const ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || env.GEMINI_API_KEY;
 
 if (!SUPABASE_URL || !SERVICE_KEY) {
   console.warn('⚠️ Server warning: Supabase credentials not fully configured in environment.');
@@ -111,6 +113,8 @@ const server = http.createServer(async (req, res) => {
       service: 'LedgerLens AI Intelligence Server',
       timestamp: new Date().toISOString(),
       configured: Boolean(supabaseAdmin),
+      ai_configured: Boolean(GEMINI_API_KEY && GEMINI_API_KEY.length > 10),
+      ai_model: 'gemini-2.5-flash',
     });
     return;
   }
@@ -119,20 +123,23 @@ const server = http.createServer(async (req, res) => {
   const processMatch = url.pathname.match(/^\/api\/documents\/([a-f0-9-]+)\/process$/i);
   if (req.method === 'POST' && processMatch) {
     const documentId = processMatch[1];
+    let user = null;
+    let doc = null;
     try {
-      const user = await authenticateRequest(req);
+      user = await authenticateRequest(req);
 
       // 1. Fetch document
-      const { data: doc, error: docErr } = await supabaseAdmin
+      const { data: fetchedDoc, error: docErr } = await supabaseAdmin
         .from('documents')
         .select('*')
         .eq('id', documentId)
         .single();
 
-      if (docErr || !doc) {
+      if (docErr || !fetchedDoc) {
         sendJson(res, 404, { error: 'Document not found.' });
         return;
       }
+      doc = fetchedDoc;
 
       // 2. Verify caller belongs to the document workspace
       await verifyWorkspaceMembership(user.id, doc.workspace_id);
@@ -151,6 +158,7 @@ const server = http.createServer(async (req, res) => {
         workspace_id: doc.workspace_id,
         actor_id: user.id,
         event_type: doc.status === 'review_required' || doc.status === 'failed' ? 'reprocessed' : 'processing_queued',
+        details: { previous_status: doc.status },
       });
 
       await supabaseAdmin.from('documents').update({ status: 'processing', updated_at: new Date().toISOString() }).eq('id', documentId);
@@ -159,6 +167,7 @@ const server = http.createServer(async (req, res) => {
         workspace_id: doc.workspace_id,
         actor_id: user.id,
         event_type: 'processing_started',
+        details: { engine: GEMINI_API_KEY ? 'gemini-2.5-flash' : 'server_heuristic_v1' },
       });
 
       // 5. Download file
@@ -170,63 +179,30 @@ const server = http.createServer(async (req, res) => {
         throw new Error(`Storage read failure: ${dlErr?.message || 'File not found'}`);
       }
 
-      // 6. Heuristic / Extractor logic
-      const rawText = (await fileData.text()).slice(0, 10000);
-      let supplierName = 'Apex Commercial Supplies Ltd';
-      if (rawText.includes('NORTHSTAR') || doc.original_filename.toLowerCase().includes('northstar')) {
-        supplierName = 'Northstar Office Supplies Ltd';
-      }
+      const fileBuffer = Buffer.from(await fileData.arrayBuffer());
 
-      const invMatch = rawText.match(/(?:invoice|inv|bill|ref)[\s#:.-]+([A-Z0-9\-_]{3,20})/i);
-      const invoiceNumber = invMatch ? invMatch[1].trim() : `INV-${Math.floor(1000 + Math.random() * 9000)}`;
+      // 6. Query existing workspace extractions for duplicate matching
+      const { data: existingRows } = await supabaseAdmin
+        .from('invoice_extractions')
+        .select('id, document_id, workspace_id, supplier_name, invoice_number, grand_total, currency, invoice_date')
+        .eq('workspace_id', doc.workspace_id)
+        .eq('is_latest', true);
 
-      const today = new Date().toISOString().split('T')[0];
-      const dueDate = new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0];
-
-      const lineItems = [
-        { id: 'item-1', description: 'Commercial Heavy Bond Paper (Box of 5 Reams)', quantity: 40, unit_price: 2850, total: 114000, verified: true },
-        { id: 'item-2', description: 'Thermal POS Receipt Rolls (50-pack Carton)', quantity: 15, unit_price: 3200, total: 48000, verified: true },
-        { id: 'item-3', description: 'Industrial Permanent Markers (Box of 24)', quantity: 10, unit_price: 2300, total: 23000, verified: true },
-      ];
-
-      const subtotal = 185000;
-      const taxRate = 0.075;
-      const taxAmount = 13875;
-      const grandTotal = 198875;
+      // 7. Run intelligence extraction pipeline (Gemini 2.5 Flash with Heuristic fallback)
+      const pipelineResult = await runServerExtractionPipeline(
+        fileBuffer,
+        doc.mime_type,
+        doc.original_filename,
+        documentId,
+        existingRows || [],
+        GEMINI_API_KEY
+      );
 
       const extractionPayload = {
         document_id: documentId,
         workspace_id: doc.workspace_id,
         version: 1,
-        supplier_name: supplierName,
-        supplier_address: 'Plot 14, Commercial Avenue, Industrial Zone, Ikeja',
-        supplier_tax_id: 'TIN-99482104-001',
-        customer_name: 'Apex Logistics & Distribution West',
-        customer_address: '42 Marina Boulevard, Lagos Island',
-        invoice_number: invoiceNumber,
-        invoice_date: today,
-        due_date: dueDate,
-        currency: 'NGN',
-        purchase_order_number: 'PO-89241',
-        subtotal,
-        tax_rate: taxRate,
-        tax_amount: taxAmount,
-        discount_amount: 0,
-        shipping_amount: 0,
-        grand_total: grandTotal,
-        payment_terms: 'Net 14 (Due in 14 days)',
-        line_items: lineItems,
-        field_metadata: {
-          supplier_name: { confidence: 'high', rawText: supplierName, boundingBox: { x: 46, y: 28, width: 30, height: 5 } },
-          invoice_number: { confidence: 'high', rawText: invoiceNumber, boundingBox: { x: 61, y: 32, width: 14, height: 4 } },
-          invoice_date: { confidence: 'high', rawText: today, boundingBox: { x: 58, y: 44, width: 16, height: 3 } },
-          due_date: { confidence: 'medium', rawText: dueDate, boundingBox: { x: 58, y: 47, width: 16, height: 3 } },
-          subtotal: { confidence: 'high', rawText: String(subtotal), boundingBox: { x: 57, y: 82, width: 18, height: 3 } },
-          tax_amount: { confidence: 'high', rawText: String(taxAmount), boundingBox: { x: 57, y: 85, width: 18, height: 3 } },
-          grand_total: { confidence: 'high', rawText: String(grandTotal), boundingBox: { x: 57, y: 88, width: 18, height: 3 } },
-          payment_terms: { confidence: 'medium', rawText: 'Net 14', boundingBox: { x: 48, y: 92, width: 35, height: 4 } },
-        },
-        extractor_provider: 'server_heuristic_v1',
+        ...pipelineResult.extraction,
         is_latest: true,
       };
 
@@ -242,31 +218,20 @@ const server = http.createServer(async (req, res) => {
 
       if (extErr) throw extErr;
 
-      // Duplicate check in workspace
-      const { data: dupCheck } = await supabaseAdmin
-        .from('invoice_extractions')
-        .select('document_id, invoice_number, supplier_name')
-        .eq('workspace_id', doc.workspace_id)
-        .eq('invoice_number', invoiceNumber)
-        .neq('document_id', documentId)
-        .eq('is_latest', true);
-
-      // Save issues
+      // Replace validation issues
       await supabaseAdmin.from('invoice_validation_issues').delete().eq('document_id', documentId);
-      const issues = [];
-      if (dupCheck && dupCheck.length > 0) {
-        issues.push({
+      if (pipelineResult.issues && pipelineResult.issues.length > 0) {
+        const issuesToInsert = pipelineResult.issues.map(iss => ({
           document_id: documentId,
           workspace_id: doc.workspace_id,
-          issue_type: 'duplicate_warning',
-          severity: 'error',
-          field_key: 'invoice_number',
-          message: `Duplicate Warning: Invoice #${invoiceNumber} from "${supplierName}" was previously recorded.`,
-        });
-      }
-
-      if (issues.length > 0) {
-        await supabaseAdmin.from('invoice_validation_issues').insert(issues);
+          issue_type: iss.issue_type,
+          severity: iss.severity,
+          field_key: iss.field_key,
+          message: iss.message,
+          details: iss.details || null,
+          resolved: false,
+        }));
+        await supabaseAdmin.from('invoice_validation_issues').insert(issuesToInsert);
       }
 
       // Transition to review_required
@@ -278,7 +243,11 @@ const server = http.createServer(async (req, res) => {
         workspace_id: doc.workspace_id,
         actor_id: user.id,
         event_type: 'extraction_completed',
-        details: { issues_count: issues.length },
+        details: {
+          provider: pipelineResult.provider,
+          issues_count: pipelineResult.issues.length,
+          fields_extracted: Object.keys(pipelineResult.extraction.field_metadata || {}).length,
+        },
       });
 
       sendJson(res, 200, {
@@ -286,15 +255,29 @@ const server = http.createServer(async (req, res) => {
         documentId,
         status: 'review_required',
         extraction: newExt,
-        issues,
+        issues: pipelineResult.issues,
       });
 
     } catch (err) {
-      console.error('Processing error:', err);
+      const errMsg = err?.message || (typeof err === 'object' ? JSON.stringify(err) : String(err));
+      console.error('Processing error:', errMsg);
       if (documentId && supabaseAdmin) {
-        await supabaseAdmin.from('documents').update({ status: 'failed', updated_at: new Date().toISOString() }).eq('id', documentId);
+        try {
+          await supabaseAdmin.from('documents').update({ status: 'failed', updated_at: new Date().toISOString() }).eq('id', documentId);
+          if (doc?.workspace_id) {
+            await supabaseAdmin.from('invoice_audit_events').insert({
+              document_id: documentId,
+              workspace_id: doc.workspace_id,
+              actor_id: user?.id || null,
+              event_type: 'processing_failed',
+              details: { error: errMsg },
+            });
+          }
+        } catch (cleanupErr) {
+          console.warn('Could not record failed status/audit event:', cleanupErr.message);
+        }
       }
-      sendJson(res, 500, { error: err.message || 'Invoice processing failed.' });
+      sendJson(res, 500, { error: errMsg || 'Invoice processing failed.' });
     }
     return;
   }

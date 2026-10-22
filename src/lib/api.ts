@@ -370,6 +370,26 @@ export async function queueAndProcessInvoice(
     throw new Error('Supabase is not configured.');
   }
 
+  // 0. Attempt secure backend server processing (which holds server-side GEMINI_API_KEY)
+  try {
+    const session = (await supabase.auth.getSession()).data.session;
+    if (session?.access_token) {
+      const serverRes = await fetch(`/api/documents/${documentId}/process`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+      if (serverRes.ok) {
+        const data = await serverRes.json();
+        return data as ProcessInvoiceResponse;
+      }
+    }
+  } catch {
+    // If backend server endpoint is unreachable, fall through to client pipeline fallback
+  }
+
   // 1. Fetch document and verify permission & status
   const document = await fetchDocumentById(documentId, workspaceId);
   if (!document) {
