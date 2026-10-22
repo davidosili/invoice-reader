@@ -293,19 +293,30 @@ export async function fetchInvoiceExtraction(
 ): Promise<InvoiceExtractionRecord | null> {
   if (!isSupabaseConfigured) return null;
 
-  const { data, error } = await supabase
-    .from('invoice_extractions')
-    .select('*')
-    .eq('document_id', documentId)
-    .eq('workspace_id', workspaceId)
-    .eq('is_latest', true)
-    .maybeSingle();
+  try {
+    const { data, error } = await supabase
+      .from('invoice_extractions')
+      .select('*')
+      .eq('document_id', documentId)
+      .eq('workspace_id', workspaceId)
+      .eq('is_latest', true)
+      .maybeSingle();
 
-  if (error && error.code !== 'PGRST116') {
-    throw new Error(`Failed to load extraction: ${error.message}`);
+    if (error) {
+      // PGRST116: 0 rows, PGRST205: table not created yet / missing in schema cache
+      if (error.code === 'PGRST116' || error.code === 'PGRST205' || (error as any).status === 404) {
+        return null;
+      }
+      throw new Error(`Failed to load extraction: ${error.message}`);
+    }
+
+    return (data || null) as InvoiceExtractionRecord | null;
+  } catch (err: any) {
+    if (err.message?.includes('PGRST205') || err.message?.includes('schema cache')) {
+      return null;
+    }
+    throw err;
   }
-
-  return (data || null) as InvoiceExtractionRecord | null;
 }
 
 /**
@@ -317,18 +328,28 @@ export async function fetchInvoiceValidationIssues(
 ): Promise<InvoiceValidationIssue[]> {
   if (!isSupabaseConfigured) return [];
 
-  const { data, error } = await supabase
-    .from('invoice_validation_issues')
-    .select('*')
-    .eq('document_id', documentId)
-    .eq('workspace_id', workspaceId)
-    .order('created_at', { ascending: true });
+  try {
+    const { data, error } = await supabase
+      .from('invoice_validation_issues')
+      .select('*')
+      .eq('document_id', documentId)
+      .eq('workspace_id', workspaceId)
+      .order('created_at', { ascending: true });
 
-  if (error) {
-    throw new Error(`Failed to load validation issues: ${error.message}`);
+    if (error) {
+      if (error.code === 'PGRST205' || (error as any).status === 404) {
+        return [];
+      }
+      throw new Error(`Failed to load validation issues: ${error.message}`);
+    }
+
+    return (data || []) as InvoiceValidationIssue[];
+  } catch (err: any) {
+    if (err.message?.includes('PGRST205') || err.message?.includes('schema cache')) {
+      return [];
+    }
+    throw err;
   }
-
-  return (data || []) as InvoiceValidationIssue[];
 }
 
 /**
@@ -340,18 +361,28 @@ export async function fetchInvoiceAuditEvents(
 ): Promise<InvoiceAuditEvent[]> {
   if (!isSupabaseConfigured) return [];
 
-  const { data, error } = await supabase
-    .from('invoice_audit_events')
-    .select('*')
-    .eq('document_id', documentId)
-    .eq('workspace_id', workspaceId)
-    .order('created_at', { ascending: true });
+  try {
+    const { data, error } = await supabase
+      .from('invoice_audit_events')
+      .select('*')
+      .eq('document_id', documentId)
+      .eq('workspace_id', workspaceId)
+      .order('created_at', { ascending: true });
 
-  if (error) {
-    throw new Error(`Failed to load audit history: ${error.message}`);
+    if (error) {
+      if (error.code === 'PGRST205' || (error as any).status === 404) {
+        return [];
+      }
+      throw new Error(`Failed to load audit history: ${error.message}`);
+    }
+
+    return (data || []) as InvoiceAuditEvent[];
+  } catch (err: any) {
+    if (err.message?.includes('PGRST205') || err.message?.includes('schema cache')) {
+      return [];
+    }
+    throw err;
   }
-
-  return (data || []) as InvoiceAuditEvent[];
 }
 
 /**
