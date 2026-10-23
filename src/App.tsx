@@ -5,6 +5,9 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
+import { PrivacyPage } from './pages/PrivacyPage';
+import { TermsPage } from './pages/TermsPage';
+import { PricingPage } from './pages/PricingPage';
 import { AuthPage } from './pages/AuthPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { DocumentListPage } from './pages/DocumentListPage';
@@ -39,6 +42,9 @@ export const AppContent: React.FC = () => {
           {/* Public Marketing Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
 
           {/* Authentication Entry */}
           <Route path="/app/auth" element={<AuthPage />} />

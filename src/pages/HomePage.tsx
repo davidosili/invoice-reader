@@ -7,7 +7,7 @@ import { WorkflowSection } from '../components/WorkflowSection';
 import { DifferentiationSection } from '../components/DifferentiationSection';
 import { CustomerSection } from '../components/CustomerSection';
 import { BusinessValueSection } from '../components/BusinessValueSection';
-import { EarlyAccessSection } from '../components/EarlyAccessSection';
+import { GetStartedSection } from '../components/EarlyAccessSection';
 
 export const HomePage: React.FC = () => {
   useEffect(() => {
@@ -31,7 +31,7 @@ export const HomePage: React.FC = () => {
       <DifferentiationSection />
       <CustomerSection />
       <BusinessValueSection />
-      <EarlyAccessSection />
+      <GetStartedSection />
     </main>
   );
 };

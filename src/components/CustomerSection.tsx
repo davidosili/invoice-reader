@@ -51,13 +51,13 @@ export const CustomerSection: React.FC = () => {
         {/* Section Header */}
         <div className="max-w-2xl mb-12">
           <p className="text-[12px] font-semibold tracking-wider uppercase text-[#176B50] mb-3">
-            Intended Market Focus
+            Market Focus
           </p>
           <h2 className="text-[28px] sm:text-[36px] font-bold text-[#202722] tracking-tight leading-[1.15]">
             Built for businesses that process paperwork at scale.
           </h2>
           <p className="mt-4 text-[16px] text-[#626B64] leading-relaxed">
-            We are designing LedgerLens AI specifically for operations where invoice volume and document complexity
+            LedgerLens AI is built specifically for operations where invoice volume and document complexity
             create substantial manual burden. Our initial focus is centered on wholesale distribution networks,
             with broader accounting and procurement workflows planned for future expansion.
           </p>
@@ -104,7 +104,7 @@ export const CustomerSection: React.FC = () => {
 
         {/* Market Note */}
         <div className="mt-8 pt-4 border-t border-[#E2E6E1] text-[12px] text-[#626B64] flex items-center justify-between flex-wrap gap-2">
-          <span>Targeting early pilots with forward-thinking commercial distributors.</span>
+          <span>Focused on commercial distributors, wholesale networks, and growing operations.</span>
           <span className="italic">LedgerLens AI does not claim existing enterprise customer relationships.</span>
         </div>
       </div>

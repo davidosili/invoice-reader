@@ -7,12 +7,11 @@
  * Never exposes secret values.
  */
 
-export default function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+import { handleCors } from '../server/cors.mjs';
 
-  if (req.method === 'OPTIONS') {
-    return res.status(204).end();
+export default function handler(req, res) {
+  if (handleCors(req, res, { allowedMethods: 'GET, OPTIONS' })) {
+    return;
   }
 
   if (req.method !== 'GET') {

@@ -1,5 +1,6 @@
 import React from 'react';
-import { UploadCloud, Cpu, CheckSquare, FileSpreadsheet } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { UploadCloud, Cpu, CheckSquare, UserCheck, FileSpreadsheet, ArrowRight } from 'lucide-react';
 
 interface WorkflowStep {
   number: string;
@@ -13,30 +14,30 @@ const steps: WorkflowStep[] = [
   {
     number: "01",
     title: "Upload",
-    description: "Provide supported invoices, receipts, purchase orders, and other business documents.",
-    subtext: "Batch PDF imports, scanned document captures, or forwarded email attachments.",
+    description: "Upload a supported invoice document through the existing workspace.",
+    subtext: "PDF, PNG, and JPEG formats accepted. Documents are stored in encrypted workspace storage.",
     icon: <UploadCloud className="w-4 h-4 text-[#176B50]" />
   },
   {
     number: "02",
     title: "Extract",
-    description: "AI-assisted processing identifies key fields and organizes information into structured records.",
-    subtext: "Vendors, invoice IDs, itemized line tables, tax rates, payment terms, and totals.",
+    description: "AI identifies invoice details such as supplier, invoice number, dates, line items, taxes, and totals.",
+    subtext: "Powered by Google Gemini 2.5 Flash multimodal vision extraction.",
     icon: <Cpu className="w-4 h-4 text-[#176B50]" />
   },
   {
     number: "03",
     title: "Validate",
-    description: "Validation rules help identify missing fields, inconsistent totals, and possible duplicates.",
-    subtext: "Deterministic arithmetic checks, duplicate collision scoring, and PO variance alerts.",
+    description: "Deterministic checks identify arithmetic inconsistencies, date issues, and other supported validation concerns.",
+    subtext: "Arithmetic cross-sum verification, date sanity checks, and workspace-scoped duplicate detection.",
     icon: <CheckSquare className="w-4 h-4 text-[#176B50]" />
   },
   {
     number: "04",
-    title: "Review and Export",
-    description: "Users inspect flagged information, correct errors, and prepare approved records for export.",
-    subtext: "Human-in-the-loop review console leading to clean CSV, JSON, and ERP-ready payloads.",
-    icon: <FileSpreadsheet className="w-4 h-4 text-[#176B50]" />
+    title: "Review and decide",
+    description: "Review extracted fields and flagged issues, correct information where supported, and approve or reject the invoice.",
+    subtext: "Approved records can be exported to CSV. Human decision required before any record is finalized.",
+    icon: <UserCheck className="w-4 h-4 text-[#176B50]" />
   }
 ];
 
@@ -47,18 +48,18 @@ export const WorkflowSection: React.FC = () => {
         {/* Section Header */}
         <div className="max-w-2xl mb-14">
           <p className="text-[12px] font-semibold tracking-wider uppercase text-[#176B50] mb-3">
-            Workflow Architecture
+            How It Works
           </p>
           <h2 className="text-[28px] sm:text-[36px] font-bold text-[#202722] tracking-tight leading-[1.15]">
-            From scattered paperwork to structured information.
+            From invoice upload to review-ready data
           </h2>
           <p className="mt-4 text-[16px] text-[#626B64] leading-relaxed">
-            The proposed LedgerLens AI workflow establishes a clean, repeatable path from raw business documents
-            to auditable, verified financial records.
+            LedgerLens AI's working MVP establishes a clean, repeatable path from raw invoice documents
+            to structured, validated, and human-reviewed financial records.
           </p>
         </div>
 
-        {/* 4-Step Sequence (Horizontal on Desktop, Vertical on Mobile) */}
+        {/* 4-Step Sequence */}
         <div className="grid grid-cols-1 md:grid-cols-4 border-t border-b border-[#E2E6E1] bg-[#FFFFFF] divide-y md:divide-y-0 md:divide-x divide-[#E2E6E1]">
           {steps.map((step) => (
             <div key={step.number} className="p-6 lg:p-8 flex flex-col justify-between">
@@ -85,18 +86,29 @@ export const WorkflowSection: React.FC = () => {
                 </p>
               </div>
 
-              <div className="mt-6 pt-3 border-t border-[#E2E6E1]/60 text-[11px] font-mono text-[#626B64]">
-                Step {step.number} • Stage Gateway
+              <div className="mt-6 pt-3 border-t border-[#E2E6E1]/60 text-[11px] font-mono text-[#176B50]">
+                Step {step.number} • Live in MVP
               </div>
             </div>
           ))}
         </div>
 
-        {/* Context Disclaimer */}
-        <div className="mt-4 text-center">
-          <p className="text-[12px] text-[#626B64]">
-            Note: This sequence illustrates the proposed product workflow. LedgerLens AI is currently under active design.
-          </p>
+        {/* CSV Export callout + CTA */}
+        <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 bg-[#FFFFFF] border border-[#E2E6E1] rounded-[4px]">
+          <div className="flex items-start gap-3 text-[13px] text-[#626B64]">
+            <FileSpreadsheet className="w-4 h-4 text-[#176B50] flex-shrink-0 mt-0.5" />
+            <p>
+              <strong className="text-[#202722]">CSV Export:</strong> Approved invoice records can be exported
+              to structured CSV files with active protection against formula injection.
+            </p>
+          </div>
+          <Link
+            to="/app"
+            className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#176B50] hover:text-[#12563F] flex-shrink-0"
+          >
+            Try the workflow
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
       </div>
     </section>

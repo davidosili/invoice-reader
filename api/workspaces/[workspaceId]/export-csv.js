@@ -12,6 +12,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import { handleCors } from '../../../server/cors.mjs';
 
 // ── Environment ──────────────────────────────────────────────────────────────
 const SUPABASE_URL =
@@ -72,12 +73,8 @@ async function verifyWorkspaceMembership(userId, workspaceId) {
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(204).end();
+  if (handleCors(req, res, { allowedMethods: 'GET, OPTIONS', allowedHeaders: 'Content-Type, Authorization' })) {
+    return;
   }
 
   if (req.method !== 'GET') {

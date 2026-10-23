@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createClient } from '@supabase/supabase-js';
 import { runServerExtractionPipeline } from './intelligence.mjs';
+import { handleCors } from './cors.mjs';
 
 // Load environment variables from .env and .env.server safely
 function loadEnv() {
@@ -85,22 +86,13 @@ function sendJson(res, statusCode, payload) {
   res.writeHead(statusCode, {
     'Content-Type': 'application/json',
     'Content-Length': Buffer.byteLength(body),
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   });
   res.end(body);
 }
 
 const server = http.createServer(async (req, res) => {
-  // CORS Preflight
-  if (req.method === 'OPTIONS') {
-    res.writeHead(204, {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    });
-    res.end();
+  // Hardened CORS preflight and headers
+  if (handleCors(req, res, { allowedMethods: 'GET, POST, OPTIONS', allowedHeaders: 'Content-Type, Authorization' })) {
     return;
   }
 
@@ -362,7 +354,6 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, {
         'Content-Type': 'text/csv; charset=utf-8',
         'Content-Disposition': `attachment; filename="ledgerlens_approved_invoices_${workspaceId.slice(0, 8)}.csv"`,
-        'Access-Control-Allow-Origin': '*',
       });
       res.end(csvData);
 

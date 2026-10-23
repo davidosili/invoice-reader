@@ -30,7 +30,7 @@ const values: ValueItem[] = [
   {
     headline: "Prepare structured data for downstream workflows",
     explanation:
-      "Generate clean, normalized JSON and CSV payloads formatted for direct import into accounting ledgers, ERP systems, and business intelligence pipelines."
+      "Generate clean, normalized CSV exports formatted for bookkeeping, spreadsheet analysis, and financial reporting workflows."
   },
   {
     headline: "Improve visibility into document-processing tasks",
@@ -46,7 +46,7 @@ export const BusinessValueSection: React.FC = () => {
         {/* Section Header */}
         <div className="max-w-2xl mb-14">
           <p className="text-[12px] font-semibold tracking-wider uppercase text-[#176B50] mb-3">
-            Intended Business Value
+            Business Value
           </p>
           <h2 className="text-[28px] sm:text-[36px] font-bold text-[#202722] tracking-tight leading-[1.15]">
             Spend less time entering data. More time understanding it.

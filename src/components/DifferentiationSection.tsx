@@ -117,7 +117,7 @@ export const DifferentiationSection: React.FC = () => {
                 </div>
               </div>
               <div className="mt-3 text-[11px] text-[#626B64]">
-                Bounding boxes mapped to document coordinates.
+                Structured fields extracted with confidence scoring and layout context.
               </div>
             </div>
 
@@ -133,7 +133,7 @@ export const DifferentiationSection: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-1.5 text-[#176B50] bg-[#EDF4EF] p-1.5 rounded-[3px]">
                   <Check className="w-3.5 h-3.5 flex-shrink-0" />
-                  <span className="font-medium text-[10px]">Vendor TIN confirmed active</span>
+                  <span className="font-medium text-[10px]">Required fields present & verified</span>
                 </div>
               </div>
               <div className="mt-3 text-[11px] text-[#626B64]">
@@ -148,13 +148,13 @@ export const DifferentiationSection: React.FC = () => {
                 4. Field For Review
               </div>
               <div className="border border-[#A33A32]/30 bg-[#A33A32]/5 p-2.5 rounded-[3px] text-[11px] space-y-1">
-                <p className="font-bold text-[#A33A32]">Terms Mismatch</p>
+                <p className="font-bold text-[#A33A32]">Terms & Due Date Flag</p>
                 <p className="text-[#626B64] text-[10px] leading-tight">
-                  Invoice indicates Net 14. PO-892 contract specifies Net 30.
+                  Accelerated payment term (Net 14) flagged for operator verification.
                 </p>
                 <div className="pt-1 text-[10px] text-[#202722] font-semibold flex items-center gap-1">
                   <ArrowRight className="w-3 h-3 text-[#A33A32]" />
-                  Awaiting AP Lead Approval
+                  Awaiting Operator Approval
                 </div>
               </div>
               <div className="mt-3 text-[11px] text-[#626B64]">

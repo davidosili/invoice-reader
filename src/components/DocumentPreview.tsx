@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, AlertTriangle, FileText, ArrowRight, ShieldCheck, Search, CornerDownRight } from 'lucide-react';
+import { Check, AlertTriangle, FileText, ShieldCheck, Search, CornerDownRight } from 'lucide-react';
 import { ExtractedField, InvoiceMockupData } from '../types';
 
 const sampleInvoice: InvoiceMockupData = {
@@ -129,8 +129,8 @@ export const DocumentPreview: React.FC = () => {
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-[#176B50]" />
           <span className="font-semibold text-[#202722] tracking-tight">LedgerLens Review Console</span>
-          <span className="text-[#626B64] border-l border-[#E2E6E1] pl-2 hidden sm:inline">
-            Batch: #2026-10-OCT • Doc 14 of 48
+          <span className="text-[#626B64] border-l border-[#E2E6E1] pl-2 hidden sm:inline font-mono">
+            Interactive Demonstration • Synthetic Sample
           </span>
         </div>
 
@@ -166,8 +166,8 @@ export const DocumentPreview: React.FC = () => {
             </button>
           </div>
 
-          <span className="inline-flex items-center px-2 py-0.5 rounded-[3px] text-[11px] font-medium bg-[#EDF4EF] text-[#176B50] border border-[#176B50]/20">
-            Preview Model
+          <span className="inline-flex items-center px-2 py-0.5 rounded-[3px] text-[11px] font-medium bg-[#EDF4EF] text-[#176B50] border border-[#176B50]/20 font-mono">
+            Interactive Demo
           </span>
         </div>
       </div>
@@ -185,7 +185,7 @@ export const DocumentPreview: React.FC = () => {
               <FileText className="w-3.5 h-3.5 text-[#176B50] flex-shrink-0" />
               source_invoice_scan.pdf
             </span>
-            <span className="text-[10px] text-[#626B64] font-medium flex-shrink-0">Simulated Document Scan</span>
+            <span className="text-[10px] text-[#626B64] font-medium flex-shrink-0 font-mono">Synthetic Document Scan (Demonstration)</span>
           </div>
 
           {/* Realistic enterprise invoice layout */}
@@ -201,7 +201,7 @@ export const DocumentPreview: React.FC = () => {
                 }`}
               >
                 <p className="font-bold text-[#202722] text-xs uppercase tracking-wide">
-                  {sampleInvoice.supplierName}
+                  {sampleInvoice.supplierName} <span className="text-[9px] font-normal lowercase text-[#626B64] tracking-normal font-sans">(fictional company)</span>
                 </p>
                 <p className="text-[#626B64] text-[10px]">{sampleInvoice.supplierAddress}</p>
                 <p className="text-[#626B64] text-[10px] font-mono mt-0.5">TIN: {sampleInvoice.supplierTaxId}</p>
@@ -421,7 +421,7 @@ export const DocumentPreview: React.FC = () => {
                 <CornerDownRight className="w-3 h-3 text-[#626B64]" />
                 Location in scan: Page 1 • X: {activeField.documentLocation.x}% Y: {activeField.documentLocation.y}%
               </span>
-              <span className="font-medium text-[#202722]">Audit Trail: Hash #8F29A</span>
+              <span className="font-medium text-[#202722] font-mono">Simulated Audit Hash #8F29A</span>
             </div>
           </div>
         </div>
@@ -430,10 +430,10 @@ export const DocumentPreview: React.FC = () => {
       {/* Product preview footer disclaimer */}
       <div className="bg-[#FFFFFF] px-4 py-2 border-t border-[#E2E6E1] text-[11px] text-[#626B64] flex flex-wrap items-center justify-between gap-2">
         <span className="text-[#626B64]">
-          Product Preview: Static interactive demonstration of proposed document intelligence workflow.
+          Product Preview: Static interactive demonstration of proposed document intelligence workflow (synthetic data, not real customer records).
         </span>
-        <span className="text-[#176B50] font-medium flex items-center gap-1 text-[11px]">
-          Confidence score: 98.4% <ArrowRight className="w-3 h-3 inline" />
+        <span className="text-[#176B50] font-medium flex items-center gap-1 text-[11px] font-mono">
+          Simulated confidence score: 98.4% (illustrative demo)
         </span>
       </div>
     </div>

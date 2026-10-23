@@ -1,40 +1,34 @@
 import { InvoiceExtractionProvider, ExtractorMetadata } from './types';
 import { SanitizedExtractedInvoice } from '../schema';
+import { GeminiInvoiceExtractionProvider } from './geminiProvider';
 
+/**
+ * Primary AI Invoice Extraction Provider Adapter.
+ *
+ * Active Model: Google Gemini 2.5 Flash (`gemini-2.5-flash`)
+ * Credentials: GEMINI_API_KEY (stored server-side in environment secrets)
+ * Fallback: HeuristicOcrProvider (deterministic rule-based extractor)
+ */
 export class AiInvoiceExtractionProvider implements InvoiceExtractionProvider {
-  readonly providerId = 'claude_multimodal_v1';
-  readonly displayName = 'Claude 3.5 Sonnet / Vision Model';
-  private apiKey: string | null = null;
+  readonly providerId = 'gemini-2.5-flash';
+  readonly displayName = 'Google Gemini 2.5 Flash Vision';
+  private delegate: GeminiInvoiceExtractionProvider;
 
   constructor(apiKey?: string | null) {
-    const proc = typeof globalThis !== 'undefined' ? (globalThis as any).process : undefined;
-    this.apiKey = apiKey || (proc ? proc.env?.ANTHROPIC_API_KEY || null : null);
+    this.delegate = new GeminiInvoiceExtractionProvider(apiKey);
   }
 
   getMetadata(): ExtractorMetadata {
-    return {
-      providerId: this.providerId,
-      displayName: this.displayName,
-      isAiPowered: true,
-      isConfigured: this.isConfigured(),
-      capabilities: {
-        boundingBoxes: true,
-        confidenceScores: true,
-        rawText: true,
-      },
-    };
+    return this.delegate.getMetadata();
   }
 
   isConfigured(): boolean {
-    return Boolean(this.apiKey && this.apiKey.trim().length > 10);
+    return this.delegate.isConfigured();
   }
 
-  async extract(_fileBuffer: Uint8Array, _mimeType: string, _filename: string): Promise<SanitizedExtractedInvoice> {
-    if (!this.isConfigured()) {
-      throw new Error('AI extraction provider is not configured. Server administrator must supply ANTHROPIC_API_KEY in server secrets.');
-    }
-
-    // Server-side AI call implementation (invoked when operator provides API key)
-    throw new Error('Server-side AI model integration requires configured server execution.');
+  async extract(fileBuffer: Uint8Array, mimeType: string, filename: string): Promise<SanitizedExtractedInvoice> {
+    return this.delegate.extract(fileBuffer, mimeType, filename);
   }
 }
+
+export { GeminiInvoiceExtractionProvider };

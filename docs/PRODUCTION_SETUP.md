@@ -1,6 +1,6 @@
-# LedgerLens AI — Production SaaS Configuration Guide
+# LedgerLens AI — Production Configuration & Deployment Guide
 
-This guide describes the one-time centralized infrastructure setup for the LedgerLens AI production platform.
+This guide describes the architecture, database migrations, serverless environment configuration, and verification runbooks for LedgerLens AI.
 
 ---
 
@@ -14,7 +14,7 @@ LedgerLens AI operates as a **centrally managed, multi-tenant SaaS application**
 |  - Sign up / Sign in at branded UI                          |
 |  - Automatic atomic workspace provisioning                  |
 |  - Never see or configure infrastructure                    |
-|  - All errors sanitized (no SQL / vendor leaks)             |
+|  - All database errors sanitized (no SQL / vendor leaks)    |
 +------------------------------+------------------------------+
                                |
                                v
@@ -35,17 +35,20 @@ LedgerLens AI operates as a **centrally managed, multi-tenant SaaS application**
 |  - Storage RLS: enforces workspace folder ownership         |
 +------------------------------+------------------------------+
                                |
-                               v (Phase 2 Serverless Pipeline)
+                               v
 +-------------------------------------------------------------+
-|            Server-Side Edge Functions (Phase 2)             |
-|  - Secrets: ANTHROPIC_API_KEY / OPENAI_API_KEY / OCR creds  |
-|  - Never exposed to client bundle                           |
+|            Serverless API Pipeline (Vercel / Node)          |
+|  - Endpoints: /api/documents/:id/process, /api/export-csv   |
+|  - Secrets: GEMINI_API_KEY, SUPABASE_SERVICE_ROLE_KEY       |
+|  - Never exposed to browser bundle                          |
+|  - Primary engine: Google Gemini 2.5 Flash Vision           |
+|  - Resilient fallback: Server heuristic extractor          |
 +-------------------------------------------------------------+
 ```
 
 ### Key Security & Isolation Guarantees
-1. **Single Central Backend:** The product owner provisions and manages **one** Supabase project. Customers never create their own Supabase accounts or configure databases.
-2. **Strict Multi-Tenancy:** PostgreSQL Row Level Security (RLS) isolates workspaces and documents. Users can only query and mutate data belonging to workspaces where they hold active membership.
+1. **Single Central Backend:** The product owner provisions and manages **one** Supabase project. Customers never configure databases or API keys.
+2. **Strict Multi-Tenancy:** PostgreSQL Row Level Security (RLS) isolates workspaces, documents, extractions, validation issues, and audit events. Users can only query and mutate data belonging to workspaces where they hold active membership.
 3. **Private Storage Isolation:** Files are stored in the private `invoices` bucket under `{workspace_id}/{document_id}.{ext}`. Storage policies verify workspace membership before granting read or write permissions.
 4. **Client Secret Minimization:** The browser bundle contains *only* the public anonymous client key (`VITE_SUPABASE_ANON_KEY`). Service-role keys and AI provider credentials are stored strictly in server-side environments.
 5. **Customer Experience Separation:** If infrastructure is unconfigured or unreachable, customers see an enterprise-grade service notice. Raw database error codes (`PGRST`, `relation does not exist`, `violates row-level security`) are intercepted and sanitized.
@@ -59,17 +62,17 @@ LedgerLens AI operates as a **centrally managed, multi-tenant SaaS application**
 2. Create a new project:
    - **Name:** `ledgerlens-production` (or your company naming convention).
    - **Database Password:** Store securely in your company's password manager / secrets vault.
-   - **Region:** Select a region close to your primary customers (e.g., `eu-west-1` for Europe or `us-east-1` for North America).
+   - **Region:** Select a region close to your primary customers.
 3. Under **Project Settings -> API**, retrieve:
    - **Project URL:** `https://<your-project-id>.supabase.co`
    - **Project API Keys -> `anon` (public):** `eyJhbGciOi...`
-   - *(Note: Do NOT copy the `service_role` key into client environment files).*
+   - **Project API Keys -> `service_role` (secret):** `eyJhbGciOi...` *(Store securely; never put in frontend code)*.
 
 ---
 
 ### Step 2: Apply Database Schema & Migrations
 
-Navigate to the **SQL Editor** in the Supabase Dashboard and run the migrations in order:
+All migrations are located in `supabase/migrations/` and can be run sequentially in the Supabase **SQL Editor**, or applied all at once via `supabase/production_init.sql`.
 
 #### 1. Core Schema & Row-Level Security
 Run `supabase/migrations/20261019000001_initial_schema.sql`:
@@ -79,82 +82,67 @@ Run `supabase/migrations/20261019000001_initial_schema.sql`:
   - `public.documents`: ID, workspace_id, user_id, original_filename, storage_path, file_size_bytes, mime_type, status, timestamps.
 - Enables **Row Level Security (RLS)** on all three tables.
 - Creates helper functions:
-  - `public.is_workspace_member(_workspace_id, _user_id)`: Security definer function for leak-proof membership validation.
-  - `public.create_workspace_with_owner(workspace_name)`: Atomic transaction creating the workspace and registering the creator as `owner`.
-- Configures RLS policies guaranteeing:
-  - Users can only view workspaces they belong to.
-  - Only owners and admins can invite members or update workspace settings.
-  - Users can only read and upload documents within their active workspace.
+  - `public.is_workspace_member(_workspace_id, _user_id)`: Security definer function for leak-proof membership verification.
+  - `public.create_workspace_with_owner(workspace_name, owner_user_id)`: Atomic workspace creation with owner assignment.
 
-#### 2. Private Storage Bucket & Storage Policies
+#### 2. Private Storage Bucket Setup
 Run `supabase/migrations/20261019000002_storage_setup.sql`:
-- Creates the private storage bucket:
-  - **Bucket Name:** `invoices`
-  - **Public:** `false` (Direct URLs without tokens return HTTP 403 Forbidden).
-  - **Max File Size:** `20971520` (20 MB).
-  - **Allowed MIME Types:** `application/pdf`, `image/png`, `image/jpeg`.
-- Creates Storage RLS policies on `storage.objects`:
-  - **Read:** Workspace members can read objects where `storage.foldername(name)[1] == workspace_id`.
-  - **Insert:** Workspace members can upload objects matching their workspace prefix with strict size and MIME verification.
-  - **Update/Delete:** Limited to authorized workspace members.
+- Creates private storage bucket `invoices` (`public = false`).
+- Configures 20MB file size limit.
+- Enforces allowed MIME types (`application/pdf`, `image/png`, `image/jpeg`).
+- Applies storage policies scoped to `{workspace_id}/...`.
+
+#### 3. Invoice Intelligence & Lifecycle Engine
+Run `supabase/migrations/20261022000001_phase2_intelligence.sql`:
+- Creates intelligence tables:
+  - `public.invoice_extractions`: Structured header data, line items, field confidence metadata, version tracking (`is_latest`).
+  - `public.invoice_validation_issues`: Deterministic arithmetic, date, required field, and duplicate issues.
+  - `public.invoice_audit_events`: Immutable, append-only log of all workflow actions (no UPDATE or DELETE policies).
+- Configures `public.transition_document_status()` PostgreSQL function enforcing legal state machine transitions.
 
 ---
 
-### Step 3: Configure Authentication & Redirect URLs
+### Step 3: Configure Authentication Settings in Supabase
 
-In the Supabase Dashboard, navigate to **Authentication -> URL Configuration**:
+In the Supabase Dashboard:
 
-1. **Site URL:**
-   - Production: `https://app.ledgerlens.ai` (or your primary domain).
+1. **Email Auth:**
+   - Navigate to **Authentication -> Providers -> Email**.
+   - Enable "Email provider".
+   - In production, enable "Confirm email" and customize the branded email template.
+
 2. **Redirect URLs:**
-   Add each environment redirect URL:
-   - `https://app.ledgerlens.ai/**`
-   - `https://*.ledgerlens.ai/**`
-   - `http://localhost:5173/**` (for local development)
-3. **Email Settings:**
-   - Under **Authentication -> Email Templates**, brand the confirmation and password reset emails with LedgerLens AI headers.
-   - For production high-volume delivery, configure a custom SMTP provider (e.g., SendGrid, Postmark, AWS SES, Resend) under **Authentication -> SMTP Settings**.
+   - Navigate to **Authentication -> URL Configuration**.
+   - Set **Site URL** to your production domain: `https://app.ledgerlens.ai` (or your active Vercel domain).
+   - Add **Redirect URLs**:
+     - `https://app.ledgerlens.ai/app/auth`
+     - `https://app.ledgerlens.ai/**`
+     - `http://localhost:5173/app/auth` (for local development)
 
 ---
 
-### Step 4: Deploy Frontend & Environment Variables
+### Step 4: Serverless API & Frontend Deployment (Vercel)
 
-Deploy the React SPA to your hosting platform (Vercel, Cloudflare Pages, Netlify, AWS Amplify, or Docker/Nginx):
+#### Environment Variables Configuration
 
-#### Production Environment Variables
-| Variable Name | Description | Visibility | Example |
-| :--- | :--- | :--- | :--- |
-| `VITE_SUPABASE_URL` | Central Supabase Project URL | Public / Client | `https://xyzproject.supabase.co` |
-| `VITE_SUPABASE_ANON_KEY` | Supabase Public Anonymous Key | Public / Client | `eyJhbGciOi...` |
+**In Vercel Project Settings -> Environment Variables:**
 
-#### Build Settings
-- **Build Command:** `npm run build` (runs `tsc -b && vite build`)
+| Variable Name | Description | Target Scope | Example Value |
+|---|---|---|---|
+| `VITE_SUPABASE_URL` | Public Supabase project URL | Production, Preview, Dev | `https://xyz.supabase.co` |
+| `VITE_SUPABASE_ANON_KEY` | Public anonymous client key | Production, Preview, Dev | `eyJhbGciOi...` |
+| `SUPABASE_URL` | Backend Supabase project URL | Production, Preview (Serverless) | `https://xyz.supabase.co` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Privileged service role key | Production, Preview (Serverless) | `eyJhbGciOi...` |
+| `GEMINI_API_KEY` | Google Gemini 2.5 Flash API Key | Production, Preview (Serverless) | `AIzaSy...` |
+| `ALLOWED_ORIGINS` | Permitted frontend origins (comma-separated) | Production, Preview (Serverless) | `https://app.ledgerlens.ai,https://ledgerlens.ai` |
+
+> **Security Rule:** Never prefix `GEMINI_API_KEY` or `SUPABASE_SERVICE_ROLE_KEY` with `VITE_`. They are utilized exclusively by server-side endpoints in `api/`.
+
+#### Build & Routing Settings
+- **Build Command:** `npm run build` (`tsc -b && vite build`)
 - **Output Directory:** `dist`
-- **Node.js Version:** `18+` or `20+`
-
-#### SPA Rewrite Configuration
-Ensure the web server routes all non-static requests to `index.html`:
-
-**Vercel (`vercel.json`):**
-```json
-{
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
-}
-```
-
-**Netlify (`public/_redirects`):**
-```text
-/*    /index.html   200
-```
-
-**Nginx:**
-```nginx
-location / {
-  try_files $uri $uri/ /index.html;
-}
-```
+- **Node.js Version:** `20.x`
+- Routing and timeouts are pre-configured in `vercel.json` (30-second serverless execution for document processing).
 
 ---
 
@@ -185,56 +173,89 @@ All raw error responses from the backend are filtered through `src/lib/authError
 
 ---
 
-## 4. Phase 2 AI Pipeline Preparation & Secrets Management
+## 4. AI Extraction Engine & Server Secrets Configuration
 
-In Phase 2, automated OCR and AI extraction will process uploaded invoices.
+The invoice intelligence engine is fully implemented:
 
-### Server-Side Secrets Architecture
-- **AI Credentials:** AI vendor API keys (Anthropic Claude, OpenAI, or document extraction endpoints) must **NEVER** be prefixed with `VITE_` or embedded in the client application.
-- **Serverless Edge Functions:** All AI extraction will run in Supabase Edge Functions (`supabase/functions/process-invoice/index.ts`).
-- **Storing Edge Secrets:**
-  ```bash
-  # In terminal via Supabase CLI
-  supabase secrets set ANTHROPIC_API_KEY="sk-ant-..."
-  supabase secrets set OPENAI_API_KEY="sk-proj-..."
-  ```
-- **Execution Lifecycle:**
-  1. Frontend uploads invoice to `invoices` bucket -> inserts record into `public.documents` with `status = 'pending_processing'`.
-  2. Database webhook or Storage trigger invokes the Edge Function with the `document_id`.
-  3. The Edge Function verifies authentication via service-role key, downloads the file buffer, invokes the AI model, validates cross-sums, and records extracted fields.
-  4. The client receives realtime updates or fetches the structured result when navigating to `/app/documents/:id`.
+### Server-Side Pipeline Execution
+1. Document upload saves the original file to private storage (`invoices` bucket) and creates a row in `documents` with status `uploaded`.
+2. Frontend calls `POST /api/documents/:id/process` with an authenticated Bearer token.
+3. Server endpoint verifies caller membership in the document's workspace.
+4. Server transitions document status to `queued` → `processing` and logs audit events.
+5. Extraction is executed using **Google Gemini 2.5 Flash** (`gemini-2.5-flash`) via multimodal vision JSON prompting.
+6. If the Gemini API key is missing or the external service encounters a temporary error (e.g. HTTP 503), the engine automatically falls back to the deterministic heuristic extractor (`server_heuristic_v1`).
+7. Deterministic arithmetic validation (`validator.ts`) and workspace duplicate checks (`duplicates.ts`) are evaluated.
+8. Results are atomically persisted to `invoice_extractions` and `invoice_validation_issues`.
+9. Document status transitions to `review_required` and an `extraction_completed` audit event is logged.
 
 ---
 
-## 5. Verification Runbook & Health Checks
+## 5. Implementation Status: Completed vs. Deployment Tasks
 
-After configuring production, execute this verification runbook:
+### Implemented & Verified in Codebase
+- [x] Multi-tenant workspace isolation with PostgreSQL RLS.
+- [x] Private Supabase Storage bucket with magic-byte file signature validation.
+- [x] Multimodal AI extraction via Google Gemini 2.5 Flash (`gemini-2.5-flash`).
+- [x] Resilient heuristic OCR fallback extractor (`server_heuristic_v1`).
+- [x] Deterministic financial arithmetic validation (subtotals, tax rates, line items, 0.02 rounding tolerance).
+- [x] Workspace-scoped duplicate invoice detection.
+- [x] Interactive human review console with inline field correction.
+- [x] Deterministic lifecycle state machine (`transition_document_status`).
+- [x] Immutable, append-only audit trail (`invoice_audit_events`).
+- [x] Formula-injection-safe CSV export endpoint.
+- [x] Legal readiness and commercial positioning pages (`/privacy`, `/terms`, `/pricing`).
+- [x] Automated test suite with 48 passing unit/integration, legal, and security tests.
 
-1. **Test Suite:**
-   ```bash
-   npm test
-   ```
-   *Expected: All 12 security, MIME validation, path isolation, and error sanitization tests pass.*
+### Remaining Deployment Tasks (Operator Setup)
+- [ ] Set `GEMINI_API_KEY` in Vercel project environment settings.
+- [ ] Set `SUPABASE_SERVICE_ROLE_KEY` in Vercel project environment settings.
+- [ ] Configure `ALLOWED_ORIGINS` in Vercel with your production domain(s).
+- [ ] Configure custom domain DNS records (CNAME pointing to `cname.vercel-dns.com`).
+- [ ] Verify Supabase Auth Site URL and Redirect URLs match the production domain.
 
-2. **Production Build:**
-   ```bash
-   npm run build
-   ```
-   *Expected: Clean TypeScript compilation and Vite build with 0 errors.*
+---
 
-3. **Public Website Integrity:**
-   - Verify `/` loads marketing homepage with interactive demo and zero console errors.
-   - Verify `/about` loads editorial about page with company principles.
+## 6. Verification Runbook & Health Checks
 
-4. **Customer Onboarding Smoke Test:**
-   - Navigate to `/app/auth`.
-   - Register a new user: `testuser@example.com` with company name `Apex Logistics`.
-   - Check Supabase Dashboard -> `public.workspaces` has record `Apex Logistics`.
-   - Check `public.workspace_members` has the user as `role = 'owner'`.
-   - Verify user is redirected to `/app/documents`.
+Execute this verification runbook before and after production deployment:
 
-5. **Storage & Multi-Tenant Isolation Smoke Test:**
-   - Upload a test PDF invoice (`sample-invoice.pdf`).
-   - Verify file is stored in `invoices` bucket under `<workspace_id>/<document_uuid>.pdf`.
-   - Click "Download Original" -> signed URL generates with 3600-second expiration.
-   - Log out and attempt direct download without signed token -> HTTP 403 Forbidden.
+### 1. Offline Automated Test Suite
+```bash
+npm test
+```
+*Expected: All 48 automated tests pass across CORS security policy, server intelligence, lifecycle state machine, schema sanitization, financial arithmetic validation, duplicate detection, CSV formula injection mitigation, file signatures, legal readiness disclosures, and error masking.*
+
+### 2. TypeScript Compilation & Production Build
+```bash
+npm run build
+```
+*Expected: Clean compilation with 0 TypeScript errors and Vite bundle generated in `dist/`.*
+
+### 3. Server Endpoint Health Check
+Query the health check endpoint:
+```bash
+curl -s http://localhost:3001/api/health | jq .
+# Or against production:
+curl -s https://app.ledgerlens.ai/api/health | jq .
+```
+*Expected JSON response:*
+```json
+{
+  "status": "ok",
+  "service": "LedgerLens AI Intelligence Server",
+  "configured": true,
+  "ai_configured": true,
+  "ai_model": "gemini-2.5-flash"
+}
+```
+
+### 4. Optional Live Supabase Environment Gate
+To run full end-to-end integration tests against an active Supabase test instance:
+```bash
+npm run test:live
+```
+*Expected:*
+- `live_security_gate.mjs`: 20/20 multi-tenant isolation tests pass.
+- `security_constraints_gate.mjs`: All storage and DB constraint gates pass.
+- `live_phase2_gate.mjs`: 10/10 lifecycle transition and review gates pass.
+- `live_server_e2e_gate.mjs`: End-to-end extraction and export verification passes.

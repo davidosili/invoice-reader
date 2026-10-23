@@ -213,7 +213,7 @@ test('Provider Handling - Reports configuration error when credentials unsupplie
     isConfigured() { return false; }
     async extract() {
       if (!this.isConfigured()) {
-        throw new Error('AI extraction provider is not configured. Server administrator must supply ANTHROPIC_API_KEY.');
+        throw new Error('AI extraction provider is not configured. Server administrator must supply GEMINI_API_KEY.');
       }
     }
   }

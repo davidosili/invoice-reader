@@ -143,7 +143,7 @@ export const AboutPage: React.FC = () => {
             </h1>
 
             <p className="text-[17px] sm:text-[19px] text-[#626B64] leading-relaxed">
-              LedgerLens AI is being developed to help businesses transform unstructured financial paperwork
+              LedgerLens AI helps businesses transform unstructured financial paperwork
               into organized, verifiable information. By combining AI-assisted extraction with structured validation
               and human review, our vision is to make document-heavy workflows simpler and more reliable.
             </p>
@@ -396,7 +396,7 @@ export const AboutPage: React.FC = () => {
               Cloud infrastructure and development
             </h2>
             <p className="mt-3 text-[15px] sm:text-[16px] text-[#626B64] leading-relaxed">
-              LedgerLens AI is being developed with a focus on practical cloud infrastructure and AI-powered document processing.
+              LedgerLens AI is built on practical cloud infrastructure and AI-powered document processing.
             </p>
           </div>
 
@@ -487,14 +487,14 @@ export const AboutPage: React.FC = () => {
                 to="/app"
                 className="inline-flex items-center justify-center px-6 py-3.5 text-[15px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors focus-ring"
               >
-                <span>Launch Working MVP</span>
+                <span>Open LedgerLens AI</span>
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
               <a
-                href="/#early-access"
+                href="/#contact"
                 className="inline-flex items-center justify-center px-5 py-3.5 text-[15px] font-medium text-[#202722] bg-[#FFFFFF] hover:bg-[#EDF4EF] border border-[#E2E6E1] rounded-[4px] transition-colors focus-ring"
               >
-                Request Early Access
+                Contact the Team
               </a>
             </div>
           </div>

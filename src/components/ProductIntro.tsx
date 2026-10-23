@@ -9,25 +9,23 @@ export const ProductIntro: React.FC = () => {
           {/* Main Editorial Text Column */}
           <div className="lg:col-span-7">
             <p className="text-[12px] font-semibold tracking-wider uppercase text-[#176B50] mb-3">
-              The Product Concept
+              The Product
             </p>
             <h2 className="text-[30px] sm:text-[38px] font-bold text-[#202722] tracking-tight leading-[1.15] mb-6">
-              Meet LedgerLens AI.
+              LedgerLens AI
             </h2>
             <div className="space-y-4 text-[16px] text-[#626B64] leading-relaxed">
               <p className="text-[18px] text-[#202722] font-medium leading-relaxed">
-                LedgerLens AI is an AI-native document intelligence platform designed to help businesses
+                LedgerLens AI is an AI-native document intelligence platform that helps businesses
                 turn unstructured financial paperwork into structured, reviewable information.
               </p>
               <p>
-                Modern business operations generate a steady stream of paper, scanned PDFs, and emailed receipts.
-                Rather than treating document extraction as a simple text conversion exercise, LedgerLens AI is
-                conceived as an end-to-end audit and verification workflow.
+                LedgerLens AI has a working invoice-processing workflow that uses AI to extract structured information, applies validation checks, and supports human review of potential discrepancies.
               </p>
               <p>
-                The platform architecture unites deep document comprehension with deterministic business logic:
-                automatically extracting multi-page line items, verifying arithmetic balances, flagging duplicate
-                submissions across historical archives, and surfacing variances before transactions reach your general ledger.
+                The platform unites AI-powered document comprehension with deterministic business logic:
+                automatically extracting line items, verifying arithmetic balances, flagging duplicate
+                submissions, and surfacing discrepancies before records reach downstream review.
               </p>
             </div>
 
@@ -39,7 +37,7 @@ export const ProductIntro: React.FC = () => {
               <p className="text-[13px] text-[#626B64]">
                 LedgerLens AI is intentionally designed to augment existing finance, operations, and bookkeeping
                 teams. It automates tedious mechanical transcription while keeping authorized human decision-makers
-                in complete control of financial approvals and downstream ERP postings.
+                in complete control of financial approvals.
               </p>
             </div>
           </div>
@@ -47,7 +45,7 @@ export const ProductIntro: React.FC = () => {
           {/* Core System Architecture Callout Panel */}
           <div className="lg:col-span-5 bg-[#F7F8F6] border border-[#E2E6E1] rounded-[6px] p-6 lg:p-7">
             <h3 className="text-[14px] font-semibold uppercase tracking-wider text-[#202722] pb-3 border-b border-[#E2E6E1]">
-              Proposed Integrated Pipeline
+              Working MVP Pipeline
             </h3>
 
             <div className="mt-5 space-y-4">
@@ -56,9 +54,9 @@ export const ProductIntro: React.FC = () => {
                   <Cpu className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-[14px] font-semibold text-[#202722]">AI-Assisted Extraction & Classification</h4>
+                  <h4 className="text-[14px] font-semibold text-[#202722]">AI-Assisted Extraction</h4>
                   <p className="text-[13px] text-[#626B64] mt-0.5">
-                    Layout-aware neural parsing that separates invoices, receipts, POs, and supplier statements.
+                    Google Gemini 2.5 Flash extracts supplier details, invoice numbers, line items, taxes, and totals from uploaded documents.
                   </p>
                 </div>
               </div>
@@ -70,7 +68,7 @@ export const ProductIntro: React.FC = () => {
                 <div>
                   <h4 className="text-[14px] font-semibold text-[#202722]">Deterministic Rules & Duplicate Flagging</h4>
                   <p className="text-[13px] text-[#626B64] mt-0.5">
-                    Rigorous arithmetic checks, tax calculation validation, and multi-signal duplicate prevention.
+                    Arithmetic checks, required field validation, and workspace-scoped duplicate detection run on every document.
                   </p>
                 </div>
               </div>
@@ -80,18 +78,18 @@ export const ProductIntro: React.FC = () => {
                   <Layers className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-[14px] font-semibold text-[#202722]">Cross-Document Comparison & Review</h4>
+                  <h4 className="text-[14px] font-semibold text-[#202722]">Human Review & CSV Export</h4>
                   <p className="text-[13px] text-[#626B64] mt-0.5">
-                    Side-by-side reconciliation against purchase orders and clean structured export formats (CSV, JSON).
+                    Flagged invoices go into a review queue. Operators inspect, correct, approve or reject, and export approved records to CSV.
                   </p>
                 </div>
               </div>
             </div>
 
             <div className="mt-6 pt-4 border-t border-[#E2E6E1] text-[12px] text-[#626B64] flex items-center justify-between">
-              <span>Platform Stage:</span>
+              <span>Product Status:</span>
               <span className="font-mono font-medium text-[#176B50] bg-[#EDF4EF] px-2 py-0.5 rounded-[3px]">
-                Concept Development
+                Working MVP
               </span>
             </div>
           </div>
