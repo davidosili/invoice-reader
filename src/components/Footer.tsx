@@ -38,8 +38,8 @@ export const Footer: React.FC = () => {
             </p>
 
             <div className="pt-2">
-              <span className="text-[11px] font-mono uppercase bg-[#F7F8F6] text-[#626B64] px-2 py-1 rounded-[3px] border border-[#E2E6E1]">
-                Technical Stage: Concept & Architecture
+              <span className="text-[11px] font-mono uppercase bg-[#F7F8F6] text-[#176B50] px-2 py-1 rounded-[3px] border border-[#176B50]/20 font-semibold">
+                Technical Stage: Working MVP
               </span>
             </div>
           </div>
@@ -109,7 +109,7 @@ export const Footer: React.FC = () => {
           <p>© {new Date().getFullYear()} LedgerLens AI. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <span className="text-[#626B64]/80">
-              Marketing website demonstration • No backend storage active
+              Working MVP Demonstration • Built by David Osili
             </span>
             <Link to="/about" className="hover:text-[#202722] underline">
               About & Roadmap
