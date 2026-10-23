@@ -138,10 +138,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error('Supabase is not configured.');
     }
 
+    const emailRedirectTo = typeof window !== 'undefined'
+      ? `${window.location.origin}/app/auth`
+      : undefined;
+
     const { data, error } = await supabase.auth.signUp({
       email: email.trim(),
       password,
       options: {
+        emailRedirectTo,
         data: {
           requested_workspace_name: workspaceName || 'Primary Workspace',
         },
