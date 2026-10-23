@@ -133,7 +133,9 @@ In the Supabase Dashboard:
 | `VITE_SUPABASE_ANON_KEY` | Public anonymous client key | Production, Preview, Dev | `eyJhbGciOi...` |
 | `SUPABASE_URL` | Backend Supabase project URL | Production, Preview (Serverless) | `https://xyz.supabase.co` |
 | `SUPABASE_SERVICE_ROLE_KEY` | Privileged service role key | Production, Preview (Serverless) | `eyJhbGciOi...` |
-| `GEMINI_API_KEY` | Google Gemini 2.5 Flash API Key | Production, Preview (Serverless) | `AIzaSy...` |
+| `GEMINI_API_KEY` | Google Gemini API Key | Production, Preview (Serverless) | `AIzaSy...` |
+| `GEMINI_PRIMARY_MODEL` | Primary AI vision extraction model | Production, Preview (Serverless) | `gemini-2.5-flash` |
+| `GEMINI_FALLBACK_MODELS` | Comma-separated quota fallback AI models | Production, Preview (Serverless) | `gemini-flash-lite-latest,gemini-3-flash-preview` |
 | `ALLOWED_ORIGINS` | Permitted frontend origins (comma-separated) | Production, Preview (Serverless) | `https://app.ledgerlens.ai,https://ledgerlens.ai` |
 
 > **Security Rule:** Never prefix `GEMINI_API_KEY` or `SUPABASE_SERVICE_ROLE_KEY` with `VITE_`. They are utilized exclusively by server-side endpoints in `api/`.

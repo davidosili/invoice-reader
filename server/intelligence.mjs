@@ -335,12 +335,52 @@ export function detectDuplicateInvoices(current, currentDocumentId, existingWork
   return issues;
 }
 
-// 4. Google Gemini Multimodal Vision Extraction
-export async function extractWithGemini(fileBuffer, mimeType, filename, apiKey) {
+// 4. Multi-Model Google Gemini Vision Extraction & Quota Cascade
+export class GeminiApiError extends Error {
+  constructor(status, message, details = {}) {
+    super(`Gemini API error (${status}): ${message}`);
+    this.name = 'GeminiApiError';
+    this.status = status;
+    this.details = details;
+    this.isQuotaExceeded = status === 429 || (typeof message === 'string' && (message.includes('quota') || message.includes('RESOURCE_EXHAUSTED')));
+    this.isMethodNotAllowed = status === 405;
+    this.isClientError = status === 400 || status === 401 || status === 403 || status === 405;
+    this.isServerError = status >= 500 && status < 600;
+  }
+}
+
+export function getModelConfig() {
+  const primaryModel = process.env.GEMINI_PRIMARY_MODEL || 'gemini-2.5-flash';
+  const fallbackEnv = process.env.GEMINI_FALLBACK_MODELS || 'gemini-flash-lite-latest,gemini-3-flash-preview';
+  const fallbackModels = fallbackEnv
+    .split(',')
+    .map((m) => m.trim())
+    .filter(Boolean);
+
+  const maxRetries = parseInt(process.env.GEMINI_MAX_RETRIES || '1', 10);
+  const timeoutMs = parseInt(process.env.GEMINI_TIMEOUT_MS || '20000', 10);
+
+  return {
+    primaryModel,
+    fallbackModels,
+    maxRetries: isNaN(maxRetries) ? 1 : maxRetries,
+    timeoutMs: isNaN(timeoutMs) ? 20000 : timeoutMs,
+  };
+}
+
+export async function extractWithGeminiModel(
+  fileBuffer,
+  mimeType,
+  filename,
+  apiKey,
+  modelId,
+  options = {}
+) {
   if (!apiKey || apiKey.trim().length < 10) {
-    throw new Error('GEMINI_API_KEY is not configured.');
+    throw new GeminiApiError(401, 'GEMINI_API_KEY is not configured or invalid.');
   }
 
+  const timeoutMs = options.timeoutMs || 20000;
   const base64Data = Buffer.isBuffer(fileBuffer)
     ? fileBuffer.toString('base64')
     : Buffer.from(fileBuffer).toString('base64');
@@ -414,31 +454,162 @@ Output MUST be raw JSON without markdown backticks or commentary.`;
     },
   };
 
-  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`;
 
-  const response = await fetch(apiUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(requestBody),
-  });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  let response;
+  try {
+    const fetchFunc = options.fetchFn || globalThis.fetch;
+    response = await fetchFunc(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+      signal: controller.signal,
+    });
+  } catch (fetchErr) {
+    clearTimeout(timer);
+    if (fetchErr.name === 'AbortError') {
+      throw new GeminiApiError(408, `Model ${modelId} request timed out after ${timeoutMs}ms`, { timeout: true, modelId });
+    }
+    throw new GeminiApiError(0, `Network failure reaching Gemini API (${modelId}): ${fetchErr.message}`, { modelId });
+  } finally {
+    clearTimeout(timer);
+  }
 
   if (!response.ok) {
     const errText = await response.text();
-    throw new Error(`Gemini API error (${response.status}): ${errText.slice(0, 200)}`);
+    const sanitizedErr = errText.replace(new RegExp(apiKey, 'g'), '[REDACTED_API_KEY]').slice(0, 300);
+    throw new GeminiApiError(response.status, sanitizedErr, { rawText: sanitizedErr, modelId });
   }
 
   const resJson = await response.json();
   const candidateText = resJson?.candidates?.[0]?.content?.parts?.[0]?.text;
 
   if (!candidateText) {
-    throw new Error('Gemini API returned an empty extraction response.');
+    throw new GeminiApiError(502, `Model ${modelId} returned an empty extraction response.`, { modelId });
   }
 
   const cleanJson = candidateText.replace(/^```json\s*/i, '').replace(/\s*```$/, '').trim();
   const parsed = JSON.parse(cleanJson);
-  parsed.extractor_provider = 'gemini-2.5-flash';
+  parsed.extractor_provider = modelId;
 
-  return validateAndSanitizeExtraction(parsed, 'gemini-2.5-flash');
+  return validateAndSanitizeExtraction(parsed, modelId);
+}
+
+export async function extractWithModelCascade(
+  fileBuffer,
+  mimeType,
+  filename,
+  apiKey,
+  options = {}
+) {
+  const config = getModelConfig();
+  const primaryModel = options.primaryModel || config.primaryModel;
+  const fallbackModels = options.fallbackModels || config.fallbackModels;
+  const maxRetries = options.maxRetries ?? config.maxRetries;
+  const backoffBaseMs = options.backoffBaseMs ?? 500;
+
+  const modelChain = [primaryModel, ...fallbackModels];
+  const quotaFailures = [];
+
+  for (let i = 0; i < modelChain.length; i++) {
+    const model = modelChain[i];
+    const isPrimary = i === 0;
+
+    let attempts = 0;
+    while (attempts <= maxRetries) {
+      attempts++;
+      try {
+        const extraction = await extractWithGeminiModel(
+          fileBuffer,
+          mimeType,
+          filename,
+          apiKey,
+          model,
+          options
+        );
+
+        const isFallback = !isPrimary;
+        const providerName = isFallback ? `${model} (fallback)` : model;
+        extraction.extractor_provider = providerName;
+
+        return {
+          success: true,
+          extraction,
+          provider: providerName,
+          modelUsed: model,
+          isPrimary,
+          isFallbackAi: isFallback,
+          primaryModel,
+          quotaFailures,
+          attempts,
+        };
+      } catch (err) {
+        const is429 = err.isQuotaExceeded || err.status === 429;
+
+        // Non-quota client errors (400, 401, 403, 405): DO NOT RETRY AND DO NOT SWITCH MODELS
+        if (err.isClientError && !is429) {
+          console.warn(`[LedgerLens AI Server] Model ${model} failed with non-retryable client error (HTTP ${err.status}): ${err.message}. Aborting AI cascade.`);
+          throw err;
+        }
+
+        // Upstream server errors (5xx) or request timeout: DO NOT classify as quota exhaustion
+        if (err.isServerError || err.status === 408) {
+          console.warn(`[LedgerLens AI Server] Model ${model} encountered upstream server/timeout error (HTTP ${err.status}): ${err.message}.`);
+          if (attempts <= maxRetries) {
+            await new Promise((r) => setTimeout(r, backoffBaseMs));
+            continue;
+          }
+          throw err;
+        }
+
+        // Genuine HTTP 429 quota exhaustion:
+        if (is429) {
+          console.warn(`[LedgerLens AI Server] Model ${model} quota/rate-limit exceeded (HTTP 429, attempt ${attempts}/${maxRetries + 1}).`);
+          if (attempts <= maxRetries) {
+            const delay = backoffBaseMs * Math.pow(2, attempts - 1) + Math.random() * 200;
+            await new Promise((r) => setTimeout(r, delay));
+            continue;
+          }
+
+          quotaFailures.push({ model, status: 429, message: err.message });
+          if (i < modelChain.length - 1) {
+            console.log(`[LedgerLens AI Server] Cascading from ${model} to fallback model ${modelChain[i + 1]} due to quota limits.`);
+          }
+          break;
+        }
+
+        throw err;
+      }
+    }
+  }
+
+  return {
+    success: false,
+    allModelsQuotaExhausted: true,
+    quotaFailures,
+    summary: `All configured AI models (${modelChain.join(', ')}) exceeded API quota limits.`,
+  };
+}
+
+export async function extractWithGemini(
+  fileBuffer,
+  mimeType,
+  filename,
+  apiKey,
+  modelId = null,
+  options = {}
+) {
+  if (modelId) {
+    return extractWithGeminiModel(fileBuffer, mimeType, filename, apiKey, modelId, options);
+  }
+  const result = await extractWithModelCascade(fileBuffer, mimeType, filename, apiKey, options);
+  if (result.success) {
+    return result.extraction;
+  }
+  throw new GeminiApiError(429, result.summary, { quotaFailures: result.quotaFailures });
 }
 
 // 5. Heuristic OCR Fallback Provider
@@ -655,28 +826,63 @@ export async function runServerExtractionPipeline(
   filename,
   currentDocumentId,
   existingWorkspaceRecords = [],
-  apiKey = null
+  apiKey = null,
+  options = {}
 ) {
   let extraction = null;
   let providerUsed = 'server_heuristic_v1';
   let fallbackReason = null;
+  let fallbackType = null; // 'ai' | 'heuristic' | null
+  let isFallback = false;
+  let modelUsed = null;
 
   if (apiKey && apiKey.trim().length > 10) {
     try {
-      extraction = await extractWithGemini(fileBuffer, mimeType, filename, apiKey);
-      providerUsed = 'gemini-2.5-flash';
-    } catch (geminiErr) {
-      console.warn(`[LedgerLens AI Server] Gemini extraction failed (${geminiErr.message}). Falling back to heuristic extractor.`);
-      fallbackReason = geminiErr.message;
+      const cascadeResult = await extractWithModelCascade(
+        fileBuffer,
+        mimeType,
+        filename,
+        apiKey,
+        options
+      );
+
+      if (cascadeResult.success) {
+        extraction = cascadeResult.extraction;
+        providerUsed = cascadeResult.provider;
+        modelUsed = cascadeResult.modelUsed;
+        isFallback = cascadeResult.isFallbackAi;
+        if (cascadeResult.isFallbackAi) {
+          fallbackType = 'ai';
+          fallbackReason = `Primary AI model (${cascadeResult.primaryModel}) quota exceeded (HTTP 429). Successfully extracted via fallback AI model (${cascadeResult.modelUsed}).`;
+        }
+      } else {
+        fallbackType = 'heuristic';
+        fallbackReason = cascadeResult.summary || 'All configured AI models exceeded API quota limits.';
+        console.warn(`[LedgerLens AI Server] AI cascade quota exhausted (${fallbackReason}). Falling back to heuristic extractor.`);
+        extraction = extractWithHeuristic(fileBuffer, mimeType, filename);
+        providerUsed = 'server_heuristic_v1 (fallback)';
+        extraction.extractor_provider = providerUsed;
+        isFallback = true;
+      }
+    } catch (err) {
+      console.warn(`[LedgerLens AI Server] Extraction pipeline error (${err.message}). Falling back to heuristic.`);
+      fallbackType = 'heuristic';
+      const sanitized = (err.message || 'AI extraction failed').replace(new RegExp(apiKey, 'g'), '[REDACTED_API_KEY]');
+      fallbackReason = err.status === 405
+        ? 'HTTP 405 Method Not Allowed: Gemini endpoint or HTTP method misconfiguration. Model switching was not attempted.'
+        : sanitized;
       extraction = extractWithHeuristic(fileBuffer, mimeType, filename);
       providerUsed = 'server_heuristic_v1 (fallback)';
       extraction.extractor_provider = providerUsed;
+      isFallback = true;
     }
   } else {
+    fallbackType = 'heuristic';
     fallbackReason = 'GEMINI_API_KEY not configured on server';
     extraction = extractWithHeuristic(fileBuffer, mimeType, filename);
     providerUsed = 'server_heuristic_v1 (fallback)';
     extraction.extractor_provider = providerUsed;
+    isFallback = true;
   }
 
   // Deterministic validation
@@ -687,16 +893,20 @@ export async function runServerExtractionPipeline(
 
   const allIssues = [...consistencyIssues, ...duplicateIssues];
 
-  if (providerUsed.includes('fallback')) {
+  if (isFallback) {
     allIssues.unshift({
       issue_type: 'format_warning',
       severity: 'warning',
       field_key: null,
-      message: `Fallback extraction provider active (${providerUsed}): AI vision was unavailable (${fallbackReason}). Review all fields against the source scan.`,
+      message: fallbackType === 'ai'
+        ? `AI Fallback active (${providerUsed}): ${fallbackReason}`
+        : `Fallback extraction provider active (${providerUsed}): AI vision was unavailable (${fallbackReason}). Review all fields against the source scan.`,
       details: {
         fallback: true,
+        fallback_type: fallbackType,
         provider: providerUsed,
         reason: fallbackReason,
+        model_used: modelUsed,
       },
     });
   }
@@ -705,7 +915,9 @@ export async function runServerExtractionPipeline(
     extraction,
     issues: allIssues,
     provider: providerUsed,
-    fallback: providerUsed.includes('fallback'),
+    fallback: isFallback,
+    fallbackType,
     fallbackReason,
+    modelUsed,
   };
 }

@@ -201,14 +201,34 @@ async function main() {
   // Navigate to document review console
   console.log(`\n[5] Navigating to Document Review Console: /app/documents/${DOC_ID}...`);
   await sendCmd('Page.navigate', { url: `http://localhost:5173/app/documents/${DOC_ID}` });
-  await wait(4000);
+  
+  // Wait until loading and session verification finish
+  for (let attempt = 0; attempt < 30; attempt++) {
+    await wait(600);
+    const state = await evalInBrowser(`(() => {
+      const text = document.body.innerText || '';
+      return {
+        isVerifying: text.includes('Verifying session'),
+        isLoading: text.includes('Loading invoice data'),
+        hasDoc: text.includes('images.png') || text.includes('${DOC_ID}'),
+      };
+    })()`);
+    if (state.hasDoc && !state.isLoading && !state.isVerifying) break;
+  }
 
   const debugState = await evalInBrowser(`({
     href: window.location.href,
-    text: document.body.innerText.slice(0, 300),
+    text: document.body.innerText.slice(0, 400),
     authStorage: localStorage.getItem('ledgerlens_auth_token') ? 'PRESENT' : 'EMPTY',
   })`);
   console.log('  Debug Page State:', debugState);
+
+  // Check if extraction was loaded or if another 2s is needed
+  for (let attempt = 0; attempt < 20; attempt++) {
+    const hasExtraction = await evalInBrowser(`document.body.innerText.includes('Extracted Intelligence')`);
+    if (hasExtraction) break;
+    await wait(500);
+  }
 
   // Verify DOM values
   console.log('\n[6] Verifying DOM elements in Review Console...');

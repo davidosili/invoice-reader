@@ -205,7 +205,10 @@ test('Regression 8: Live Gemini Vision integration extraction with actual source
   assert.equal(extraction.tax_amount, 87, 'Tax must be 87');
   assert.equal(extraction.grand_total, 957, 'Total must be 957');
   assert.ok(extraction.supplier_name.includes('Juliana Silva'), 'Supplier must be Juliana Silva');
-  assert.equal(extraction.extractor_provider, 'gemini-2.5-flash');
+  assert.ok(
+    extraction.extractor_provider.startsWith('gemini'),
+    `Provider must be a Gemini model (primary or fallback), got ${extraction.extractor_provider}`
+  );
 
   // Consistency validation must flag due date preceding invoice date (2025-07-10 vs 2025-07-30)
   const issues = validateInvoiceConsistency(extraction);

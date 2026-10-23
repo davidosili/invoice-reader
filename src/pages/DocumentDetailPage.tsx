@@ -549,9 +549,15 @@ export const DocumentDetailPage: React.FC = () => {
                   </h2>
                   <div className="flex items-center gap-2 mt-1 flex-wrap">
                     {extraction.extractor_provider?.includes('gemini') ? (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-[3px] text-[11px] font-mono font-medium bg-[#EDF4EF] text-[#176B50] border border-[#176B50]/30 font-semibold">
-                        AI Provider: {extraction.extractor_provider}
-                      </span>
+                      extraction.extractor_provider.includes('fallback') ? (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-[3px] text-[11px] font-mono font-medium bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE] font-semibold">
+                          AI Fallback: {extraction.extractor_provider.replace(' (fallback)', '')}
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-[3px] text-[11px] font-mono font-medium bg-[#EDF4EF] text-[#176B50] border border-[#176B50]/30 font-semibold">
+                          AI Provider: {extraction.extractor_provider}
+                        </span>
+                      )
                     ) : (
                       <span className="inline-flex items-center px-2 py-0.5 rounded-[3px] text-[11px] font-mono font-medium bg-[#FFFBEB] text-[#B45309] border border-[#FDE68A]">
                         Fallback Engine: {extraction.extractor_provider}
@@ -574,8 +580,22 @@ export const DocumentDetailPage: React.FC = () => {
                 </button>
               </div>
 
-              {/* Fallback Notice Banner */}
-              {extraction.extractor_provider && (extraction.extractor_provider.includes('fallback') || extraction.extractor_provider.includes('heuristic')) && (
+              {/* AI Fallback Notice Banner */}
+              {extraction.extractor_provider?.includes('gemini') && extraction.extractor_provider.includes('fallback') && (
+                <div className="p-3 bg-[#EFF6FF] border border-[#BFDBFE] rounded-[4px] text-[12px] text-[#1E40AF] flex items-start gap-2.5">
+                  <AlertCircle className="w-4 h-4 text-[#2563EB] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-bold">AI Quota Fallback Active</p>
+                    <p className="mt-0.5 text-[11px] text-[#1E40AF] leading-relaxed">
+                      Primary AI model (gemini-2.5-flash) was rate-limited or quota-exhausted (HTTP 429). Extraction was successfully fulfilled by verified fallback model{' '}
+                      <strong className="font-mono">{extraction.extractor_provider.replace(' (fallback)', '')}</strong>. Please review extracted fields against the source scan before approving.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Heuristic Fallback Notice Banner */}
+              {extraction.extractor_provider && !extraction.extractor_provider.includes('gemini') && (extraction.extractor_provider.includes('fallback') || extraction.extractor_provider.includes('heuristic')) && (
                 <div className="p-3 bg-[#FFFBEB] border border-[#FDE68A] rounded-[4px] text-[12px] text-[#92400E] flex items-start gap-2.5">
                   <AlertTriangle className="w-4 h-4 text-[#B45309] flex-shrink-0 mt-0.5" />
                   <div>

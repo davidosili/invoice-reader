@@ -261,6 +261,8 @@ export default async function handler(req, res) {
       details: {
         provider: pipelineResult.provider,
         fallback: Boolean(pipelineResult.fallback),
+        fallback_type: pipelineResult.fallbackType || null,
+        model_used: pipelineResult.modelUsed || null,
         fallback_reason: pipelineResult.fallbackReason || null,
         issues_count: pipelineResult.issues.length,
         fields_extracted: Object.keys(

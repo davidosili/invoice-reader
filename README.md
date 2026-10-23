@@ -15,9 +15,10 @@ Built for distributors, wholesalers, accounting firms, and import/export busines
    - Client and server-side magic-byte file signature validation to prevent file spoofing.
    - Secure storage in isolated, private Supabase Storage buckets.
 
-2. **AI-Assisted Multimodal Extraction**
+2. **AI-Assisted Multimodal Extraction & Quota Cascade**
    - Primary engine: **Google Gemini 2.5 Flash** (`gemini-2.5-flash`), invoked server-side to extract supplier details, billing addresses, invoice identifiers, tax IDs, line items, taxes, and totals.
-   - Deterministic heuristic fallback extractor (`server_heuristic_v1`) if the AI service is unreachable, ensuring continuous operational uptime.
+   - Multi-Model Quota Cascade: On genuine HTTP 429 rate-limit/quota errors, the pipeline automatically retries with backoff and cascades to verified alternative models (`gemini-flash-lite-latest`, `gemini-3-flash-preview`). Non-retryable errors (HTTP 405, 401, 403, 400) do not trigger model switching.
+   - Deterministic heuristic fallback extractor (`server_heuristic_v1`) if all AI models are unreachable or exhausted, ensuring continuous operational uptime while flagging review items.
 
 3. **Deterministic Financial & Business Rule Validation**
    - Line-item verification: verifies `quantity × unit_price = total` across all line items.
@@ -153,6 +154,8 @@ For running the server-side extraction engine locally, create `.env.server` (ign
 SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
 GEMINI_API_KEY=your-gemini-api-key
+GEMINI_PRIMARY_MODEL=gemini-2.5-flash
+GEMINI_FALLBACK_MODELS=gemini-flash-lite-latest,gemini-3-flash-preview
 ```
 
 ### 3. Initialize Database Schema
@@ -177,7 +180,7 @@ Open `http://localhost:5173` in your browser.
 
 ## Running the Automated Test Suite
 
-LedgerLens AI includes 53 automated unit, validation, CORS, legal readiness, synthetic benchmark, and security regression tests:
+LedgerLens AI includes 69 automated unit, validation, CORS, legal readiness, synthetic benchmark, security regression, and multi-model fallback tests:
 
 ```bash
 # Run unit and security test suites (offline / local)
@@ -185,8 +188,10 @@ npm test
 ```
 
 ### Test Coverage Breakdown:
+- **`multi_model_fallback.test.mjs`**: Multi-model cascade configuration, primary model attribution, HTTP 429 quota cascade, multiple quota exhaustion, HTTP 405 Method Not Allowed non-retryability, HTTP 400/401 client error handling, heuristic fallback with missing field warnings, and deterministic arithmetic validation on fallback outputs (8 tests).
 - **`cors.test.mjs`**: Hardened CORS policy, environment parsing, exact origin matching, header application, preflight OPTIONS rejection/approval, and health endpoint verification (14 tests).
 - **`intelligence_engine.test.mjs`**: String sanitization, numerical currency parser, ISO date normalization, line-item arithmetic validation, supplier normalization, duplicate detection, heuristic fallback extraction (8 tests).
+- **`invoice_identity_regression.test.mjs`**: Document ID binding, storage path isolation, independent extraction, provider failure masking, fallback attribution, and live multimodal Gemini extraction (8 tests).
 - **`legal_and_commercial_pages.test.mjs`**: Route accessibility, navigation/footer links, verifiable technical disclosures (Gemini, Supabase, Vercel), absence of fake checkout/billing, explicit pre-launch legal placeholders, and human-review disclaimers (6 tests).
 - **`phase2_intelligence.test.mjs`**: State machine legal/illegal transitions, schema control-character sanitization, 2-cent rounding tolerance checks, CSV formula-injection neutralization, provider configuration checks (8 tests).
 - **`security_and_validation.test.mjs`**: Magic-byte signature verification (PDF, PNG, JPEG), file extension spoofing rejection, PE executable rejection, workspace path isolation, 20MB limit enforcement, SQL RLS schema verification, customer error sanitization (12 tests).
