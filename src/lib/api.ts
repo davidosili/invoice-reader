@@ -8,6 +8,7 @@ import {
   ProcessInvoiceResponse,
 } from '../types';
 import { runInvoiceIntelligencePipeline, isPermittedTransition } from './intelligence/pipeline';
+import { HeuristicOcrProvider } from './intelligence/providers/heuristicOcrProvider';
 import { ExistingInvoiceRecord } from './intelligence/duplicates';
 import { ExportableInvoiceRow } from './exportCsv';
 
@@ -402,6 +403,7 @@ export async function queueAndProcessInvoice(
   }
 
   // 0. Attempt secure backend server processing (which holds server-side GEMINI_API_KEY)
+  let backendErrorDetail: string | null = null;
   try {
     const session = (await supabase.auth.getSession()).data.session;
     if (session?.access_token) {
@@ -415,10 +417,21 @@ export async function queueAndProcessInvoice(
       if (serverRes.ok) {
         const data = await serverRes.json();
         return data as ProcessInvoiceResponse;
+      } else {
+        const errJson = await serverRes.json().catch(() => ({}));
+        backendErrorDetail = errJson.error || `Server responded with HTTP ${serverRes.status}`;
+        console.warn(`[LedgerLens] Backend API processing error (${serverRes.status}):`, backendErrorDetail);
+        if (serverRes.status === 401 || serverRes.status === 403 || serverRes.status === 404) {
+          throw new Error(backendErrorDetail || 'Access denied or document not found.');
+        }
       }
     }
-  } catch {
-    // If backend server endpoint is unreachable, fall through to client pipeline fallback
+  } catch (err: any) {
+    if (err.message?.includes('Access denied') || err.message?.includes('not found')) {
+      throw err;
+    }
+    backendErrorDetail = err?.message || 'Backend API server unreachable';
+    console.warn('[LedgerLens] Backend server unreachable, falling back to client heuristic extraction:', backendErrorDetail);
   }
 
   // 1. Fetch document and verify permission & status
@@ -456,6 +469,7 @@ export async function queueAndProcessInvoice(
     .eq('id', documentId)
     .eq('workspace_id', workspaceId);
 
+  const fallbackProviderId = 'heuristic_ocr_v1 (fallback)';
   await supabase
     .from('invoice_audit_events')
     .insert({
@@ -463,7 +477,11 @@ export async function queueAndProcessInvoice(
       workspace_id: workspaceId,
       actor_id: (await supabase.auth.getUser()).data.user?.id || null,
       event_type: 'processing_started',
-      details: { engine: 'heuristic_ocr_v1' },
+      details: {
+        engine: fallbackProviderId,
+        fallback: true,
+        reason: backendErrorDetail || 'Backend AI unavailable',
+      },
     });
 
   try {
@@ -497,12 +515,23 @@ export async function queueAndProcessInvoice(
       invoice_date: r.invoice_date,
     }));
 
-    // 6. Run the intelligence pipeline
+    // 6. Run the intelligence pipeline with fallback attribution
+    const fallbackProvider = new HeuristicOcrProvider(fallbackProviderId);
     const pipelineResult = await runInvoiceIntelligencePipeline(
       fileBytes,
       document,
-      existingRecords
+      existingRecords,
+      fallbackProvider
     );
+
+    // Explicitly flag that fallback provider was used
+    pipelineResult.issues.unshift({
+      issue_type: 'format_warning',
+      severity: 'warning',
+      field_key: null,
+      message: `Fallback extraction provider active (${fallbackProviderId}): AI vision was unavailable (${backendErrorDetail || 'offline'}). Review and verify all fields against the source document.`,
+      details: { fallback: true, provider: fallbackProviderId, reason: backendErrorDetail },
+    });
 
     // 7. Archive any previous extraction versions
     await supabase
@@ -564,9 +593,11 @@ export async function queueAndProcessInvoice(
         actor_id: user?.id || null,
         event_type: 'extraction_completed',
         details: {
-          extraction_id: newExtraction.id,
+          provider: fallbackProviderId,
+          fallback: true,
+          fallback_reason: backendErrorDetail || null,
           issues_count: pipelineResult.issues.length,
-          fields_extracted: Object.keys(pipelineResult.extraction.field_metadata).length,
+          fields_extracted: Object.keys(pipelineResult.extraction.field_metadata || {}).length,
         },
       });
 

@@ -547,9 +547,20 @@ export const DocumentDetailPage: React.FC = () => {
                   <h2 className="text-[14px] font-bold text-[#202722] uppercase tracking-wider">
                     Extracted Intelligence & Review Console
                   </h2>
-                  <p className="text-[12px] text-[#626B64] mt-0.5">
-                    Provider: <span className="font-mono text-[#202722]">{extraction.extractor_provider}</span> • Engine Version {extraction.version}
-                  </p>
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    {extraction.extractor_provider?.includes('gemini') ? (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-[3px] text-[11px] font-mono font-medium bg-[#EDF4EF] text-[#176B50] border border-[#176B50]/30 font-semibold">
+                        AI Provider: {extraction.extractor_provider}
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-[3px] text-[11px] font-mono font-medium bg-[#FFFBEB] text-[#B45309] border border-[#FDE68A]">
+                        Fallback Engine: {extraction.extractor_provider}
+                      </span>
+                    )}
+                    <span className="text-[11px] font-mono text-[#626B64]">
+                      Version {extraction.version}
+                    </span>
+                  </div>
                 </div>
 
                 <button
@@ -562,6 +573,19 @@ export const DocumentDetailPage: React.FC = () => {
                   <span>{isSaving ? 'Saving...' : 'Save Corrections'}</span>
                 </button>
               </div>
+
+              {/* Fallback Notice Banner */}
+              {extraction.extractor_provider && (extraction.extractor_provider.includes('fallback') || extraction.extractor_provider.includes('heuristic')) && (
+                <div className="p-3 bg-[#FFFBEB] border border-[#FDE68A] rounded-[4px] text-[12px] text-[#92400E] flex items-start gap-2.5">
+                  <AlertTriangle className="w-4 h-4 text-[#B45309] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-bold">Fallback Extraction Mode Active</p>
+                    <p className="mt-0.5 text-[11px] text-[#B45309] leading-relaxed">
+                      Google Gemini AI was unavailable for this processing request. Extraction was executed via the local heuristic fallback engine. Please inspect missing, unverified, or review-required fields against the source scan before approving.
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {/* General Metadata Fields */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">

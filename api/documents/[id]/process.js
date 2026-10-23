@@ -12,15 +12,37 @@
  *   GEMINI_API_KEY
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
 import { createClient } from '@supabase/supabase-js';
 import { runServerExtractionPipeline } from '../../../server/intelligence.mjs';
 import { handleCors } from '../../../server/cors.mjs';
 
+// Safe environment loader fallback
+function getEnv(key) {
+  if (process.env[key]) return process.env[key];
+  for (const filename of ['.env', '.env.server']) {
+    const p = path.resolve(process.cwd(), filename);
+    if (fs.existsSync(p)) {
+      const content = fs.readFileSync(p, 'utf-8');
+      for (const line of content.split('\n')) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const idx = trimmed.indexOf('=');
+        if (idx !== -1 && trimmed.slice(0, idx).trim() === key) {
+          return trimmed.slice(idx + 1).trim();
+        }
+      }
+    }
+  }
+  return undefined;
+}
+
 // ── Environment ──────────────────────────────────────────────────────────────
 const SUPABASE_URL =
-  process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+  process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || getEnv('VITE_SUPABASE_URL') || getEnv('SUPABASE_URL');
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || getEnv('SUPABASE_SERVICE_ROLE_KEY');
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || getEnv('GEMINI_API_KEY');
 
 // ── Supabase admin client (service role — never exposed to the browser) ──────
 const supabaseAdmin =
@@ -238,6 +260,8 @@ export default async function handler(req, res) {
       event_type: 'extraction_completed',
       details: {
         provider: pipelineResult.provider,
+        fallback: Boolean(pipelineResult.fallback),
+        fallback_reason: pipelineResult.fallbackReason || null,
         issues_count: pipelineResult.issues.length,
         fields_extracted: Object.keys(
           pipelineResult.extraction.field_metadata || {}

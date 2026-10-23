@@ -237,6 +237,8 @@ const server = http.createServer(async (req, res) => {
         event_type: 'extraction_completed',
         details: {
           provider: pipelineResult.provider,
+          fallback: Boolean(pipelineResult.fallback),
+          fallback_reason: pipelineResult.fallbackReason || null,
           issues_count: pipelineResult.issues.length,
           fields_extracted: Object.keys(pipelineResult.extraction.field_metadata || {}).length,
         },
