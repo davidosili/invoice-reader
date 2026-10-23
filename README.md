@@ -177,7 +177,7 @@ Open `http://localhost:5173` in your browser.
 
 ## Running the Automated Test Suite
 
-LedgerLens AI includes 48 automated unit, validation, CORS, legal readiness, and security regression tests:
+LedgerLens AI includes 53 automated unit, validation, CORS, legal readiness, synthetic benchmark, and security regression tests:
 
 ```bash
 # Run unit and security test suites (offline / local)
@@ -190,12 +190,38 @@ npm test
 - **`legal_and_commercial_pages.test.mjs`**: Route accessibility, navigation/footer links, verifiable technical disclosures (Gemini, Supabase, Vercel), absence of fake checkout/billing, explicit pre-launch legal placeholders, and human-review disclaimers (6 tests).
 - **`phase2_intelligence.test.mjs`**: State machine legal/illegal transitions, schema control-character sanitization, 2-cent rounding tolerance checks, CSV formula-injection neutralization, provider configuration checks (8 tests).
 - **`security_and_validation.test.mjs`**: Magic-byte signature verification (PDF, PNG, JPEG), file extension spoofing rejection, PE executable rejection, workspace path isolation, 20MB limit enforcement, SQL RLS schema verification, customer error sanitization (12 tests).
+- **`synthetic_dataset.test.mjs`**: Benchmark fixture integrity, %PDF magic bytes, independent arithmetic variance calculation, inverted date verification, duplicate identifier checks (5 tests).
 
 ### Live Environment Testing (Optional):
 To run tests against an active Supabase instance:
 ```bash
 npm run test:live
 ```
+
+---
+
+## Synthetic Benchmark Dataset & Demo Assets
+
+A controlled dataset of 8 synthetic invoice PDFs covering edge cases and compliance checks is located in `demo-assets/synthetic-invoices/`:
+
+- **Scenario A (`fixture_a_normal_clean.pdf`)**: Standard clean B2B invoice (passes clean).
+- **Scenario B (`fixture_b_multi_item.pdf`)**: Multi-item component invoice with individual quantity/price calculations.
+- **Scenario C (`fixture_c_arithmetic_discrepancy.pdf`)**: Deliberate $470.00 arithmetic variance to verify detection.
+- **Scenario D (`fixture_d_missing_fields.pdf`)**: Missing supplier name and invoice date to verify required-field checks.
+- **Scenario E (`fixture_e_date_inconsistency.pdf`)**: Payment due date preceding invoice issue date.
+- **Scenario F (`fixture_f_duplicate_copy.pdf`)**: Exact duplicate of Scenario A to verify workspace duplicate warnings.
+- **Scenario G (`fixture_g_ambiguous_field.pdf`)**: Obscured reference stamp requiring visual human review.
+- **Scenario H (`fixture_h_discount_shipping.pdf`)**: Contracted volume discount and freight logistics reconciliation.
+
+To run the full end-to-end synthetic benchmark:
+```bash
+node scripts/verify_synthetic_workflow.mjs
+```
+
+Demonstration assets and high-resolution screenshots are located in:
+- `demo-assets/screenshots/`: High-resolution PNG captures of authenticated workspace, side-by-side review console, arithmetic warnings, and policy pages.
+- `demo-assets/PRODUCT_WALKTHROUGH_SCRIPT.md`: 90-second ordered storyboard, narration script, and reviewer instructions.
+- `demo-assets/synthetic_verification_results.json`: Full machine-readable extraction and audit verification log.
 
 ---
 

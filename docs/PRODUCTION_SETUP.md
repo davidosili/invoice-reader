@@ -204,7 +204,8 @@ The invoice intelligence engine is fully implemented:
 - [x] Immutable, append-only audit trail (`invoice_audit_events`).
 - [x] Formula-injection-safe CSV export endpoint.
 - [x] Legal readiness and commercial positioning pages (`/privacy`, `/terms`, `/pricing`).
-- [x] Automated test suite with 48 passing unit/integration, legal, and security tests.
+- [x] Synthetic invoice benchmark dataset (Scenarios A through H) and manifest.
+- [x] Automated test suite with 53 passing unit/integration, legal, benchmark, and security tests.
 
 ### Remaining Deployment Tasks (Operator Setup)
 - [ ] Set `GEMINI_API_KEY` in Vercel project environment settings.
@@ -223,7 +224,7 @@ Execute this verification runbook before and after production deployment:
 ```bash
 npm test
 ```
-*Expected: All 48 automated tests pass across CORS security policy, server intelligence, lifecycle state machine, schema sanitization, financial arithmetic validation, duplicate detection, CSV formula injection mitigation, file signatures, legal readiness disclosures, and error masking.*
+*Expected: All 53 automated tests pass across CORS security policy, server intelligence, lifecycle state machine, schema sanitization, financial arithmetic validation, duplicate detection, CSV formula injection mitigation, file signatures, legal readiness disclosures, synthetic benchmark fixtures, and error masking.*
 
 ### 2. TypeScript Compilation & Production Build
 ```bash

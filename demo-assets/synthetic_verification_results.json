@@ -1,0 +1,388 @@
+{
+  "benchmark_timestamp": "2026-10-23T14:42:03.335Z",
+  "workspace_id": "84ca3ac1-97c3-47a0-9762-d84ecba67717",
+  "workspace_name": "Synthetic Evaluation Workspace [1792766277263]",
+  "total_scenarios_tested": 8,
+  "results": [
+    {
+      "scenario_id": "SCENARIO-A",
+      "title": "Standard Clean B2B Invoice",
+      "filename": "fixture_a_normal_clean.pdf",
+      "document_id": "0fa1c952-e532-408f-8bab-829e17804192",
+      "provider_used": "gemini-2.5-flash",
+      "processing_duration_ms": 26307,
+      "extracted_data": {
+        "supplier_name": "Meridian Global Logistics Ltd",
+        "invoice_number": "INV-2026-A101",
+        "invoice_date": "2026-10-15",
+        "due_date": "2026-10-29",
+        "currency": "USD",
+        "subtotal": 950,
+        "tax_amount": 95,
+        "discount_amount": 0,
+        "shipping_amount": 0,
+        "grand_total": 1045,
+        "line_items_count": 2
+      },
+      "expected_data": {
+        "supplier_name": "Meridian Global Logistics Ltd",
+        "invoice_number": "INV-2026-A101",
+        "invoice_date": "2026-10-15",
+        "due_date": "2026-10-29",
+        "currency": "USD",
+        "subtotal": 950,
+        "tax_amount": 95,
+        "grand_total": 1045
+      },
+      "validation_issues": [],
+      "review_decision": "approved",
+      "human_correction_applied": false,
+      "audit_events": [
+        "processing_queued",
+        "processing_started",
+        "extraction_completed",
+        "approved"
+      ]
+    },
+    {
+      "scenario_id": "SCENARIO-B",
+      "title": "Multi-Line Item Component Order",
+      "filename": "fixture_b_multi_item.pdf",
+      "document_id": "584ff6ee-d771-40f7-8433-677aa948cdc9",
+      "provider_used": "gemini-2.5-flash",
+      "processing_duration_ms": 26924,
+      "extracted_data": {
+        "supplier_name": "Cascade Industrial Components Ltd",
+        "invoice_number": "INV-2026-B202",
+        "invoice_date": "2026-10-18",
+        "due_date": "2026-11-01",
+        "currency": "USD",
+        "subtotal": 1222,
+        "tax_amount": 91.65,
+        "discount_amount": 0,
+        "shipping_amount": 0,
+        "grand_total": 1313.65,
+        "line_items_count": 4
+      },
+      "expected_data": {
+        "supplier_name": "Cascade Industrial Components Ltd",
+        "invoice_number": "INV-2026-B202",
+        "invoice_date": "2026-10-18",
+        "due_date": "2026-11-01",
+        "currency": "USD",
+        "subtotal": 1222,
+        "tax_amount": 91.65,
+        "grand_total": 1313.65
+      },
+      "validation_issues": [],
+      "review_decision": "approved",
+      "human_correction_applied": false,
+      "audit_events": [
+        "processing_queued",
+        "processing_started",
+        "extraction_completed",
+        "approved"
+      ]
+    },
+    {
+      "scenario_id": "SCENARIO-C",
+      "title": "Invoice with Deliberate Arithmetic Discrepancy",
+      "filename": "fixture_c_arithmetic_discrepancy.pdf",
+      "document_id": "1c42c01b-65df-4eb7-acfd-4afb13cb61a3",
+      "provider_used": "gemini-2.5-flash",
+      "processing_duration_ms": 29577,
+      "extracted_data": {
+        "supplier_name": "Solari Electrical Systems Inc",
+        "invoice_number": "INV-2026-C303",
+        "invoice_date": "2026-10-20",
+        "due_date": "2026-11-05",
+        "currency": "USD",
+        "subtotal": 1800,
+        "tax_amount": 180,
+        "discount_amount": 0,
+        "shipping_amount": 0,
+        "grand_total": 2450,
+        "line_items_count": 2
+      },
+      "expected_data": {
+        "supplier_name": "Solari Electrical Systems Inc",
+        "invoice_number": "INV-2026-C303",
+        "invoice_date": "2026-10-20",
+        "due_date": "2026-11-05",
+        "currency": "USD",
+        "subtotal": 1800,
+        "tax_amount": 180,
+        "grand_total": 2450
+      },
+      "validation_issues": [
+        {
+          "issue_type": "arithmetic_discrepancy",
+          "severity": "error",
+          "field_key": "grand_total",
+          "message": "Grand total discrepancy: Stated total (2450.00) does not match calculated total (1980.00 = Subtotal 1800.00 + Tax 180.00 + Shipping 0.00 - Discount 0.00). Variance: -470.00.",
+          "details": {
+            "calculatedGrand": 1980,
+            "extractedGrand": 2450,
+            "variance": -470
+          }
+        }
+      ],
+      "review_decision": "approved_after_correction",
+      "human_correction_applied": true,
+      "audit_events": [
+        "processing_queued",
+        "processing_started",
+        "extraction_completed",
+        "field_corrected",
+        "approved"
+      ]
+    },
+    {
+      "scenario_id": "SCENARIO-D",
+      "title": "Invoice with Missing Supplier Name and Date",
+      "filename": "fixture_d_missing_fields.pdf",
+      "document_id": "4b97802e-bd47-413b-90fe-4c93c0d956a8",
+      "provider_used": "gemini-2.5-flash",
+      "processing_duration_ms": 33376,
+      "extracted_data": {
+        "supplier_name": null,
+        "invoice_number": "INV-2026-D404",
+        "invoice_date": null,
+        "due_date": "2026-11-10",
+        "currency": "USD",
+        "subtotal": 170,
+        "tax_amount": 0,
+        "discount_amount": 0,
+        "shipping_amount": 0,
+        "grand_total": 170,
+        "line_items_count": 1
+      },
+      "expected_data": {
+        "supplier_name": null,
+        "invoice_number": "INV-2026-D404",
+        "invoice_date": null,
+        "due_date": "2026-11-10",
+        "currency": "USD",
+        "subtotal": 170,
+        "tax_amount": 0,
+        "grand_total": 170
+      },
+      "validation_issues": [
+        {
+          "issue_type": "missing_field",
+          "severity": "warning",
+          "field_key": "supplier_name",
+          "message": "Supplier identity is unverified or missing from the extracted record."
+        },
+        {
+          "issue_type": "missing_field",
+          "severity": "warning",
+          "field_key": "invoice_date",
+          "message": "Invoice billing date is missing."
+        }
+      ],
+      "review_decision": "rejected",
+      "human_correction_applied": false,
+      "audit_events": [
+        "processing_queued",
+        "processing_started",
+        "extraction_completed",
+        "rejected"
+      ]
+    },
+    {
+      "scenario_id": "SCENARIO-E",
+      "title": "Invoice with Inverted Payment Due Date",
+      "filename": "fixture_e_date_inconsistency.pdf",
+      "document_id": "83acb7f7-5067-4e39-8559-7e5c6ff2c41c",
+      "provider_used": "gemini-2.5-flash",
+      "processing_duration_ms": 31129,
+      "extracted_data": {
+        "supplier_name": "Zenith Chemical Reagents Ltd",
+        "invoice_number": "INV-2026-E505",
+        "invoice_date": "2026-10-22",
+        "due_date": "2026-10-05",
+        "currency": "USD",
+        "subtotal": 480,
+        "tax_amount": 24,
+        "discount_amount": 0,
+        "shipping_amount": 0,
+        "grand_total": 504,
+        "line_items_count": 1
+      },
+      "expected_data": {
+        "supplier_name": "Zenith Chemical Reagents Ltd",
+        "invoice_number": "INV-2026-E505",
+        "invoice_date": "2026-10-22",
+        "due_date": "2026-10-05",
+        "currency": "USD",
+        "subtotal": 480,
+        "tax_amount": 24,
+        "grand_total": 504
+      },
+      "validation_issues": [
+        {
+          "issue_type": "date_inconsistency",
+          "severity": "warning",
+          "field_key": "due_date",
+          "message": "Due date (2026-10-05) is prior to the invoice billing date (2026-10-22).",
+          "details": {
+            "invoiceDate": "2026-10-22",
+            "dueDate": "2026-10-05"
+          }
+        }
+      ],
+      "review_decision": "approved",
+      "human_correction_applied": false,
+      "audit_events": [
+        "processing_queued",
+        "processing_started",
+        "extraction_completed",
+        "approved"
+      ]
+    },
+    {
+      "scenario_id": "SCENARIO-F",
+      "title": "Duplicate Invoice Copy of Scenario A",
+      "filename": "fixture_f_duplicate_copy.pdf",
+      "document_id": "f4f8e171-74c9-484a-a0de-902f4cbd58c1",
+      "provider_used": "gemini-2.5-flash",
+      "processing_duration_ms": 28587,
+      "extracted_data": {
+        "supplier_name": "Meridian Global Logistics Ltd",
+        "invoice_number": "INV-2026-A101",
+        "invoice_date": "2026-10-15",
+        "due_date": "2026-10-29",
+        "currency": "USD",
+        "subtotal": 950,
+        "tax_amount": 95,
+        "discount_amount": 0,
+        "shipping_amount": 0,
+        "grand_total": 1045,
+        "line_items_count": 2
+      },
+      "expected_data": {
+        "supplier_name": "Meridian Global Logistics Ltd",
+        "invoice_number": "INV-2026-A101",
+        "invoice_date": "2026-10-15",
+        "due_date": "2026-10-29",
+        "currency": "USD",
+        "subtotal": 950,
+        "tax_amount": 95,
+        "grand_total": 1045
+      },
+      "validation_issues": [
+        {
+          "issue_type": "duplicate_warning",
+          "severity": "error",
+          "field_key": "invoice_number",
+          "message": "High confidence duplicate: Invoice #INV-2026-A101 from \"Meridian Global Logistics Ltd\" matches previously processed document record (0fa1c952).",
+          "details": {
+            "duplicateDocumentId": "0fa1c952-e532-408f-8bab-829e17804192",
+            "matchedSupplier": "Meridian Global Logistics Ltd",
+            "matchedInvoiceNumber": "INV-2026-A101",
+            "matchedGrandTotal": 1045,
+            "matchedDate": "2026-10-15",
+            "type": "exact"
+          }
+        }
+      ],
+      "review_decision": "rejected_as_duplicate",
+      "human_correction_applied": false,
+      "audit_events": [
+        "processing_queued",
+        "processing_started",
+        "extraction_completed",
+        "rejected"
+      ]
+    },
+    {
+      "scenario_id": "SCENARIO-G",
+      "title": "Invoice with Obscured / Ambiguous Reference Number",
+      "filename": "fixture_g_ambiguous_field.pdf",
+      "document_id": "b4f33e15-f84b-4e14-b14b-71e84d04f740",
+      "provider_used": "gemini-2.5-flash",
+      "processing_duration_ms": 25201,
+      "extracted_data": {
+        "supplier_name": "Oakhaven Specialty Metals",
+        "invoice_number": null,
+        "invoice_date": "2026-10-21",
+        "due_date": "2026-11-04",
+        "currency": "USD",
+        "subtotal": 340,
+        "tax_amount": 0,
+        "discount_amount": 0,
+        "shipping_amount": 0,
+        "grand_total": 340,
+        "line_items_count": 1
+      },
+      "expected_data": {
+        "supplier_name": "Oakhaven Specialty Metals",
+        "invoice_number": "INV-2026-G###07",
+        "invoice_date": "2026-10-21",
+        "due_date": "2026-11-04",
+        "currency": "USD",
+        "subtotal": 340,
+        "tax_amount": 0,
+        "grand_total": 340
+      },
+      "validation_issues": [
+        {
+          "issue_type": "missing_field",
+          "severity": "error",
+          "field_key": "invoice_number",
+          "message": "Invoice identifier / number was not detected."
+        }
+      ],
+      "review_decision": "approved",
+      "human_correction_applied": false,
+      "audit_events": [
+        "processing_queued",
+        "processing_started",
+        "extraction_completed",
+        "approved"
+      ]
+    },
+    {
+      "scenario_id": "SCENARIO-H",
+      "title": "Invoice with Promotional Discount and Freight Shipping",
+      "filename": "fixture_h_discount_shipping.pdf",
+      "document_id": "104513ad-1e22-4a94-b78c-95641e80bda8",
+      "provider_used": "gemini-2.5-flash",
+      "processing_duration_ms": 22041,
+      "extracted_data": {
+        "supplier_name": "Vanguard Packaging Systems Ltd",
+        "invoice_number": "INV-2026-H808",
+        "invoice_date": "2026-10-23",
+        "due_date": "2026-11-06",
+        "currency": "USD",
+        "subtotal": 1100,
+        "tax_amount": 75,
+        "discount_amount": 100,
+        "shipping_amount": 50,
+        "grand_total": 1125,
+        "line_items_count": 1
+      },
+      "expected_data": {
+        "supplier_name": "Vanguard Packaging Systems Ltd",
+        "invoice_number": "INV-2026-H808",
+        "invoice_date": "2026-10-23",
+        "due_date": "2026-11-06",
+        "currency": "USD",
+        "subtotal": 1100,
+        "tax_amount": 75,
+        "grand_total": 1125
+      },
+      "validation_issues": [],
+      "review_decision": "approved",
+      "human_correction_applied": false,
+      "audit_events": [
+        "processing_queued",
+        "processing_started",
+        "extraction_completed",
+        "approved"
+      ]
+    }
+  ],
+  "csv_export_row_count": 6
+}

@@ -1,0 +1,216 @@
+{
+  "title": "LedgerLens AI — Synthetic Invoice Benchmark Dataset",
+  "version": "1.0.0",
+  "generated_at": "2026-10-23T15:35:00Z",
+  "disclaimer": "All companies, names, tax numbers, and invoice identifiers are fictional fixtures created for automated evaluation.",
+  "scenarios": [
+    {
+      "scenario_id": "SCENARIO-A",
+      "filename": "fixture_a_normal_clean.pdf",
+      "title": "Standard Clean B2B Invoice",
+      "expected_supplier": "Meridian Global Logistics Ltd",
+      "expected_tax_id": "VAT-GB7729104",
+      "expected_customer": "Apex Distribution Hub",
+      "expected_invoice_number": "INV-2026-A101",
+      "expected_invoice_date": "2026-10-15",
+      "expected_due_date": "2026-10-29",
+      "expected_currency": "USD",
+      "expected_subtotal": 950,
+      "expected_tax_amount": 95,
+      "expected_discount_amount": 0,
+      "expected_shipping_amount": 0,
+      "expected_grand_total": 1045,
+      "expected_line_items_count": 2,
+      "expected_validation_issues": [],
+      "expected_duplicate_behavior": "Unique within workspace",
+      "intentionally_missing_or_ambiguous": []
+    },
+    {
+      "scenario_id": "SCENARIO-B",
+      "filename": "fixture_b_multi_item.pdf",
+      "title": "Multi-Line Item Component Order",
+      "expected_supplier": "Cascade Industrial Components Ltd",
+      "expected_tax_id": "TIN-8839102-004",
+      "expected_customer": "Apex Distribution Hub",
+      "expected_invoice_number": "INV-2026-B202",
+      "expected_invoice_date": "2026-10-18",
+      "expected_due_date": "2026-11-01",
+      "expected_currency": "USD",
+      "expected_subtotal": 1222,
+      "expected_tax_amount": 91.65,
+      "expected_discount_amount": 0,
+      "expected_shipping_amount": 0,
+      "expected_grand_total": 1313.65,
+      "expected_line_items_count": 4,
+      "expected_validation_issues": [],
+      "expected_duplicate_behavior": "Unique within workspace",
+      "intentionally_missing_or_ambiguous": []
+    },
+    {
+      "scenario_id": "SCENARIO-C",
+      "filename": "fixture_c_arithmetic_discrepancy.pdf",
+      "title": "Invoice with Deliberate Arithmetic Discrepancy",
+      "expected_supplier": "Solari Electrical Systems Inc",
+      "expected_tax_id": "EIN-44-9812401",
+      "expected_customer": "Apex Distribution Hub",
+      "expected_invoice_number": "INV-2026-C303",
+      "expected_invoice_date": "2026-10-20",
+      "expected_due_date": "2026-11-05",
+      "expected_currency": "USD",
+      "expected_subtotal": 1800,
+      "expected_tax_amount": 180,
+      "expected_discount_amount": 0,
+      "expected_shipping_amount": 0,
+      "expected_grand_total": 2450,
+      "expected_line_items_count": 2,
+      "expected_validation_issues": [
+        {
+          "issue_type": "arithmetic_discrepancy",
+          "severity": "error",
+          "expected_flag": "Grand total calculation discrepancy"
+        }
+      ],
+      "expected_duplicate_behavior": "Unique within workspace",
+      "intentionally_missing_or_ambiguous": []
+    },
+    {
+      "scenario_id": "SCENARIO-D",
+      "filename": "fixture_d_missing_fields.pdf",
+      "title": "Invoice with Missing Supplier Name and Date",
+      "expected_supplier": null,
+      "expected_tax_id": null,
+      "expected_customer": "Apex Distribution Hub",
+      "expected_invoice_number": "INV-2026-D404",
+      "expected_invoice_date": null,
+      "expected_due_date": "2026-11-10",
+      "expected_currency": "USD",
+      "expected_subtotal": 170,
+      "expected_tax_amount": 0,
+      "expected_discount_amount": 0,
+      "expected_shipping_amount": 0,
+      "expected_grand_total": 170,
+      "expected_line_items_count": 1,
+      "expected_validation_issues": [
+        {
+          "issue_type": "missing_field",
+          "field_key": "supplier_name",
+          "severity": "error"
+        },
+        {
+          "issue_type": "missing_field",
+          "field_key": "invoice_date",
+          "severity": "error"
+        }
+      ],
+      "expected_duplicate_behavior": "Unique within workspace",
+      "intentionally_missing_or_ambiguous": [
+        "supplier_name",
+        "invoice_date"
+      ]
+    },
+    {
+      "scenario_id": "SCENARIO-E",
+      "filename": "fixture_e_date_inconsistency.pdf",
+      "title": "Invoice with Inverted Payment Due Date",
+      "expected_supplier": "Zenith Chemical Reagents Ltd",
+      "expected_tax_id": "VAT-NG4091823",
+      "expected_customer": "Apex Distribution Hub",
+      "expected_invoice_number": "INV-2026-E505",
+      "expected_invoice_date": "2026-10-22",
+      "expected_due_date": "2026-10-05",
+      "expected_currency": "USD",
+      "expected_subtotal": 480,
+      "expected_tax_amount": 24,
+      "expected_discount_amount": 0,
+      "expected_shipping_amount": 0,
+      "expected_grand_total": 504,
+      "expected_line_items_count": 1,
+      "expected_validation_issues": [
+        {
+          "issue_type": "date_inconsistency",
+          "severity": "warning",
+          "expected_flag": "Payment due date precedes billing date"
+        }
+      ],
+      "expected_duplicate_behavior": "Unique within workspace",
+      "intentionally_missing_or_ambiguous": []
+    },
+    {
+      "scenario_id": "SCENARIO-F",
+      "filename": "fixture_f_duplicate_copy.pdf",
+      "title": "Duplicate Invoice Copy of Scenario A",
+      "expected_supplier": "Meridian Global Logistics Ltd",
+      "expected_tax_id": "VAT-GB7729104",
+      "expected_customer": "Apex Distribution Hub",
+      "expected_invoice_number": "INV-2026-A101",
+      "expected_invoice_date": "2026-10-15",
+      "expected_due_date": "2026-10-29",
+      "expected_currency": "USD",
+      "expected_subtotal": 950,
+      "expected_tax_amount": 95,
+      "expected_discount_amount": 0,
+      "expected_shipping_amount": 0,
+      "expected_grand_total": 1045,
+      "expected_line_items_count": 2,
+      "expected_validation_issues": [
+        {
+          "issue_type": "duplicate_warning",
+          "severity": "warning",
+          "expected_flag": "Duplicate invoice detected with identical supplier and number"
+        }
+      ],
+      "expected_duplicate_behavior": "Identified as duplicate of SCENARIO-A",
+      "intentionally_missing_or_ambiguous": []
+    },
+    {
+      "scenario_id": "SCENARIO-G",
+      "filename": "fixture_g_ambiguous_field.pdf",
+      "title": "Invoice with Obscured / Ambiguous Reference Number",
+      "expected_supplier": "Oakhaven Specialty Metals",
+      "expected_tax_id": "VAT-GB5520194",
+      "expected_customer": "Apex Distribution Hub",
+      "expected_invoice_number": "INV-2026-G###07",
+      "expected_invoice_date": "2026-10-21",
+      "expected_due_date": "2026-11-04",
+      "expected_currency": "USD",
+      "expected_subtotal": 340,
+      "expected_tax_amount": 0,
+      "expected_discount_amount": 0,
+      "expected_shipping_amount": 0,
+      "expected_grand_total": 340,
+      "expected_line_items_count": 1,
+      "expected_validation_issues": [
+        {
+          "issue_type": "review_required",
+          "severity": "warning",
+          "expected_flag": "Ambiguous or partially obscured invoice identifier"
+        }
+      ],
+      "expected_duplicate_behavior": "Unique within workspace",
+      "intentionally_missing_or_ambiguous": [
+        "invoice_number"
+      ]
+    },
+    {
+      "scenario_id": "SCENARIO-H",
+      "filename": "fixture_h_discount_shipping.pdf",
+      "title": "Invoice with Promotional Discount and Freight Shipping",
+      "expected_supplier": "Vanguard Packaging Systems Ltd",
+      "expected_tax_id": "VAT-NG9918231",
+      "expected_customer": "Apex Distribution Hub",
+      "expected_invoice_number": "INV-2026-H808",
+      "expected_invoice_date": "2026-10-23",
+      "expected_due_date": "2026-11-06",
+      "expected_currency": "USD",
+      "expected_subtotal": 1100,
+      "expected_tax_amount": 75,
+      "expected_discount_amount": 100,
+      "expected_shipping_amount": 50,
+      "expected_grand_total": 1125,
+      "expected_line_items_count": 1,
+      "expected_validation_issues": [],
+      "expected_duplicate_behavior": "Unique within workspace",
+      "intentionally_missing_or_ambiguous": []
+    }
+  ]
+}

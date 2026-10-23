@@ -28,3 +28,4 @@ dist-ssr
 
 # Temporary screenshot captures
 *.png
+!demo-assets/screenshots/*.png
