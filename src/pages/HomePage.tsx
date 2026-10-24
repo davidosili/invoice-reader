@@ -6,6 +6,7 @@ import { ProductCapabilities } from '../components/ProductCapabilities';
 import { WorkflowSection } from '../components/WorkflowSection';
 import { DifferentiationSection } from '../components/DifferentiationSection';
 import { CustomerSection } from '../components/CustomerSection';
+import { TractionSection } from '../components/TractionSection';
 import { BusinessValueSection } from '../components/BusinessValueSection';
 import { GetStartedSection } from '../components/EarlyAccessSection';
 
@@ -30,6 +31,7 @@ export const HomePage: React.FC = () => {
       <WorkflowSection />
       <DifferentiationSection />
       <CustomerSection />
+      <TractionSection />
       <BusinessValueSection />
       <GetStartedSection />
     </main>

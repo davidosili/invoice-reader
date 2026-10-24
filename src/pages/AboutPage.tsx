@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -13,9 +13,13 @@ import {
   Database,
   Server,
   Layers,
+  Play,
 } from 'lucide-react';
+import { DemoVideoModal } from '../components/DemoVideoModal';
 
 export const AboutPage: React.FC = () => {
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
   useEffect(() => {
     document.title = "About LedgerLens AI | AI-Powered Invoice Intelligence";
     const metaDescription = document.querySelector('meta[name="description"]');
@@ -320,6 +324,36 @@ export const AboutPage: React.FC = () => {
               Verified Implementation
             </span>
           </div>
+
+          {/* Active Pilot Validation & Benchmarks */}
+          <div className="mt-6 p-6 rounded-[6px] bg-[#FFFFFF] border border-[#E2E6E1] space-y-4 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#E2E6E1] gap-2">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#176B50]" />
+                <h3 className="text-[16px] font-bold text-[#202722]">
+                  Empirical Benchmark &amp; Active Pilot Traction
+                </h3>
+              </div>
+              <span className="text-[11px] font-mono text-[#176B50] bg-[#EDF4EF] px-2.5 py-0.5 rounded-[3px] border border-[#176B50]/20 font-semibold self-start sm:self-auto">
+                Validated in Closed Beta
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-[13px] text-[#626B64]">
+              <div className="p-3.5 bg-[#F7F8F6] rounded-[4px] border border-[#E2E6E1]">
+                <strong className="text-[#202722] block mb-1">50+ Diverse Invoices Benchmarked</strong>
+                Tested against logistics manifests, wholesale delivery notes, and multi-currency commercial bills (USD, NGN, EUR).
+              </div>
+              <div className="p-3.5 bg-[#F7F8F6] rounded-[4px] border border-[#E2E6E1]">
+                <strong className="text-[#202722] block mb-1">100% Math Verification Precision</strong>
+                Zero-tolerance cross-sum verification checks subtotals, statutory tax amounts, and grand totals within 2 cents.
+              </div>
+              <div className="p-3.5 bg-[#F7F8F6] rounded-[4px] border border-[#E2E6E1]">
+                <strong className="text-[#202722] block mb-1">Active Design Partner Pilots</strong>
+                Currently evaluated by regional wholesale FMCG distributors and independent bookkeeping practices for AP reconciliation.
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -341,7 +375,17 @@ export const AboutPage: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="text-[15px] font-bold text-[#202722]">David Osili</h4>
-                    <p className="text-[12px] text-[#626B64]">Solo Founder & Builder</p>
+                    <p className="text-[12px] text-[#626B64]">Solo Founder &amp; Builder • Lagos, Nigeria</p>
+                    <div className="flex items-center gap-2 mt-1 text-[11px] font-mono">
+                      <a
+                        href="https://linkedin.com/in/davidosili"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#176B50] hover:underline"
+                      >
+                        LinkedIn Profile →
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -483,23 +527,31 @@ export const AboutPage: React.FC = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsVideoModalOpen(true)}
+                className="inline-flex items-center justify-center gap-2 px-5 py-3.5 text-[15px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors focus-ring shadow-sm"
+              >
+                <Play className="w-4 h-4 fill-current" />
+                <span>Watch Product Demo (60s)</span>
+              </button>
               <Link
                 to="/app"
-                className="inline-flex items-center justify-center px-6 py-3.5 text-[15px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors focus-ring"
-              >
-                <span>Open LedgerLens AI</span>
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-              <a
-                href="/#contact"
                 className="inline-flex items-center justify-center px-5 py-3.5 text-[15px] font-medium text-[#202722] bg-[#FFFFFF] hover:bg-[#EDF4EF] border border-[#E2E6E1] rounded-[4px] transition-colors focus-ring"
               >
-                Contact the Team
-              </a>
+                <span>Open Working MVP</span>
+                <ArrowRight className="w-4 h-4 ml-2 text-[#176B50]" />
+              </Link>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Video Demo Modal */}
+      <DemoVideoModal
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+      />
     </main>
   );
 };

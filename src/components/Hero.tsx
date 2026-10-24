@@ -1,9 +1,12 @@
-import React from 'react';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { CheckCircle2, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { DocumentPreview } from './DocumentPreview';
+import { DemoVideoModal } from './DemoVideoModal';
 
 export const Hero: React.FC = () => {
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
   return (
     <section className="relative bg-[#FFFFFF] pt-12 pb-16 md:pt-16 md:pb-24 border-b border-[#E2E6E1]">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -38,13 +41,16 @@ export const Hero: React.FC = () => {
               >
                 Open LedgerLens AI
               </Link>
-              <a
-                href="#how-it-works"
-                className="inline-flex items-center justify-center px-4 py-3 text-[15px] font-medium text-[#202722] hover:text-[#176B50] border border-[#E2E6E1] hover:border-[#176B50] rounded-[4px] transition-colors group bg-[#FFFFFF]"
+              <button
+                type="button"
+                onClick={() => setIsVideoModalOpen(true)}
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 text-[15px] font-medium text-[#202722] hover:text-[#176B50] border border-[#E2E6E1] hover:border-[#176B50] rounded-[4px] transition-colors group bg-[#FFFFFF] shadow-sm"
               >
-                <span>Explore How It Works</span>
-                <ArrowRight className="w-4 h-4 ml-1.5 transition-transform group-hover:translate-x-0.5" />
-              </a>
+                <div className="w-4 h-4 rounded-full bg-[#EDF4EF] flex items-center justify-center text-[#176B50] group-hover:bg-[#176B50] group-hover:text-white transition-colors">
+                  <Play className="w-2.5 h-2.5 fill-current ml-0.5" />
+                </div>
+                <span>Watch 60-Sec Demo</span>
+              </button>
             </div>
 
             {/* Supporting Trust Statement */}
@@ -75,6 +81,12 @@ export const Hero: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Product Demonstration Video Modal */}
+      <DemoVideoModal
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+      />
     </section>
   );
 };

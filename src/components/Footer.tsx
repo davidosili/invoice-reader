@@ -185,9 +185,14 @@ export const Footer: React.FC = () => {
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between text-[12px] text-[#626B64] gap-4">
           <p>© {new Date().getFullYear()} LedgerLens AI. All rights reserved.</p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-            <span className="text-[#626B64]/90 font-medium">
+            <a
+              href="https://linkedin.com/in/davidosili"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#626B64]/90 font-medium hover:text-[#176B50] underline transition-colors"
+            >
               Built by David Osili
-            </span>
+            </a>
             <Link to="/privacy" className="hover:text-[#202722] underline">
               Privacy Policy
             </Link>
