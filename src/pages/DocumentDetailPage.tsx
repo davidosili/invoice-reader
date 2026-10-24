@@ -20,6 +20,11 @@ import {
   ExtractionLineItem,
 } from '../types';
 import {
+  getExtractionState,
+  filterCustomerIssues,
+  formatAuditEvent,
+} from '../lib/extractionUi';
+import {
   FileText,
   ArrowLeft,
   Download,
@@ -37,6 +42,10 @@ import {
   Calendar,
   Hash,
   Tag,
+  UploadCloud,
+  ShieldCheck,
+  FileSpreadsheet,
+  Edit3,
 } from 'lucide-react';
 
 export const DocumentDetailPage: React.FC = () => {
@@ -49,6 +58,7 @@ export const DocumentDetailPage: React.FC = () => {
   const [issues, setIssues] = useState<InvoiceValidationIssue[]>([]);
   const [auditEvents, setAuditEvents] = useState<InvoiceAuditEvent[]>([]);
   const [previewSignedUrl, setPreviewSignedUrl] = useState<string | null>(null);
+  const [showTechnicalAudit, setShowTechnicalAudit] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,6 +71,12 @@ export const DocumentDetailPage: React.FC = () => {
   // Editable form fields
   const [formData, setFormData] = useState<Partial<InvoiceExtractionRecord>>({});
   const [, startTransition] = useTransition();
+
+  const customerIssues = React.useMemo(() => filterCustomerIssues(issues), [issues]);
+  const extractionState = React.useMemo(
+    () => getExtractionState({ documentStatus: document?.status, extraction, issues }),
+    [document?.status, extraction, issues]
+  );
 
   const loadAllDocumentData = async () => {
     if (!id || !currentWorkspace) return;
@@ -294,6 +310,33 @@ export const DocumentDetailPage: React.FC = () => {
     );
   }
 
+  const renderAuditIcon = (iconType: string) => {
+    switch (iconType) {
+      case 'upload':
+        return <UploadCloud className="w-3.5 h-3.5 text-[#176B50]" />;
+      case 'start':
+        return <RotateCw className="w-3.5 h-3.5 text-[#176B50]" />;
+      case 'check':
+        return <CheckCircle2 className="w-3.5 h-3.5 text-[#176B50]" />;
+      case 'review':
+      case 'warning':
+        return <AlertTriangle className="w-3.5 h-3.5 text-[#B45309]" />;
+      case 'edit':
+        return <Edit3 className="w-3.5 h-3.5 text-[#176B50]" />;
+      case 'approved':
+        return <ShieldCheck className="w-3.5 h-3.5 text-[#176B50]" />;
+      case 'rejected':
+        return <XCircle className="w-3.5 h-3.5 text-[#A33A32]" />;
+      case 'export':
+        return <FileSpreadsheet className="w-3.5 h-3.5 text-[#176B50]" />;
+      case 'error':
+      case 'failed':
+        return <AlertCircle className="w-3.5 h-3.5 text-[#A33A32]" />;
+      default:
+        return <FileText className="w-3.5 h-3.5 text-[#626B64]" />;
+    }
+  };
+
   const activeBox = activeHighlightKey && extraction?.field_metadata?.[activeHighlightKey]?.boundingBox;
 
   return (
@@ -405,13 +448,13 @@ export const DocumentDetailPage: React.FC = () => {
       )}
 
       {/* Validation Discrepancies Alert */}
-      {issues.length > 0 && (
+      {customerIssues.length > 0 && (
         <div className="bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] p-4 shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-[#B45309]" />
               <h2 className="text-[13px] font-bold text-[#202722] uppercase tracking-wider">
-                Audit Validation Discrepancies ({issues.length})
+                Audit Validation Discrepancies ({customerIssues.length})
               </h2>
             </div>
             <span className="text-[11px] font-mono text-[#626B64]">
@@ -420,7 +463,7 @@ export const DocumentDetailPage: React.FC = () => {
           </div>
 
           <div className="space-y-2 mt-3">
-            {issues.map((issue) => (
+            {customerIssues.map((issue) => (
               <div
                 key={issue.id}
                 className={`p-2.5 rounded-[4px] text-[12px] border flex items-start gap-2.5 ${
@@ -523,23 +566,47 @@ export const DocumentDetailPage: React.FC = () => {
         {/* Right Panel: Extracted Fields Review & Correction Console */}
         <div className="lg:col-span-7 space-y-4">
           {!extraction ? (
-            <div className="p-8 bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] text-center space-y-3">
-              <FileText className="w-8 h-8 text-[#176B50] mx-auto opacity-70" />
-              <h3 className="text-[15px] font-bold text-[#202722]">Invoice Metadata Registered</h3>
-              <p className="text-[13px] text-[#626B64] max-w-md mx-auto">
-                This document is ready for extraction. Click <strong>Extract & Validate</strong> to queue automated field
-                extraction, arithmetic cross-sum validation, and duplicate detection.
-              </p>
-              <button
-                type="button"
-                disabled={isProcessing}
-                onClick={handleRunProcessing}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors focus-ring"
-              >
-                <RotateCw className={`w-4 h-4 ${isProcessing ? 'animate-spin' : ''}`} />
-                <span>{isProcessing ? 'Processing Pipeline...' : 'Run Extraction & Validation'}</span>
-              </button>
-            </div>
+            document.status === 'failed' ? (
+              <div className="p-8 bg-[#FFFFFF] border border-[#FECACA] rounded-[6px] text-center space-y-3">
+                <AlertCircle className="w-8 h-8 text-[#A33A32] mx-auto opacity-90" />
+                <div>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-[3px] text-[11px] font-medium bg-[#FEF2F2] text-[#991B1B] border border-[#FCA5A5] font-semibold">
+                    Extraction failed — try again.
+                  </span>
+                </div>
+                <h3 className="text-[15px] font-bold text-[#202722]">Extraction Failed</h3>
+                <p className="text-[13px] text-[#626B64] max-w-md mx-auto">
+                  The automated extraction pipeline could not process this document. You can retry the extraction or inspect the scan manually.
+                </p>
+                <button
+                  type="button"
+                  disabled={isProcessing}
+                  onClick={handleRunProcessing}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors focus-ring"
+                >
+                  <RotateCw className={`w-4 h-4 ${isProcessing ? 'animate-spin' : ''}`} />
+                  <span>{isProcessing ? 'Processing Pipeline...' : 'Retry Extraction'}</span>
+                </button>
+              </div>
+            ) : (
+              <div className="p-8 bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] text-center space-y-3">
+                <FileText className="w-8 h-8 text-[#176B50] mx-auto opacity-70" />
+                <h3 className="text-[15px] font-bold text-[#202722]">Invoice Metadata Registered</h3>
+                <p className="text-[13px] text-[#626B64] max-w-md mx-auto">
+                  This document is ready for extraction. Click <strong>Extract & Validate</strong> to queue automated field
+                  extraction, arithmetic cross-sum validation, and duplicate detection.
+                </p>
+                <button
+                  type="button"
+                  disabled={isProcessing}
+                  onClick={handleRunProcessing}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors focus-ring"
+                >
+                  <RotateCw className={`w-4 h-4 ${isProcessing ? 'animate-spin' : ''}`} />
+                  <span>{isProcessing ? 'Processing Pipeline...' : 'Run Extraction & Validation'}</span>
+                </button>
+              </div>
+            )
           ) : (
             <div className="bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] p-5 shadow-sm space-y-5">
               <div className="flex items-center justify-between pb-3 border-b border-[#E2E6E1]">
@@ -547,26 +614,15 @@ export const DocumentDetailPage: React.FC = () => {
                   <h2 className="text-[14px] font-bold text-[#202722] uppercase tracking-wider">
                     Extracted Intelligence & Review Console
                   </h2>
-                  <div className="flex items-center gap-2 mt-1 flex-wrap">
-                    {extraction.extractor_provider?.includes('gemini') ? (
-                      extraction.extractor_provider.includes('fallback') ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-[3px] text-[11px] font-mono font-medium bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE] font-semibold">
-                          AI Fallback: {extraction.extractor_provider.replace(' (fallback)', '')}
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-[3px] text-[11px] font-mono font-medium bg-[#EDF4EF] text-[#176B50] border border-[#176B50]/30 font-semibold">
-                          AI Provider: {extraction.extractor_provider}
-                        </span>
-                      )
-                    ) : (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-[3px] text-[11px] font-mono font-medium bg-[#FFFBEB] text-[#B45309] border border-[#FDE68A]">
-                        Fallback Engine: {extraction.extractor_provider}
+                  {extractionState && (
+                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-[3px] text-[11px] font-medium border font-semibold ${extractionState.badgeClass}`}
+                      >
+                        {extractionState.label}
                       </span>
-                    )}
-                    <span className="text-[11px] font-mono text-[#626B64]">
-                      Version {extraction.version}
-                    </span>
-                  </div>
+                    </div>
+                  )}
                 </div>
 
                 <button
@@ -580,28 +636,14 @@ export const DocumentDetailPage: React.FC = () => {
                 </button>
               </div>
 
-              {/* AI Fallback Notice Banner */}
-              {extraction.extractor_provider?.includes('gemini') && extraction.extractor_provider.includes('fallback') && (
-                <div className="p-3 bg-[#EFF6FF] border border-[#BFDBFE] rounded-[4px] text-[12px] text-[#1E40AF] flex items-start gap-2.5">
-                  <AlertCircle className="w-4 h-4 text-[#2563EB] flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-bold">AI Quota Fallback Active</p>
-                    <p className="mt-0.5 text-[11px] text-[#1E40AF] leading-relaxed">
-                      Primary AI model (gemini-2.5-flash) was rate-limited or quota-exhausted (HTTP 429). Extraction was successfully fulfilled by verified fallback model{' '}
-                      <strong className="font-mono">{extraction.extractor_provider.replace(' (fallback)', '')}</strong>. Please review extracted fields against the source scan before approving.
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* Heuristic Fallback Notice Banner */}
-              {extraction.extractor_provider && !extraction.extractor_provider.includes('gemini') && (extraction.extractor_provider.includes('fallback') || extraction.extractor_provider.includes('heuristic')) && (
+              {/* Partial Extraction Warning Banner */}
+              {extractionState?.status === 'partial' && (
                 <div className="p-3 bg-[#FFFBEB] border border-[#FDE68A] rounded-[4px] text-[12px] text-[#92400E] flex items-start gap-2.5">
                   <AlertTriangle className="w-4 h-4 text-[#B45309] flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-bold">Fallback Extraction Mode Active</p>
+                    <p className="font-bold">Partial Extraction Notice</p>
                     <p className="mt-0.5 text-[11px] text-[#B45309] leading-relaxed">
-                      Google Gemini AI was unavailable for this processing request. Extraction was executed via the local heuristic fallback engine. Please inspect missing, unverified, or review-required fields against the source scan before approving.
+                      Automated visual extraction was partially complete. Please inspect and verify all fields against the source scan before certifying or approving.
                     </p>
                   </div>
                 </div>
@@ -863,26 +905,80 @@ export const DocumentDetailPage: React.FC = () => {
 
           {/* Audit Event History */}
           {auditEvents.length > 0 && (
-            <div className="bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] p-4 shadow-sm">
-              <h3 className="text-[12px] font-bold text-[#202722] uppercase tracking-wider flex items-center gap-1.5 mb-3">
-                <History className="w-3.5 h-3.5 text-[#176B50]" />
-                Document Lifecycle & Audit Trail ({auditEvents.length})
-              </h3>
-              <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
-                {auditEvents.map((evt) => (
-                  <div key={evt.id} className="text-[11px] font-mono p-2 bg-[#F7F8F6] rounded-[3px] border border-[#E2E6E1] flex items-center justify-between">
-                    <div>
-                      <span className="font-bold text-[#176B50] uppercase mr-2">{evt.event_type.replace('_', ' ')}</span>
-                      <span className="text-[#626B64]">
-                        {evt.details ? JSON.stringify(evt.details).slice(0, 60) : 'Recorded event'}
+            <div className="bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] p-4 shadow-sm space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-[12px] font-bold text-[#202722] uppercase tracking-wider flex items-center gap-1.5">
+                  <History className="w-3.5 h-3.5 text-[#176B50]" />
+                  Document Lifecycle & Audit Trail ({auditEvents.length})
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowTechnicalAudit(!showTechnicalAudit)}
+                  className="text-[11px] font-mono text-[#176B50] hover:underline"
+                >
+                  {showTechnicalAudit ? 'Hide Technical Diagnostics' : 'View Technical Diagnostics'}
+                </button>
+              </div>
+
+              {/* Customer-Facing Clean Timeline */}
+              <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                {auditEvents.map((evt) => {
+                  const formatted = formatAuditEvent(evt);
+                  return (
+                    <div
+                      key={evt.id}
+                      className="p-2.5 bg-[#F7F8F6] rounded-[4px] border border-[#E2E6E1] flex items-start justify-between gap-3 text-[12px]"
+                    >
+                      <div className="flex items-start gap-2.5">
+                        <div className="mt-0.5 flex-shrink-0">
+                          {renderAuditIcon(formatted.iconType)}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-[#202722]">{formatted.title}</p>
+                          <p className="text-[11px] text-[#626B64] mt-0.5 leading-relaxed">
+                            {formatted.description}
+                          </p>
+                        </div>
+                      </div>
+                      <span className="text-[#626B64] text-[10px] font-mono whitespace-nowrap flex-shrink-0">
+                        {new Date(evt.created_at).toLocaleString('en-GB')}
                       </span>
                     </div>
-                    <span className="text-[#626B64] text-[10px] whitespace-nowrap ml-2">
-                      {new Date(evt.created_at).toLocaleString('en-GB')}
+                  );
+                })}
+              </div>
+
+              {/* Collapsible Technical Diagnostics (for debugging & engineering accountability) */}
+              {showTechnicalAudit && (
+                <div className="mt-3 pt-3 border-t border-[#E2E6E1] space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-mono font-bold text-[#626B64] uppercase">
+                      Technical Diagnostics & Raw Event Stream
+                    </span>
+                    <span className="text-[10px] font-mono text-[#626B64]">
+                      Internal system logs & provider attributions
                     </span>
                   </div>
-                ))}
-              </div>
+                  <div className="space-y-1.5 max-h-48 overflow-y-auto bg-[#202722] text-[#E2E6E1] p-2.5 rounded-[4px] font-mono text-[10px]">
+                    {auditEvents.map((evt) => (
+                      <div key={`tech-${evt.id}`} className="py-1 border-b border-[#333E35] last:border-0">
+                        <div className="flex items-center justify-between text-[#8E9B90]">
+                          <span className="text-[#4ADE80] font-semibold">{evt.event_type}</span>
+                          <span>{new Date(evt.created_at).toISOString()}</span>
+                        </div>
+                        {evt.actor_id && (
+                          <div className="text-[#A5B4A8]">Actor ID: {evt.actor_id}</div>
+                        )}
+                        {evt.details && (
+                          <pre className="text-[#D1D5DB] whitespace-pre-wrap break-all mt-0.5">
+                            {JSON.stringify(evt.details, null, 2)}
+                          </pre>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

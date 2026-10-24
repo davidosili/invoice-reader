@@ -245,7 +245,8 @@ async function main() {
       hasTax87: inputs.some(i => i.val === '87'),
       hasTotal957: inputs.some(i => i.val === '957'),
       hasCurrencyUSD: inputs.some(i => i.val === 'USD'),
-      hasGeminiProviderBadge: badges.some(b => b.includes('gemini')),
+      hasExtractionStateBadge: badges.some(b => b.includes('Extraction completed') || b.includes('review required')),
+      hasCustomerModelName: badges.some(b => b.includes('gemini-2.5-flash')),
       hasDateWarning: body.includes('Due date (2025-07-10) is prior to the invoice billing date (2025-07-30)'),
       hasDuplicateWarning: body.includes('High confidence duplicate: Invoice #12345'),
       previewImageLoaded: images.some(src => src.includes('801ac8bb') || src.includes('.png')),
@@ -256,7 +257,8 @@ async function main() {
   console.log('  DOM Evaluation Results:');
   console.log(`    - Document ID verified in UI:        ${domInfo.hasDocId}`);
   console.log(`    - Preview Image Loaded:              ${domInfo.previewImageLoaded}`);
-  console.log(`    - AI Provider Badge (Gemini Flash):  ${domInfo.hasGeminiProviderBadge}`);
+  console.log(`    - Extraction State Badge:            ${domInfo.hasExtractionStateBadge}`);
+  console.log(`    - Customer Model Name Hidden:        ${!domInfo.hasCustomerModelName}`);
   console.log(`    - Supplier Name (Juliana Silva):     ${domInfo.hasJuliana}`);
   console.log(`    - Invoice Number (12345):            ${domInfo.has12345}`);
   console.log(`    - Subtotal ($870):                   ${domInfo.hasSubtotal870}`);
@@ -266,7 +268,7 @@ async function main() {
   console.log(`    - Due Date Precedes Invoice Warning: ${domInfo.hasDateWarning}`);
   console.log(`    - Duplicate Warning:                 ${domInfo.hasDuplicateWarning}`);
 
-  if (!domInfo.hasDocId || !domInfo.hasGeminiProviderBadge || !domInfo.has12345 || !domInfo.hasTotal957) {
+  if (!domInfo.hasDocId || !domInfo.hasExtractionStateBadge || domInfo.hasCustomerModelName || !domInfo.has12345 || !domInfo.hasTotal957) {
     throw new Error('UI verification assertion failed! Expected values not found in DOM.');
   }
 
@@ -309,8 +311,18 @@ async function main() {
 
   // Step 9: Verify audit trail
   console.log('\n[9] Inspecting immutable audit trail...');
-  const auditEntries = await evalInBrowser(`Array.from(document.querySelectorAll('.font-mono')).map(e => e.innerText).filter(t => t.includes('EXTRACTION') || t.includes('APPROVED') || t.includes('CORRECTION') || t.includes('PROCESSING'))`);
-  console.log('  Audit trail events visible in UI:', auditEntries.slice(0, 5));
+  const customerAuditEntries = await evalInBrowser(`Array.from(document.querySelectorAll('p.font-semibold')).map(e => e.innerText).filter(t => t.includes('Extraction') || t.includes('Approved') || t.includes('Corrections') || t.includes('Uploaded'))`);
+  console.log('  Customer audit events visible in UI:', customerAuditEntries.slice(0, 5));
+
+  // Toggle technical diagnostics
+  await evalInBrowser(`(() => {
+    const btn = Array.from(document.querySelectorAll('button')).find(b => b.innerText.includes('View Technical Diagnostics'));
+    if (btn) btn.click();
+  })()`);
+  await wait(500);
+  const technicalEntries = await evalInBrowser(`Array.from(document.querySelectorAll('.font-mono')).map(e => e.innerText).filter(t => t.includes('extraction_completed') || t.includes('approved') || t.includes('field_corrected') || t.includes('processing_queued'))`);
+  console.log('  Technical diagnostic events visible in UI:', technicalEntries.slice(0, 5));
+  await takeScreenshot('demo_actual_invoice_technical_diagnostics.png');
 
   // Step 10: Test CSV export
   console.log('\n[10] Testing CSV export endpoint...');
