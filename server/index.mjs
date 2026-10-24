@@ -113,7 +113,15 @@ const server = http.createServer(async (req, res) => {
 
   // POST /api/documents/:id/process
   const processMatch = url.pathname.match(/^\/api\/documents\/([a-f0-9-]+)\/process$/i);
-  if (req.method === 'POST' && processMatch) {
+  if (processMatch) {
+    if (req.method !== 'POST') {
+      res.writeHead(405, {
+        'Content-Type': 'application/json',
+        'Allow': 'POST, OPTIONS',
+      });
+      res.end(JSON.stringify({ error: 'Method not allowed. /api/documents/:id/process requires POST.' }));
+      return;
+    }
     const documentId = processMatch[1];
     let user = null;
     let doc = null;
@@ -280,7 +288,15 @@ const server = http.createServer(async (req, res) => {
 
   // GET /api/workspaces/:workspaceId/export-csv
   const exportMatch = url.pathname.match(/^\/api\/workspaces\/([a-f0-9-]+)\/export-csv$/i);
-  if (req.method === 'GET' && exportMatch) {
+  if (exportMatch) {
+    if (req.method !== 'GET') {
+      res.writeHead(405, {
+        'Content-Type': 'application/json',
+        'Allow': 'GET, OPTIONS',
+      });
+      res.end(JSON.stringify({ error: 'Method not allowed. /api/workspaces/:workspaceId/export-csv requires GET.' }));
+      return;
+    }
     const workspaceId = exportMatch[1];
     try {
       const user = await authenticateRequest(req);

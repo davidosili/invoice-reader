@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 import {
   GeminiApiError,
   getModelConfig,
@@ -374,4 +376,47 @@ test('Multi-Model: Fallback model output undergoes deterministic arithmetic vali
   const mathIssue = result.issues.find((i) => i.issue_type === 'arithmetic_discrepancy');
   assert.ok(mathIssue, 'Arithmetic discrepancy must be detected on fallback model output');
   assert.ok(mathIssue.message.includes('Grand total'));
+});
+
+test('Multi-Model: Vercel routing configuration maps dynamic serverless functions without static fallback', () => {
+  const vercelConfigPath = path.resolve('vercel.json');
+  assert.ok(fs.existsSync(vercelConfigPath), 'vercel.json must exist');
+  const vercelConfig = JSON.parse(fs.readFileSync(vercelConfigPath, 'utf-8'));
+
+  assert.ok(Array.isArray(vercelConfig.rewrites), 'rewrites must be configured');
+  
+  // Verify document process rewrite exists and passes query parameter
+  const docProcessRewrite = vercelConfig.rewrites.find((r) => r.source === '/api/documents/:id/process');
+  assert.ok(docProcessRewrite, 'Explicit rewrite for /api/documents/:id/process must exist');
+  assert.ok(
+    docProcessRewrite.destination.includes('api/documents/[id]/process') && docProcessRewrite.destination.includes('?id=:id'),
+    'Rewrite destination must target serverless function with query id'
+  );
+
+  // Verify workspace export CSV rewrite exists
+  const exportCsvRewrite = vercelConfig.rewrites.find((r) => r.source === '/api/workspaces/:workspaceId/export-csv');
+  assert.ok(exportCsvRewrite, 'Explicit rewrite for /api/workspaces/:workspaceId/export-csv must exist');
+  assert.ok(
+    exportCsvRewrite.destination.includes('api/workspaces/[workspaceId]/export-csv'),
+    'Rewrite destination must target export-csv serverless function'
+  );
+
+  // Catch-all rewrite must be placed after API rewrites
+  const catchAllIndex = vercelConfig.rewrites.findIndex((r) => r.source === '/(.*)');
+  const docProcessIndex = vercelConfig.rewrites.indexOf(docProcessRewrite);
+  assert.ok(
+    catchAllIndex > docProcessIndex,
+    'SPA fallback rewrite /(.*) must be positioned after explicit API rewrites'
+  );
+});
+
+test('Multi-Model: API endpoint rejects unsupported HTTP methods with HTTP 405 Method Not Allowed', async () => {
+  const res = await fetch('http://localhost:3001/api/documents/00000000-0000-0000-0000-000000000000/process', {
+    method: 'GET',
+  });
+  assert.equal(res.status, 405, 'GET on /api/documents/:id/process must return HTTP 405 Method Not Allowed');
+  const allowHeader = res.headers.get('allow');
+  assert.ok(allowHeader?.includes('POST'), 'Allow header must include POST');
+  const body = await res.json();
+  assert.ok(body.error?.includes('requires POST'), 'Error message must explain required method');
 });

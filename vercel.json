@@ -1,5 +1,8 @@
 {
   "rewrites": [
+    { "source": "/api/documents/:id/process", "destination": "/api/documents/[id]/process?id=:id" },
+    { "source": "/api/workspaces/:workspaceId/export-csv", "destination": "/api/workspaces/[workspaceId]/export-csv?workspaceId=:workspaceId" },
+    { "source": "/api/health", "destination": "/api/health" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],

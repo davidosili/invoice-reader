@@ -14,8 +14,8 @@ function apiServerDevPlugin() {
       });
       ping.on('error', () => {
         // Not running on 3001, spawn server/index.mjs
-        console.log('[LedgerLens Vite] Auto-starting API server on port 3001...');
-        serverProcess = spawn('node', ['server/index.mjs'], {
+        console.log('[LedgerLens Vite] Auto-starting API server on port 3001 with --watch...');
+        serverProcess = spawn('node', ['--watch', 'server/index.mjs'], {
           stdio: 'inherit',
           env: { ...process.env, PORT: '3001' },
         });

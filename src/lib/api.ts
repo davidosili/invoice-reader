@@ -424,10 +424,22 @@ export async function queueAndProcessInvoice(
         if (serverRes.status === 401 || serverRes.status === 403 || serverRes.status === 404) {
           throw new Error(backendErrorDetail || 'Access denied or document not found.');
         }
+        if (serverRes.status === 405) {
+          throw new Error(`API routing defect: ${backendErrorDetail} (HTTP 405 Method Not Allowed on /api/documents/${documentId}/process). The serverless function route was rejected.`);
+        }
+        if (serverRes.status === 400) {
+          throw new Error(backendErrorDetail || 'Invalid request payload or document identifier.');
+        }
       }
     }
   } catch (err: any) {
-    if (err.message?.includes('Access denied') || err.message?.includes('not found')) {
+    if (
+      err.message?.includes('Access denied') ||
+      err.message?.includes('not found') ||
+      err.message?.includes('routing defect') ||
+      err.message?.includes('HTTP 405') ||
+      err.message?.includes('Invalid request')
+    ) {
       throw err;
     }
     backendErrorDetail = err?.message || 'Backend API server unreachable';

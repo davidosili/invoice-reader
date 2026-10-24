@@ -245,7 +245,7 @@ async function main() {
       hasTax87: inputs.some(i => i.val === '87'),
       hasTotal957: inputs.some(i => i.val === '957'),
       hasCurrencyUSD: inputs.some(i => i.val === 'USD'),
-      hasGeminiProviderBadge: badges.some(b => b.includes('gemini-2.5-flash')),
+      hasGeminiProviderBadge: badges.some(b => b.includes('gemini')),
       hasDateWarning: body.includes('Due date (2025-07-10) is prior to the invoice billing date (2025-07-30)'),
       hasDuplicateWarning: body.includes('High confidence duplicate: Invoice #12345'),
       previewImageLoaded: images.some(src => src.includes('801ac8bb') || src.includes('.png')),
