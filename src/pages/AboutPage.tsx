@@ -533,7 +533,7 @@ export const AboutPage: React.FC = () => {
                 className="inline-flex items-center justify-center gap-2 px-5 py-3.5 text-[15px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors focus-ring shadow-sm"
               >
                 <Play className="w-4 h-4 fill-current" />
-                <span>Watch Product Demo (60s)</span>
+                <span>Watch Product Demo (15s)</span>
               </button>
               <Link
                 to="/app"

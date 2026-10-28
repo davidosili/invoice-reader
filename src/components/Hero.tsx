@@ -49,7 +49,7 @@ export const Hero: React.FC = () => {
                 <div className="w-4 h-4 rounded-full bg-[#EDF4EF] flex items-center justify-center text-[#176B50] group-hover:bg-[#176B50] group-hover:text-white transition-colors">
                   <Play className="w-2.5 h-2.5 fill-current ml-0.5" />
                 </div>
-                <span>Watch 60-Sec Demo</span>
+                <span>Watch 15-Sec Demo</span>
               </button>
             </div>
 
