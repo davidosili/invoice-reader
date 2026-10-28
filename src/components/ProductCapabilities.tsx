@@ -230,16 +230,18 @@ export const ProductCapabilities: React.FC = () => {
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-2xl mb-12">
-          <div className="inline-flex items-center gap-2 mb-3">
-            <span className="w-2 h-2 rounded-full bg-[#176B50]" />
-            <p className="text-[12px] font-semibold tracking-wider uppercase text-[#176B50] font-mono">
-              Product status: Working MVP
+          <div className="flex items-center gap-2 mb-3">
+            <span className="font-mono text-[9px] uppercase px-1.5 py-0.5 bg-[#FFFFFF] border border-[#DDD7CD] text-[#5A5852]">
+              REGISTER // 04
+            </span>
+            <p className="text-[11px] font-mono tracking-wider uppercase text-[#1D4ED8]">
+              CURRENT PRODUCT CAPABILITIES
             </p>
           </div>
-          <h2 className="text-[28px] sm:text-[36px] font-bold text-[#202722] tracking-tight leading-[1.15]">
-            Current capabilities
+          <h2 className="text-[28px] sm:text-[36px] font-bold text-[#111318] tracking-tight leading-[1.15]">
+            Verified operational features
           </h2>
-          <p className="mt-4 text-[16px] text-[#626B64] leading-relaxed">
+          <p className="mt-4 text-[15px] text-[#5A5852] leading-relaxed">
             LedgerLens AI has a working invoice-processing workflow that uses AI to extract structured
             information, applies validation checks, and supports human review of potential discrepancies.
             The 8 capabilities below are implemented and working today.
@@ -256,24 +258,24 @@ export const ProductCapabilities: React.FC = () => {
                 <div
                   key={cap.id}
                   onClick={() => setActiveCapability(idx)}
-                  className={`p-3.5 sm:p-4 rounded-[4px] cursor-pointer transition-all border ${
+                  className={`p-3.5 sm:p-4 rounded-[2px] cursor-pointer transition-all border ${
                     isActive
-                      ? 'bg-[#F7F8F6] border-[#176B50] shadow-sm'
-                      : 'bg-[#FFFFFF] border-[#E2E6E1] hover:border-[#626B64]/40 hover:bg-[#F7F8F6]/50'
+                      ? 'bg-[#FAFAF8] border-[#111318] shadow-sm'
+                      : 'bg-[#FFFFFF] border-[#E2DFD7] hover:border-[#DDD7CD] hover:bg-[#FAFAF8]/60'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-mono text-[12px] font-medium text-[#176B50]">
+                    <span className="font-mono text-[12px] font-bold text-[#111318]">
                       {cap.num}
                     </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-[3px] border font-medium text-[#176B50] bg-[#EDF4EF] border-[#176B50]/20">
-                      Live in MVP
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-[2px] border font-medium text-[#1B4938] bg-[#EBF3EE] border-[#1B4938]/30">
+                      LIVE IN MVP
                     </span>
                   </div>
-                  <h3 className="text-[15px] font-semibold text-[#202722] mb-0.5">
+                  <h3 className="text-[15px] font-bold text-[#111318] mb-0.5">
                     {cap.title}
                   </h3>
-                  <p className="text-[12px] text-[#626B64] line-clamp-1 leading-relaxed">
+                  <p className="text-[12px] text-[#5A5852] line-clamp-1 leading-relaxed">
                     {cap.shortDesc}
                   </p>
                 </div>
@@ -282,39 +284,42 @@ export const ProductCapabilities: React.FC = () => {
           </div>
 
           {/* Right: Deep-Dive Inspector for Selected Capability */}
-          <div className="lg:col-span-7 bg-[#F7F8F6] border border-[#E2E6E1] rounded-[6px] p-6 sm:p-8">
-            <div className="flex items-center justify-between pb-4 border-b border-[#E2E6E1]">
+          <div className="lg:col-span-7 bg-[#FAFAF8] border border-[#E2DFD7] rounded-[2px] p-6 sm:p-8 relative">
+            <span className="absolute top-1 left-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+            <span className="absolute top-1 right-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+
+            <div className="flex items-center justify-between pb-4 border-b border-[#E2DFD7]">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-[4px] bg-[#EDF4EF] flex items-center justify-center text-[#176B50]">
+                <div className="w-8 h-8 rounded-[2px] bg-[#111318] flex items-center justify-center text-white">
                   <CurrentIcon className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="font-mono text-[11px] font-medium text-[#176B50] block">
-                    Capability {current.num}
+                  <span className="font-mono text-[10px] font-bold uppercase text-[#5A5852] block">
+                    CAPABILITY {current.num}
                   </span>
-                  <h3 className="text-[19px] sm:text-[21px] font-bold text-[#202722]">
+                  <h3 className="text-[18px] sm:text-[20px] font-bold text-[#111318]">
                     {current.title}
                   </h3>
                 </div>
               </div>
-              <span className="text-[11px] font-mono font-medium px-2 py-0.5 rounded-[3px] border text-[#176B50] bg-[#EDF4EF] border-[#176B50]/20 flex-shrink-0">
-                Live in MVP
+              <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-[2px] border text-[#1B4938] bg-[#EBF3EE] border-[#1B4938]/30 flex-shrink-0">
+                LIVE IN MVP
               </span>
             </div>
 
-            <p className="mt-4 text-[15px] text-[#202722] leading-relaxed">
+            <p className="mt-4 text-[14px] text-[#111318] leading-relaxed">
               {current.description}
             </p>
 
             {/* Implemented Processing Behaviors */}
-            <div className="mt-6 pt-5 border-t border-[#E2E6E1]">
-              <h4 className="text-[12px] font-semibold uppercase tracking-wider text-[#626B64] mb-3 font-mono">
-                Implemented Processing Behaviors
+            <div className="mt-6 pt-5 border-t border-[#E2DFD7]">
+              <h4 className="text-[11px] font-bold uppercase tracking-wider text-[#5A5852] mb-3 font-mono">
+                IMPLEMENTED PROCESSING BEHAVIORS
               </h4>
               <ul className="space-y-2.5">
                 {current.details.map((detail, dIdx) => (
-                  <li key={dIdx} className="flex items-start gap-2.5 text-[13px] sm:text-[14px] text-[#202722]">
-                    <CheckCircle className="w-4 h-4 text-[#176B50] flex-shrink-0 mt-0.5" />
+                  <li key={dIdx} className="flex items-start gap-2.5 text-[13px] text-[#111318]">
+                    <CheckCircle className="w-4 h-4 text-[#1B4938] flex-shrink-0 mt-0.5" />
                     <span>{detail}</span>
                   </li>
                 ))}
@@ -322,32 +327,32 @@ export const ProductCapabilities: React.FC = () => {
             </div>
 
             {/* Sample Output */}
-            <div className="mt-6 pt-5 border-t border-[#E2E6E1]">
+            <div className="mt-6 pt-5 border-t border-[#E2DFD7]">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-mono uppercase text-[#626B64]">
-                  Sample Pipeline Output • Structured Record
+                <span className="text-[10px] font-mono uppercase text-[#5A5852]">
+                  SAMPLE PIPELINE OUTPUT • STRUCTURED REGISTER
                 </span>
-                <span className="text-[10px] text-[#176B50] font-mono font-medium bg-[#EDF4EF] px-1.5 py-0.5 rounded-[2px]">
-                  Verified in MVP
+                <span className="text-[9px] text-[#1B4938] font-mono font-medium bg-[#EBF3EE] border border-[#1B4938]/30 px-1.5 py-0.5 rounded-[2px]">
+                  VERIFIED
                 </span>
               </div>
-              <div className="bg-[#FFFFFF] border border-[#E2E6E1] rounded-[4px] p-3.5 font-mono text-[12px] space-y-1.5 overflow-x-auto">
+              <div className="bg-[#FFFFFF] border border-[#DDD7CD] rounded-[2px] p-3.5 font-mono text-[12px] space-y-1.5 overflow-x-auto">
                 {Object.entries(current.sampleOutput).map(([key, val]) => (
                   <div key={key} className="flex items-start justify-between gap-4">
-                    <span className="text-[#626B64] text-[11px]">{key}:</span>
-                    <span className="text-[#202722] font-semibold text-right">{val}</span>
+                    <span className="text-[#5A5852] text-[11px]">{key}:</span>
+                    <span className="text-[#111318] font-semibold text-right">{val}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="mt-5 pt-3 border-t border-[#E2E6E1] text-[11px] text-[#626B64] flex items-center justify-between">
-              <span>Implemented and working in current MVP</span>
+            <div className="mt-5 pt-3 border-t border-[#E2DFD7] text-[11px] font-mono text-[#5A5852] flex items-center justify-between">
+              <span>ACTIVE IN PRODUCTION INSTANCE</span>
               <Link
                 to="/app"
-                className="inline-flex items-center gap-1 text-[#176B50] font-medium hover:underline"
+                className="inline-flex items-center gap-1 text-[#1D4ED8] font-bold hover:underline"
               >
-                Open LedgerLens AI
+                OPEN WORKSPACE
                 <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
@@ -355,18 +360,18 @@ export const ProductCapabilities: React.FC = () => {
         </div>
 
         {/* Planned Capabilities Roadmap Header */}
-        <div className="pt-10 border-t border-[#E2E6E1]">
+        <div className="pt-10 border-t border-[#E2DFD7]">
           <div className="max-w-2xl mb-8">
             <div className="inline-flex items-center gap-2 mb-2">
-              <Layers className="w-4 h-4 text-[#626B64]" />
-              <p className="text-[12px] font-semibold tracking-wider uppercase text-[#626B64] font-mono">
-                Product Roadmap
+              <Layers className="w-4 h-4 text-[#5A5852]" />
+              <p className="text-[11px] font-bold tracking-wider uppercase text-[#5A5852] font-mono">
+                PRODUCT ROADMAP
               </p>
             </div>
-            <h3 className="text-[24px] sm:text-[30px] font-bold text-[#202722] tracking-tight leading-[1.2]">
+            <h3 className="text-[24px] sm:text-[30px] font-bold text-[#111318] tracking-tight leading-[1.2]">
               What's next
             </h3>
-            <p className="mt-2 text-[15px] text-[#626B64] leading-relaxed">
+            <p className="mt-2 text-[14px] text-[#5A5852] leading-relaxed">
               These capabilities are genuinely planned for future releases and are not currently available in the live MVP.
             </p>
           </div>
@@ -375,21 +380,21 @@ export const ProductCapabilities: React.FC = () => {
             {plannedCapabilities.map((item, idx) => (
               <div
                 key={idx}
-                className="bg-[#F7F8F6] border border-[#E2E6E1] rounded-[6px] p-5 flex flex-col justify-between"
+                className="bg-[#FAFAF8] border border-[#E2DFD7] rounded-[2px] p-5 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-[3px] bg-[#FFFFFF] text-[#626B64] border border-[#E2E6E1] font-medium">
-                      Roadmap Item
+                    <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded-[2px] bg-[#FFFFFF] text-[#5A5852] border border-[#DDD7CD] font-medium">
+                      ROADMAP ITEM
                     </span>
-                    <span className="text-[11px] font-mono text-[#626B64]">
-                      Planned
+                    <span className="text-[10px] font-mono text-[#5A5852]">
+                      PLANNED
                     </span>
                   </div>
-                  <h4 className="text-[15px] font-bold text-[#202722] mb-2 leading-snug">
+                  <h4 className="text-[15px] font-bold text-[#111318] mb-2 leading-snug">
                     {item.title}
                   </h4>
-                  <p className="text-[13px] text-[#626B64] leading-relaxed">
+                  <p className="text-[13px] text-[#5A5852] leading-relaxed">
                     {item.description}
                   </p>
                 </div>
@@ -397,20 +402,20 @@ export const ProductCapabilities: React.FC = () => {
             ))}
 
             {/* Architecture Integrity Card */}
-            <div className="bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] p-5 flex flex-col justify-between">
+            <div className="bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] p-5 flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-[3px] bg-[#EDF4EF] text-[#176B50] border border-[#176B50]/20 font-medium">
-                    Development Principle
+                  <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded-[2px] bg-[#EBF3EE] text-[#1B4938] border border-[#1B4938]/30 font-medium">
+                    DEVELOPMENT PRINCIPLE
                   </span>
-                  <span className="text-[11px] font-mono text-[#176B50]">
-                    Verified
+                  <span className="text-[10px] font-mono text-[#1B4938]">
+                    VERIFIED
                   </span>
                 </div>
-                <h4 className="text-[15px] font-bold text-[#202722] mb-2 leading-snug">
+                <h4 className="text-[15px] font-bold text-[#111318] mb-2 leading-snug">
                   Transparent feature claims
                 </h4>
-                <p className="text-[13px] text-[#626B64] leading-relaxed">
+                <p className="text-[13px] text-[#5A5852] leading-relaxed">
                   LedgerLens AI clearly separates live working features from future roadmap items. We do not claim integrations, cross-document matching, or batch pipelines until they are fully implemented.
                 </p>
               </div>

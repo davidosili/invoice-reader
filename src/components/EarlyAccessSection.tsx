@@ -4,44 +4,49 @@ import { ArrowRight, Mail, Lock, ShieldCheck } from 'lucide-react';
 
 export const GetStartedSection: React.FC = () => {
   return (
-    <section id="contact" className="bg-[#F7F8F6] py-16 md:py-24 border-b border-[#E2E6E1]">
+    <section id="contact" className="bg-[#F6F5F1] py-16 md:py-24 border-b border-[#E2DFD7]">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* Left Column: Context */}
           <div className="lg:col-span-6">
-            <p className="text-[12px] font-semibold tracking-wider uppercase text-[#176B50] font-mono mb-3">
-              Get Started
-            </p>
-            <h2 className="text-[28px] sm:text-[36px] font-bold text-[#202722] tracking-tight leading-[1.15] mb-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="font-mono text-[9px] uppercase px-1.5 py-0.5 bg-[#FFFFFF] border border-[#DDD7CD] text-[#5A5852]">
+                REGISTER // 10
+              </span>
+              <p className="text-[11px] font-mono tracking-wider uppercase text-[#1D4ED8]">
+                Get Started
+              </p>
+            </div>
+            <h2 className="text-[28px] sm:text-[36px] font-bold text-[#111318] tracking-tight leading-[1.15] mb-4">
               Ready to work with your invoices?
             </h2>
-            <p className="text-[16px] text-[#626B64] leading-relaxed mb-6">
+            <p className="text-[15px] text-[#5A5852] leading-relaxed mb-6">
               Explore LedgerLens AI's invoice-processing workflow. Upload a supported document, inspect
               extracted information, review validation issues, and manage invoice decisions through the workspace.
             </p>
-            <div className="p-4 bg-[#FFFFFF] border border-[#E2E6E1] rounded-[4px] mb-6">
+            <div className="p-4 bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] mb-6">
               <div className="flex items-start gap-2.5">
-                <Lock className="w-4 h-4 text-[#176B50] flex-shrink-0 mt-0.5" />
-                <p className="text-[13px] text-[#626B64] leading-relaxed">
-                  <strong className="text-[#202722]">Account required:</strong> Accessing the application workspace
+                <Lock className="w-4 h-4 text-[#1D4ED8] flex-shrink-0 mt-0.5" />
+                <p className="text-[13px] text-[#5A5852] leading-relaxed">
+                  <strong className="text-[#111318]">Account required:</strong> Accessing the application workspace
                   requires authentication. You can sign in with an existing account or register a new account
                   before processing documents.
                 </p>
               </div>
             </div>
 
-            <div className="border-t border-[#E2E6E1] pt-6 space-y-3 text-[13px] text-[#626B64]">
+            <div className="border-t border-[#E2DFD7] pt-6 space-y-3 text-[13px] text-[#5A5852]">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#176B50] flex-shrink-0" />
+                <ShieldCheck className="w-4 h-4 text-[#1B4938] flex-shrink-0" />
                 <span>Single invoice upload, AI extraction, validation, and review are live in the current MVP</span>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-[#176B50] flex-shrink-0" />
+                <Mail className="w-4 h-4 text-[#1D4ED8] flex-shrink-0" />
                 <span>
                   Direct team email:{' '}
                   <a
                     href="mailto:support@myledgerlens.com"
-                    className="text-[#176B50] font-medium hover:underline"
+                    className="text-[#111318] font-mono font-medium underline hover:text-[#1D4ED8]"
                   >
                     support@myledgerlens.com
                   </a>
@@ -51,46 +56,49 @@ export const GetStartedSection: React.FC = () => {
           </div>
 
           {/* Right Column: Action Panel */}
-          <div className="lg:col-span-6 bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] p-6 sm:p-8">
-            <h3 className="text-[18px] font-bold text-[#202722] pb-4 border-b border-[#E2E6E1] mb-6">
-              Workspace Access & Inquiries
+          <div className="lg:col-span-6 bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] p-6 sm:p-8 shadow-sm relative">
+            <span className="absolute top-1 left-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+            <span className="absolute top-1 right-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+
+            <h3 className="text-[16px] font-bold text-[#111318] pb-4 border-b border-[#E2DFD7] mb-6 uppercase tracking-wider font-mono">
+              WORKSPACE ACCESS & INQUIRIES
             </h3>
 
-            <div className="space-y-3.5 mb-6">
+            <div className="space-y-3 mb-6">
               {/* Primary CTA */}
               <Link
                 to="/app"
-                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 text-[15px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors focus-ring"
+                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 text-[14px] font-bold text-white bg-[#111318] hover:bg-[#1D4ED8] rounded-[2px] transition-colors focus-ring"
               >
-                Open LedgerLens AI
+                OPEN WORKSPACE
                 <ArrowRight className="w-4 h-4" />
               </Link>
 
               {/* Secondary CTA */}
               <a
                 href="mailto:support@myledgerlens.com"
-                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 text-[15px] font-medium text-[#202722] bg-[#FFFFFF] hover:bg-[#F7F8F6] border border-[#E2E6E1] hover:border-[#176B50] rounded-[4px] transition-colors focus-ring"
+                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 text-[14px] font-medium text-[#111318] bg-[#FAFAF8] hover:bg-[#FFFFFF] border border-[#DDD7CD] rounded-[2px] transition-colors focus-ring"
               >
-                <Mail className="w-4 h-4 text-[#176B50]" />
-                Contact the Team
+                <Mail className="w-4 h-4 text-[#5A5852]" />
+                Contact the Engineering Team
               </a>
             </div>
 
-            <div className="border-t border-[#E2E6E1] pt-5">
+            <div className="border-t border-[#E2DFD7] pt-5">
               <div className="flex items-center justify-between text-[13px]">
-                <span className="text-[#626B64]">Already have an account?</span>
+                <span className="text-[#5A5852]">Already have an account?</span>
                 <Link
                   to="/app/auth"
-                  className="font-medium text-[#176B50] hover:text-[#12563F] underline"
+                  className="font-medium text-[#1D4ED8] hover:text-[#111318] underline font-mono text-[12px]"
                 >
-                  Sign In to Workspace
+                  Sign In to Workspace →
                 </Link>
               </div>
-              <p className="mt-4 text-[12px] text-[#626B64] leading-relaxed">
+              <p className="mt-4 text-[12px] text-[#5A5852] leading-relaxed">
                 Contact us at{' '}
                 <a
                   href="mailto:support@myledgerlens.com"
-                  className="text-[#176B50] underline font-medium"
+                  className="text-[#111318] underline font-medium font-mono"
                 >
                   support@myledgerlens.com
                 </a>{' '}

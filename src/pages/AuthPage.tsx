@@ -5,6 +5,7 @@ import { isSupabaseConfigured } from '../lib/supabase';
 import { ServiceUnavailable } from '../components/ServiceUnavailable';
 import { sanitizeAuthError } from '../lib/authErrors';
 import { AlertCircle, CheckCircle2, ArrowRight } from 'lucide-react';
+import { BrandLogo } from '../components/BrandLogo';
 
 export const AuthPage: React.FC = () => {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
@@ -29,7 +30,7 @@ export const AuthPage: React.FC = () => {
 
   if (!isSupabaseConfigured) {
     return (
-      <div className="min-h-screen bg-[#F7F8F6] p-4 sm:p-6 flex flex-col justify-center">
+      <div className="min-h-screen bg-[#F6F5F1] p-4 sm:p-6 flex flex-col justify-center">
         <ServiceUnavailable />
       </div>
     );
@@ -76,36 +77,17 @@ export const AuthPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8F6] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F6F5F1] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         {/* Brand Header */}
         <div className="flex justify-center">
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-[4px] bg-[#176B50] flex items-center justify-center text-white">
-              <svg
-                className="w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <path d="m9 15 2 2 4-4" />
-              </svg>
-            </div>
-            <span className="text-[19px] font-semibold tracking-tight text-[#202722]">
-              LedgerLens<span className="text-[#176B50] font-normal ml-0.5">AI</span>
-            </span>
-          </Link>
+          <BrandLogo to="/" size="lg" />
         </div>
 
-        <h2 className="mt-5 text-center text-[24px] font-bold tracking-tight text-[#202722]">
+        <h2 className="mt-6 text-center text-[22px] font-bold tracking-tight text-[#111318]">
           {mode === 'signin' ? 'Sign in to your workspace' : 'Create your business account'}
         </h2>
-        <p className="mt-1 text-center text-[13px] text-[#626B64]">
+        <p className="mt-1 text-center text-[13px] text-[#525866]">
           {mode === 'signin' ? (
             <>
               New to LedgerLens AI?{' '}
@@ -116,7 +98,7 @@ export const AuthPage: React.FC = () => {
                   setErrorMessage(null);
                   setInfoMessage(null);
                 }}
-                className="font-medium text-[#176B50] hover:underline"
+                className="font-medium text-[#1D4ED8] hover:underline"
               >
                 Create a workspace
               </button>
@@ -131,7 +113,7 @@ export const AuthPage: React.FC = () => {
                   setErrorMessage(null);
                   setInfoMessage(null);
                 }}
-                className="font-medium text-[#176B50] hover:underline"
+                className="font-medium text-[#1D4ED8] hover:underline"
               >
                 Sign in
               </button>
@@ -141,17 +123,17 @@ export const AuthPage: React.FC = () => {
       </div>
 
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-[#FFFFFF] py-7 px-5 sm:px-8 border border-[#E2E6E1] rounded-[6px] shadow-sm">
+        <div className="bg-[#FFFFFF] py-7 px-5 sm:px-8 border border-[#E2DFD7] rounded-[4px] shadow-datum">
           {errorMessage && (
-            <div className="mb-4 p-3 bg-[#A33A32]/10 border border-[#A33A32]/30 rounded-[4px] flex items-start gap-2 text-[13px] text-[#A33A32]">
-              <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+            <div className="mb-4 p-3 bg-[#FEF2F2] border border-[#C2410C]/30 rounded-[3px] flex items-start gap-2 text-[12px] text-[#C2410C]">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>{errorMessage}</span>
             </div>
           )}
 
           {infoMessage && (
-            <div className="mb-4 p-3 bg-[#EDF4EF] border border-[#176B50]/30 rounded-[4px] flex items-start gap-2 text-[13px] text-[#176B50]">
-              <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" />
+            <div className="mb-4 p-3 bg-[#EDF7EE] border border-[#15803D]/30 rounded-[3px] flex items-start gap-2 text-[12px] text-[#15803D]">
+              <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
               <span>{infoMessage}</span>
             </div>
           )}
@@ -159,7 +141,7 @@ export const AuthPage: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === 'signup' && (
               <div>
-                <label htmlFor="workspaceName" className="block text-[13px] font-medium text-[#202722] mb-1">
+                <label htmlFor="workspaceName" className="block text-[12px] font-mono font-medium text-[#111318] mb-1 uppercase tracking-wider">
                   Company / Workspace Name
                 </label>
                 <input
@@ -167,14 +149,14 @@ export const AuthPage: React.FC = () => {
                   type="text"
                   value={workspaceName}
                   onChange={(e) => setWorkspaceName(e.target.value)}
-                  placeholder="e.g. Acme Wholesale Ltd."
-                  className="w-full px-3 py-2 text-[14px] text-[#202722] bg-[#FFFFFF] border border-[#E2E6E1] rounded-[4px] focus-ring"
+                  placeholder="e.g. Apex Distribution Ltd."
+                  className="w-full px-3 py-2 text-[13px] text-[#111318] bg-[#FFFFFF] border border-[#E2DFD7] rounded-[3px] focus-ring"
                 />
               </div>
             )}
 
             <div>
-              <label htmlFor="email" className="block text-[13px] font-medium text-[#202722] mb-1">
+              <label htmlFor="email" className="block text-[12px] font-mono font-medium text-[#111318] mb-1 uppercase tracking-wider">
                 Work Email Address
               </label>
               <input
@@ -183,13 +165,13 @@ export const AuthPage: React.FC = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@company.com"
-                className="w-full px-3 py-2 text-[14px] text-[#202722] bg-[#FFFFFF] border border-[#E2E6E1] rounded-[4px] focus-ring"
+                placeholder="finance@company.com"
+                className="w-full px-3 py-2 text-[13px] text-[#111318] bg-[#FFFFFF] border border-[#E2DFD7] rounded-[3px] focus-ring font-mono"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-[13px] font-medium text-[#202722] mb-1">
+              <label htmlFor="password" className="block text-[12px] font-mono font-medium text-[#111318] mb-1 uppercase tracking-wider">
                 Password
               </label>
               <input
@@ -199,7 +181,7 @@ export const AuthPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-3 py-2 text-[14px] text-[#202722] bg-[#FFFFFF] border border-[#E2E6E1] rounded-[4px] focus-ring"
+                className="w-full px-3 py-2 text-[13px] text-[#111318] bg-[#FFFFFF] border border-[#E2DFD7] rounded-[3px] focus-ring"
               />
             </div>
 
@@ -207,22 +189,22 @@ export const AuthPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full inline-flex items-center justify-center py-2.5 px-4 text-[14px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors focus-ring disabled:opacity-60"
+                className="w-full inline-flex items-center justify-center py-2.5 px-4 text-[13px] font-medium text-white bg-[#111318] hover:bg-[#20242C] rounded-[3px] transition-colors focus-ring disabled:opacity-60 shadow-datum"
               >
                 {isSubmitting ? (
                   <span>Processing...</span>
                 ) : (
                   <>
                     <span>{mode === 'signin' ? 'Sign In' : 'Create Workspace Account'}</span>
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                    <ArrowRight className="w-3.5 h-3.5 ml-2 text-[#C5C1B6]" />
                   </>
                 )}
               </button>
             </div>
           </form>
 
-          <div className="mt-6 pt-4 border-t border-[#E2E6E1] text-center">
-            <Link to="/" className="text-[13px] text-[#626B64] hover:text-[#202722] hover:underline">
+          <div className="mt-6 pt-4 border-t border-[#E2DFD7] text-center">
+            <Link to="/" className="text-[12px] text-[#525866] hover:text-[#111318] hover:underline font-mono">
               ← Return to public website
             </Link>
           </div>

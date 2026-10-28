@@ -81,7 +81,7 @@ export function getExtractionState(params: {
   return {
     status: 'success',
     label: 'Extraction completed.',
-    badgeClass: 'bg-[#EDF4EF] text-[#176B50] border-[#176B50]/30',
+    badgeClass: 'bg-[#EBF3EE] text-[#1B4938] border-[#1B4938]/30',
     iconType: 'success',
   };
 }

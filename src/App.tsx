@@ -33,7 +33,7 @@ export const AppContent: React.FC = () => {
   }, [location]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FFFFFF] text-[#202722] selection:bg-[#EDF4EF] selection:text-[#176B50]">
+    <div className="min-h-screen flex flex-col bg-[#F6F5F1] text-[#111318] selection:bg-[#1D4ED8]/15 selection:text-[#1D4ED8]">
       {/* Public Navbar shown only on public website */}
       {!isAppRoute && <Navbar />}
 

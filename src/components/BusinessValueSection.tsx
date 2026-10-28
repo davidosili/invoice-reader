@@ -41,34 +41,39 @@ const values: ValueItem[] = [
 
 export const BusinessValueSection: React.FC = () => {
   return (
-    <section className="bg-[#FFFFFF] py-16 md:py-24 border-b border-[#E2E6E1]">
+    <section className="bg-[#FFFFFF] py-16 md:py-24 border-b border-[#E2DFD7]">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-2xl mb-14">
-          <p className="text-[12px] font-semibold tracking-wider uppercase text-[#176B50] mb-3">
-            Business Value
-          </p>
-          <h2 className="text-[28px] sm:text-[36px] font-bold text-[#202722] tracking-tight leading-[1.15]">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="font-mono text-[9px] uppercase px-1.5 py-0.5 bg-[#F6F5F1] border border-[#DDD7CD] text-[#5A5852]">
+              REGISTER // 09
+            </span>
+            <p className="text-[11px] font-mono tracking-wider uppercase text-[#1D4ED8]">
+              Business Value
+            </p>
+          </div>
+          <h2 className="text-[28px] sm:text-[36px] font-bold text-[#111318] tracking-tight leading-[1.15]">
             Spend less time entering data. More time understanding it.
           </h2>
-          <p className="mt-4 text-[16px] text-[#626B64] leading-relaxed">
+          <p className="mt-4 text-[15px] text-[#5A5852] leading-relaxed">
             Financial paperwork should inform decision-making, not stall it. By modernizing document capture and
             verification, businesses establish a cleaner operational foundation.
           </p>
         </div>
 
         {/* Editorial Value Layout: Clean 2-Column Grid with Horizontal Dividers */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10 border-t border-[#E2E6E1] pt-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10 border-t border-[#E2DFD7] pt-10">
           {values.map((v, idx) => (
             <div key={idx} className="flex items-start gap-4">
-              <div className="w-6 h-6 rounded-[3px] bg-[#EDF4EF] flex items-center justify-center text-[#176B50] flex-shrink-0 mt-1">
+              <div className="w-6 h-6 rounded-[2px] bg-[#FAFAF8] border border-[#DDD7CD] flex items-center justify-center text-[#1B4938] flex-shrink-0 mt-0.5">
                 <Check className="w-3.5 h-3.5" />
               </div>
               <div>
-                <h3 className="text-[17px] font-bold text-[#202722] mb-1.5">
+                <h3 className="text-[16px] font-bold text-[#111318] mb-1 font-sans">
                   {v.headline}
                 </h3>
-                <p className="text-[14px] text-[#626B64] leading-relaxed">
+                <p className="text-[13px] text-[#5A5852] leading-relaxed">
                   {v.explanation}
                 </p>
               </div>

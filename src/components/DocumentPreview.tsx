@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, AlertTriangle, FileText, ShieldCheck, Search, CornerDownRight } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, ShieldCheck, ArrowRight } from 'lucide-react';
 import { ExtractedField, InvoiceMockupData } from '../types';
 
 const sampleInvoice: InvoiceMockupData = {
@@ -52,96 +52,79 @@ const sampleInvoice: InvoiceMockupData = {
 
 const extractedFields: ExtractedField[] = [
   {
+    id: "field-total",
+    label: "Final Payable Total",
+    extractedValue: "₦198,875.00",
+    confidence: "high",
+    status: "verified",
+    ruleDetail: "Deterministic arithmetic reconciled: Subtotal (₦185,000) + Tax (₦13,875) = ₦198,875.00 within 0.00 currency variance tolerance.",
+    documentLocation: { x: 55, y: 77, width: 40, height: 7 }
+  },
+  {
+    id: "field-terms",
+    label: "Payment Terms Variance",
+    extractedValue: "Net 14 (Due: 26 Oct 2026)",
+    confidence: "review",
+    status: "warning",
+    ruleDetail: "Contractual anomaly flagged: Purchase Order PO-892 stipulates Net 30. Invoice demands Net 14. Requires accounts payable review before release.",
+    documentLocation: { x: 58, y: 22, width: 38, height: 7 }
+  },
+  {
+    id: "field-vat",
+    label: "Statutory Tax Rate (7.5%)",
+    extractedValue: "₦13,875.00",
+    confidence: "high",
+    status: "verified",
+    ruleDetail: "Statutory VAT rate calculation confirmed: 7.5% of verified subtotal ₦185,000 matches stated line amount of ₦13,875.00 exactly.",
+    documentLocation: { x: 55, y: 70, width: 40, height: 6 }
+  },
+  {
     id: "field-inv-no",
     label: "Invoice Identifier",
     extractedValue: "INV-2048",
     confidence: "high",
     status: "verified",
-    ruleDetail: "Unique ID verified against supplier sequence. No duplicate found in 12-month ledger.",
-    documentLocation: { x: 62, y: 15, width: 32, height: 7 }
-  },
-  {
-    id: "field-supplier",
-    label: "Supplier Identity",
-    extractedValue: "Northstar Office Supplies Ltd.",
-    confidence: "high",
-    status: "verified",
-    ruleDetail: "Verified against Master Vendor Registry. TIN-99482104-001 confirmed active.",
-    documentLocation: { x: 6, y: 12, width: 44, height: 10 }
-  },
-  {
-    id: "field-subtotal",
-    label: "Calculated Subtotal",
-    extractedValue: "₦185,000.00",
-    confidence: "high",
-    status: "verified",
-    ruleDetail: "Line item cross-sum (114,000 + 48,000 + 23,000) matches subtotal exactly.",
-    documentLocation: { x: 58, y: 64, width: 36, height: 5 }
-  },
-  {
-    id: "field-vat",
-    label: "Tax Rate (VAT 7.5%)",
-    extractedValue: "₦13,875.00",
-    confidence: "high",
-    status: "verified",
-    ruleDetail: "Statutory VAT rate applied: 7.5% of ₦185,000 equals exactly ₦13,875.00.",
-    documentLocation: { x: 58, y: 70, width: 36, height: 5 }
-  },
-  {
-    id: "field-total",
-    label: "Final Payable Amount",
-    extractedValue: "₦198,875.00",
-    confidence: "high",
-    status: "verified",
-    ruleDetail: "Arithmetic validated: Subtotal (₦185,000) + Tax (₦13,875) = ₦198,875.00.",
-    documentLocation: { x: 58, y: 77, width: 36, height: 6 }
-  },
-  {
-    id: "field-terms",
-    label: "Payment Terms",
-    extractedValue: "Net 14 (Due: 26 Oct 2026)",
-    confidence: "review",
-    status: "warning",
-    ruleDetail: "Variance flagged: Purchase Order PO-892 stipulates Net 30 days. Requires AP sign-off.",
-    documentLocation: { x: 62, y: 23, width: 32, height: 6 }
-  },
-  {
-    id: "field-bank",
-    label: "Remittance Account",
-    extractedValue: "Zenith Bank • 0123456789",
-    confidence: "high",
-    status: "verified",
-    ruleDetail: "Matches verified supplier disbursement account on file.",
-    documentLocation: { x: 6, y: 84, width: 44, height: 8 }
+    ruleDetail: "Sequential identifier verified against historical supplier workspace records. No duplicate invoice detected in active 12-month registry.",
+    documentLocation: { x: 58, y: 14, width: 38, height: 7 }
   }
 ];
 
 export const DocumentPreview: React.FC = () => {
-  const [activeFieldId, setActiveFieldId] = useState<string>("field-terms");
+  const [activeFieldId, setActiveFieldId] = useState<string>("field-total");
   const [activeTab, setActiveTab] = useState<'split' | 'fields' | 'document'>('split');
 
   const activeField = extractedFields.find(f => f.id === activeFieldId) || extractedFields[0];
 
   return (
-    <div className="w-full bg-[#FFFFFF] border border-[#E2E6E1] rounded-[8px] shadow-preview overflow-hidden">
-      {/* Product preview toolbar */}
-      <div className="bg-[#F7F8F6] px-4 py-2.5 border-b border-[#E2E6E1] flex flex-wrap items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#176B50]" />
-          <span className="font-semibold text-[#202722] tracking-tight">LedgerLens Review Console</span>
-          <span className="text-[#626B64] border-l border-[#E2E6E1] pl-2 hidden sm:inline font-mono">
-            Interactive Demonstration • Synthetic Sample
+    <div className="w-full bg-[#FFFFFF] border border-[#E2DFD7] rounded-[4px] shadow-datum overflow-hidden">
+      {/* Bench Header Bar */}
+      <div className="bg-[#F6F5F1] px-4 py-2.5 border-b border-[#E2DFD7] flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="flex items-center gap-2.5">
+          <span className="font-mono text-[11px] font-semibold tracking-wider uppercase text-[#111318]">
+            [RECONCILIATION BENCH]
+          </span>
+          <span className="text-[#E2DFD7]">/</span>
+          <span className="font-mono text-[11px] text-[#525866]">
+            SYNTHETIC BENCHMARK FIXTURE
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2 font-mono text-[11px] text-[#525866]">
+            <span>LOC: [X:{activeField.documentLocation.x}%, Y:{activeField.documentLocation.y}%]</span>
+            <span className="text-[#E2DFD7]">|</span>
+            <span className={activeField.status === 'warning' ? 'text-[#C2410C] font-semibold' : 'text-[#15803D] font-semibold'}>
+              {activeField.status === 'warning' ? 'DISCREPANCY_FLAGGED' : 'ARITHMETIC_MATCH'}
+            </span>
+          </div>
+
           {/* View toggle for small screens */}
-          <div className="flex lg:hidden bg-[#FFFFFF] border border-[#E2E6E1] rounded-[4px] p-0.5">
+          <div className="flex lg:hidden bg-[#FFFFFF] border border-[#E2DFD7] rounded-[3px] p-0.5">
             <button
               type="button"
               onClick={() => setActiveTab('split')}
-              className={`px-2 py-0.5 text-[11px] font-medium rounded-[3px] ${
-                activeTab === 'split' ? 'bg-[#EDF4EF] text-[#176B50]' : 'text-[#626B64]'
+              className={`px-2 py-0.5 text-[11px] font-medium rounded-[2px] ${
+                activeTab === 'split' ? 'bg-[#111318] text-white' : 'text-[#525866]'
               }`}
             >
               Split
@@ -149,292 +132,208 @@ export const DocumentPreview: React.FC = () => {
             <button
               type="button"
               onClick={() => setActiveTab('document')}
-              className={`px-2 py-0.5 text-[11px] font-medium rounded-[3px] ${
-                activeTab === 'document' ? 'bg-[#EDF4EF] text-[#176B50]' : 'text-[#626B64]'
+              className={`px-2 py-0.5 text-[11px] font-medium rounded-[2px] ${
+                activeTab === 'document' ? 'bg-[#111318] text-white' : 'text-[#525866]'
               }`}
             >
-              Document
+              Source
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('fields')}
-              className={`px-2 py-0.5 text-[11px] font-medium rounded-[3px] ${
-                activeTab === 'fields' ? 'bg-[#EDF4EF] text-[#176B50]' : 'text-[#626B64]'
+              className={`px-2 py-0.5 text-[11px] font-medium rounded-[2px] ${
+                activeTab === 'fields' ? 'bg-[#111318] text-white' : 'text-[#525866]'
               }`}
             >
-              Validation
+              Ledger
             </button>
           </div>
-
-          <span className="inline-flex items-center px-2 py-0.5 rounded-[3px] text-[11px] font-medium bg-[#EDF4EF] text-[#176B50] border border-[#176B50]/20 font-mono">
-            Interactive Demo
-          </span>
         </div>
       </div>
 
-      {/* Main interactive comparison viewport */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#E2E6E1]">
-        {/* Left Column: Simulated Source Document */}
-        <div
-          className={`lg:col-span-6 p-4 sm:p-5 bg-[#FFFFFF] relative select-none ${
-            activeTab === 'fields' ? 'hidden lg:block' : 'block'
-          }`}
-        >
-          <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#E2E6E1] text-[11px] text-[#626B64]">
-            <span className="font-mono flex items-center gap-1.5 font-medium text-[#202722] text-[11px] truncate">
-              <FileText className="w-3.5 h-3.5 text-[#176B50] flex-shrink-0" />
-              source_invoice_scan.pdf
-            </span>
-            <span className="text-[10px] text-[#626B64] font-medium flex-shrink-0 font-mono">Synthetic Document Scan (Demonstration)</span>
+      {/* Main Alignment Surface */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#E2DFD7]">
+        {/* Left: Source Document Artifact */}
+        <div className={`p-4 sm:p-5 lg:col-span-6 bg-[#FFFFFF] relative ${activeTab === 'fields' ? 'hidden lg:block' : 'block'}`}>
+          <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#E2DFD7] text-[11px] font-mono text-[#525866]">
+            <span className="uppercase tracking-wider">Source Document (Scan)</span>
+            <span className="text-[#1D4ED8]">Interactive Reticle</span>
           </div>
 
-          {/* Realistic enterprise invoice layout */}
-          <div className="relative border border-[#E2E6E1] bg-[#FFFFFF] p-4 text-[11px] leading-relaxed font-sans shadow-sm">
-            {/* Header / Supplier block */}
-            <div className="flex justify-between items-start pb-4 border-b border-[#E2E6E1]">
-              <div
-                onClick={() => setActiveFieldId('field-supplier')}
-                className={`cursor-pointer p-1.5 transition-colors rounded-[3px] ${
-                  activeFieldId === 'field-supplier'
-                    ? 'ring-1 ring-[#176B50] bg-[#EDF4EF]/50'
-                    : 'hover:bg-[#F7F8F6]'
-                }`}
-              >
-                <p className="font-bold text-[#202722] text-xs uppercase tracking-wide">
-                  {sampleInvoice.supplierName} <span className="text-[9px] font-normal lowercase text-[#626B64] tracking-normal font-sans">(fictional company)</span>
-                </p>
-                <p className="text-[#626B64] text-[10px]">{sampleInvoice.supplierAddress}</p>
-                <p className="text-[#626B64] text-[10px] font-mono mt-0.5">TIN: {sampleInvoice.supplierTaxId}</p>
-              </div>
+          {/* Document Sheet Container */}
+          <div className="relative bg-[#FAFAF8] border border-[#E2DFD7] rounded-[3px] p-4 text-[11px] font-mono shadow-inner select-none overflow-hidden">
+            {/* Corner Alignment Ticks */}
+            <span className="absolute top-1 left-1 text-[#C5C1B6] text-[10px] leading-none select-none font-mono">+</span>
+            <span className="absolute top-1 right-1 text-[#C5C1B6] text-[10px] leading-none select-none font-mono">+</span>
+            <span className="absolute bottom-1 left-1 text-[#C5C1B6] text-[10px] leading-none select-none font-mono">+</span>
+            <span className="absolute bottom-1 right-1 text-[#C5C1B6] text-[10px] leading-none select-none font-mono">+</span>
 
+            {/* Simulated Document Header */}
+            <div className="flex justify-between items-start pb-3 border-b border-[#E2DFD7]">
+              <div>
+                <p className="font-bold text-[12px] text-[#111318]">{sampleInvoice.supplierName}</p>
+                <p className="text-[10px] text-[#525866]">{sampleInvoice.supplierAddress}</p>
+                <p className="text-[10px] text-[#525866]">TAX ID: {sampleInvoice.supplierTaxId}</p>
+              </div>
               <div className="text-right">
-                <span className="inline-block text-[10px] uppercase font-bold tracking-widest text-[#176B50] bg-[#EDF4EF] px-1.5 py-0.5 rounded-[3px]">
-                  TAX INVOICE
-                </span>
-                <div
-                  onClick={() => setActiveFieldId('field-inv-no')}
-                  className={`mt-1.5 cursor-pointer p-1 transition-colors rounded-[3px] ${
-                    activeFieldId === 'field-inv-no'
-                      ? 'ring-1 ring-[#176B50] bg-[#EDF4EF]/50'
-                      : 'hover:bg-[#F7F8F6]'
+                <p className="font-bold text-[13px] text-[#111318]">INVOICE</p>
+                <p className="text-[10px] font-semibold text-[#111318]">{sampleInvoice.invoiceNumber}</p>
+                <p className="text-[10px] text-[#525866]">Date: {sampleInvoice.invoiceDate}</p>
+                <p className="text-[10px] text-[#C2410C] font-semibold">Terms: Net 14</p>
+              </div>
+            </div>
+
+            {/* Bill To */}
+            <div className="py-2.5 border-b border-[#E2DFD7] text-[10px]">
+              <span className="text-[#525866] block">BILLED TO:</span>
+              <p className="font-semibold text-[#111318]">{sampleInvoice.recipientName}</p>
+              <p className="text-[#525866]">{sampleInvoice.recipientAddress}</p>
+            </div>
+
+            {/* Line Items Table */}
+            <div className="py-2.5">
+              <table className="w-full text-[10px]">
+                <thead>
+                  <tr className="text-[#525866] border-b border-[#E2DFD7] text-left">
+                    <th className="py-1">Description</th>
+                    <th className="py-1 text-right">Qty</th>
+                    <th className="py-1 text-right">Unit (₦)</th>
+                    <th className="py-1 text-right">Total (₦)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#E2DFD7]/60">
+                  {sampleInvoice.items.map((item) => (
+                    <tr key={item.id} className="text-[#111318]">
+                      <td className="py-1 truncate max-w-[130px]">{item.description}</td>
+                      <td className="py-1 text-right">{item.quantity}</td>
+                      <td className="py-1 text-right">{item.unitPrice.toLocaleString()}</td>
+                      <td className="py-1 text-right font-medium">{item.total.toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Totals */}
+            <div className="pt-2 border-t border-[#E2DFD7] space-y-1 text-right text-[10px]">
+              <p className="text-[#525866]">
+                Subtotal: <span className="font-semibold text-[#111318]">₦{sampleInvoice.subtotal.toLocaleString()}.00</span>
+              </p>
+              <p className="text-[#525866]">
+                VAT ({sampleInvoice.taxRate}): <span className="font-semibold text-[#111318]">₦{sampleInvoice.taxAmount.toLocaleString()}.00</span>
+              </p>
+              <p className="text-[12px] font-bold text-[#111318] pt-1 border-t border-[#E2DFD7]">
+                Grand Total: <span className="text-[#111318]">₦{sampleInvoice.totalAmount.toLocaleString()}.00</span>
+              </p>
+            </div>
+
+            {/* Dynamic Alignment Reticle Overlay on Source Document */}
+            {activeField && (
+              <div
+                className={`absolute pointer-events-none transition-all duration-300 z-20 ${
+                  activeField.status === 'warning'
+                    ? 'border border-[#C2410C] bg-[#C2410C]/10'
+                    : 'border border-[#1D4ED8] bg-[#1D4ED8]/10'
+                }`}
+                style={{
+                  left: `${activeField.documentLocation.x}%`,
+                  top: `${activeField.documentLocation.y}%`,
+                  width: `${activeField.documentLocation.width}%`,
+                  height: `${activeField.documentLocation.height}%`,
+                }}
+              >
+                <span
+                  className={`absolute -top-3 left-0 font-mono text-[8px] font-bold px-1 py-0.2 uppercase rounded-[1px] leading-tight text-white ${
+                    activeField.status === 'warning' ? 'bg-[#C2410C]' : 'bg-[#1D4ED8]'
                   }`}
                 >
-                  <p className="text-[10px] text-[#626B64]">Invoice No:</p>
-                  <p className="font-mono font-bold text-[#202722] text-xs">{sampleInvoice.invoiceNumber}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Bill To & Terms meta */}
-            <div className="grid grid-cols-2 gap-4 py-3 border-b border-[#E2E6E1] text-[10px]">
-              <div>
-                <p className="text-[#626B64] uppercase tracking-wider text-[9px] font-semibold">Billed To:</p>
-                <p className="font-semibold text-[#202722]">{sampleInvoice.recipientName}</p>
-                <p className="text-[#626B64]">{sampleInvoice.recipientAddress}</p>
-              </div>
-              <div
-                onClick={() => setActiveFieldId('field-terms')}
-                className={`cursor-pointer p-1.5 transition-colors rounded-[3px] ${
-                  activeFieldId === 'field-terms'
-                    ? 'ring-1 ring-[#A33A32] bg-[#A33A32]/5'
-                    : 'hover:bg-[#F7F8F6]'
-                }`}
-              >
-                <div className="space-y-1 text-[10px]">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[#626B64]">Invoice Date:</span>
-                    <span className="font-mono text-[#202722]">{sampleInvoice.invoiceDate}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[#A33A32] font-semibold">Terms / Due:</span>
-                    <span className="font-mono font-medium text-[#A33A32]">Net 14 (26 Oct)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Line items table */}
-            <table className="w-full text-left my-2 border-collapse text-[10px]">
-              <thead>
-                <tr className="border-b border-[#E2E6E1] text-[#626B64] font-medium">
-                  <th className="py-1 pr-2">Description</th>
-                  <th className="py-1 px-2 text-right">Qty</th>
-                  <th className="py-1 px-2 text-right">Unit ({sampleInvoice.currency})</th>
-                  <th className="py-1 pl-2 text-right">Total ({sampleInvoice.currency})</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#E2E6E1]/60">
-                {sampleInvoice.items.map((item) => (
-                  <tr
-                    key={item.id}
-                    onClick={() => setActiveFieldId('field-subtotal')}
-                    className="hover:bg-[#F7F8F6] cursor-pointer"
-                  >
-                    <td className="py-1.5 pr-2 text-[#202722]">{item.description}</td>
-                    <td className="py-1.5 px-2 text-right font-mono text-[#626B64]">{item.quantity}</td>
-                    <td className="py-1.5 px-2 text-right font-mono text-[#626B64]">
-                      {item.unitPrice.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                    </td>
-                    <td className="py-1.5 pl-2 text-right font-mono text-[#202722] font-medium">
-                      {item.total.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            {/* Financial Totals */}
-            <div className="pt-2 border-t border-[#E2E6E1] space-y-1 text-[11px]">
-              <div
-                onClick={() => setActiveFieldId('field-subtotal')}
-                className={`flex justify-between cursor-pointer px-1.5 py-0.5 rounded-[3px] ${
-                  activeFieldId === 'field-subtotal' ? 'ring-1 ring-[#176B50] bg-[#EDF4EF]/50' : 'hover:bg-[#F7F8F6]'
-                }`}
-              >
-                <span className="text-[#626B64]">Subtotal:</span>
-                <span className="font-mono font-medium text-[#202722]">
-                  {sampleInvoice.currency}{sampleInvoice.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  {activeField.label}
                 </span>
               </div>
-              <div
-                onClick={() => setActiveFieldId('field-vat')}
-                className={`flex justify-between cursor-pointer px-1.5 py-0.5 rounded-[3px] ${
-                  activeFieldId === 'field-vat' ? 'ring-1 ring-[#176B50] bg-[#EDF4EF]/50' : 'hover:bg-[#F7F8F6]'
-                }`}
-              >
-                <span className="text-[#626B64]">VAT ({sampleInvoice.taxRate}):</span>
-                <span className="font-mono font-medium text-[#202722]">
-                  {sampleInvoice.currency}{sampleInvoice.taxAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                </span>
-              </div>
-              <div
-                onClick={() => setActiveFieldId('field-total')}
-                className={`flex justify-between cursor-pointer px-1.5 py-1 rounded-[3px] border-t border-[#E2E6E1] font-bold ${
-                  activeFieldId === 'field-total' ? 'ring-1 ring-[#176B50] bg-[#EDF4EF]' : 'hover:bg-[#F7F8F6]'
-                }`}
-              >
-                <span className="text-[#202722]">Total Due:</span>
-                <span className="font-mono text-[#176B50] text-xs">
-                  {sampleInvoice.currency}{sampleInvoice.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                </span>
-              </div>
-            </div>
-
-            {/* Bank details footer */}
-            <div
-              onClick={() => setActiveFieldId('field-bank')}
-              className={`mt-3 pt-2 border-t border-dashed border-[#E2E6E1] text-[9px] text-[#626B64] cursor-pointer px-1.5 py-1 rounded-[3px] ${
-                activeFieldId === 'field-bank' ? 'ring-1 ring-[#176B50] bg-[#EDF4EF]/50' : 'hover:bg-[#F7F8F6]'
-              }`}
-            >
-              <span className="font-semibold text-[#202722]">Settlement Instructions: </span>
-              {sampleInvoice.bankName} • Account: <span className="font-mono font-bold">{sampleInvoice.bankAccount}</span>
-            </div>
-          </div>
-
-          <div className="mt-2 text-[10px] text-[#626B64] flex items-center justify-between">
-            <span className="italic">Click any document section to trace verification</span>
-            <span className="text-[#626B64]/80">Fictional sample data</span>
+            )}
           </div>
         </div>
 
-        {/* Right Column: Extracted Structured Fields & Audit Intelligence */}
-        <div
-          className={`lg:col-span-6 p-4 sm:p-5 bg-[#F7F8F6] flex flex-col justify-between ${
-            activeTab === 'document' ? 'hidden lg:flex' : 'flex'
-          }`}
-        >
+        {/* Right: Reconciled Structured Ledger */}
+        <div className={`p-4 sm:p-5 lg:col-span-6 bg-[#FFFFFF] flex flex-col justify-between ${activeTab === 'document' ? 'hidden lg:flex' : 'flex'}`}>
           <div>
-            <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#E2E6E1] text-[11px]">
-              <span className="font-medium text-[#202722] flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#176B50]" />
-                Extracted Intelligence & Audit Rules
-              </span>
-              <span className="text-[10px] font-mono text-[#626B64]">7 Fields Checked</span>
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#E2DFD7] text-[11px] font-mono text-[#525866]">
+              <span className="uppercase tracking-wider">Reconciled Ledger Register</span>
+              <span>Select to inspect proof</span>
             </div>
 
-            {/* Field selector list */}
-            <div className="space-y-1.5">
+            {/* Interactive Field Selection Rows */}
+            <div className="space-y-2 mb-4">
               {extractedFields.map((field) => {
                 const isSelected = field.id === activeFieldId;
                 const isWarning = field.status === 'warning';
 
                 return (
-                  <div
+                  <button
                     key={field.id}
+                    type="button"
                     onClick={() => setActiveFieldId(field.id)}
-                    className={`cursor-pointer p-2.5 rounded-[4px] border transition-all text-xs ${
+                    className={`w-full p-2.5 rounded-[3px] border text-left transition-all flex items-center justify-between gap-3 text-xs ${
                       isSelected
                         ? isWarning
-                          ? 'bg-[#FFFFFF] border-[#A33A32] shadow-sm'
-                          : 'bg-[#FFFFFF] border-[#176B50] shadow-sm'
-                        : 'bg-[#FFFFFF] border-[#E2E6E1] hover:border-[#626B64]/40'
+                          ? 'border-[#C2410C] bg-[#FEF2F2] shadow-sm'
+                          : 'border-[#1D4ED8] bg-[#F6F5F1] shadow-sm'
+                        : 'border-[#E2DFD7] hover:border-[#C5C1B6] bg-[#FFFFFF]'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium text-[#202722]">{field.label}</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-mono font-semibold text-[#202722]">
-                          {field.extractedValue}
-                        </span>
-                        {isWarning ? (
-                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[3px] text-[10px] font-medium bg-[#A33A32]/10 text-[#A33A32]">
-                            <AlertTriangle className="w-2.5 h-2.5" />
-                            Review
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[3px] text-[10px] font-medium bg-[#EDF4EF] text-[#176B50]">
-                            <Check className="w-2.5 h-2.5" />
-                            Verified
-                          </span>
-                        )}
-                      </div>
+                    <div className="min-w-0">
+                      <p className="font-mono text-[10px] text-[#525866] uppercase tracking-wider truncate">
+                        {field.label}
+                      </p>
+                      <p className="font-mono font-semibold text-[13px] text-[#111318] truncate mt-0.5">
+                        {field.extractedValue}
+                      </p>
                     </div>
-                  </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span
+                        className={`font-mono text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded-[2px] ${
+                          isWarning
+                            ? 'bg-[#FEF2F2] text-[#C2410C] border border-[#C2410C]/30'
+                            : 'bg-[#EDF7EE] text-[#15803D] border border-[#15803D]/30'
+                        }`}
+                      >
+                        {isWarning ? 'Review' : 'Verified'}
+                      </span>
+                      <ArrowRight className={`w-3.5 h-3.5 transition-transform ${isSelected ? 'translate-x-0.5 text-[#111318]' : 'text-[#C5C1B6]'}`} />
+                    </div>
+                  </button>
                 );
               })}
             </div>
+
+            {/* Active Proof Panel */}
+            <div className="p-3.5 bg-[#F6F5F1] border border-[#E2DFD7] rounded-[3px]">
+              <div className="flex items-center gap-2 mb-1.5">
+                {activeField.status === 'warning' ? (
+                  <AlertTriangle className="w-4 h-4 text-[#C2410C] shrink-0" />
+                ) : (
+                  <CheckCircle2 className="w-4 h-4 text-[#15803D] shrink-0" />
+                )}
+                <span className="font-mono text-[11px] font-bold text-[#111318] uppercase tracking-wider">
+                  Verification Proof Rule
+                </span>
+              </div>
+              <p className="text-[12px] text-[#525866] leading-relaxed">
+                {activeField.ruleDetail}
+              </p>
+            </div>
           </div>
 
-          {/* Active Field Verification Detail Inspector */}
-          <div className="mt-4 pt-3 border-t border-[#E2E6E1] bg-[#FFFFFF] p-3 rounded-[4px] border border-[#E2E6E1]">
-            <div className="flex items-center justify-between text-[11px] mb-1.5">
-              <span className="font-semibold text-[#202722] flex items-center gap-1">
-                <Search className="w-3 h-3 text-[#176B50]" />
-                Inspection Rule: {activeField.label}
-              </span>
-              <span
-                className={`text-[10px] uppercase font-mono px-1.5 py-0.5 rounded-[3px] ${
-                  activeField.status === 'warning'
-                    ? 'bg-[#A33A32]/10 text-[#A33A32] font-semibold'
-                    : 'bg-[#EDF4EF] text-[#176B50]'
-                }`}
-              >
-                {activeField.status === 'warning' ? 'Human Sign-off Required' : 'Automated Rule Passed'}
-              </span>
-            </div>
-            <p className="text-[12px] text-[#626B64] leading-relaxed">
-              {activeField.ruleDetail}
-            </p>
-            <div className="mt-2 pt-2 border-t border-[#E2E6E1]/60 flex items-center justify-between text-[10px] text-[#626B64]">
-              <span className="flex items-center gap-1">
-                <CornerDownRight className="w-3 h-3 text-[#626B64]" />
-                Location in scan: Page 1 • X: {activeField.documentLocation.x}% Y: {activeField.documentLocation.y}%
-              </span>
-              <span className="font-medium text-[#202722] font-mono">Simulated Audit Hash #8F29A</span>
-            </div>
+          {/* Footer Ledger Guarantee */}
+          <div className="pt-4 mt-4 border-t border-[#E2DFD7] flex items-center justify-between text-[11px] font-mono text-[#525866]">
+            <span className="flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#15803D]" />
+              Deterministic 2-Cent Math Tolerance Checked
+            </span>
+            <span>RLS ISOLATED</span>
           </div>
         </div>
-      </div>
-
-      {/* Product preview footer disclaimer */}
-      <div className="bg-[#FFFFFF] px-4 py-2 border-t border-[#E2E6E1] text-[11px] text-[#626B64] flex flex-wrap items-center justify-between gap-2">
-        <span className="text-[#626B64]">
-          Product Preview: Static interactive demonstration of proposed document intelligence workflow (synthetic data, not real customer records).
-        </span>
-        <span className="text-[#176B50] font-medium flex items-center gap-1 text-[11px] font-mono">
-          Simulated confidence score: 98.4% (illustrative demo)
-        </span>
       </div>
     </div>
   );

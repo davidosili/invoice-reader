@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FileText, Settings, LogOut, ChevronDown, Check, Building2, User } from 'lucide-react';
+import { BrandLogo } from './BrandLogo';
 
 export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, workspaces, currentWorkspace, setCurrentWorkspace, signOut } = useAuth();
@@ -19,57 +20,35 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const isSettingsActive = location.pathname.startsWith('/app/settings');
 
   return (
-    <div className="min-h-screen bg-[#F7F8F6] flex flex-col text-[#202722]">
+    <div className="min-h-screen bg-[#F6F5F1] flex flex-col text-[#111318]">
       {/* Top Application Bar */}
-      <header className="sticky top-0 z-40 bg-[#FFFFFF] border-b border-[#E2E6E1]">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 h-15 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-[#FFFFFF] border-b border-[#E2DFD7]">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-15 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            {/* Brand Logo */}
-            <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-7 h-7 rounded-[4px] bg-[#176B50] flex items-center justify-center text-white">
-                <svg
-                  className="w-3.5 h-3.5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                  <polyline points="14 2 14 8 20 8" />
-                  <path d="m9 15 2 2 4-4" />
-                </svg>
-              </div>
-              <span className="text-[16px] font-semibold tracking-tight text-[#202722]">
-                LedgerLens<span className="text-[#176B50] font-normal ml-0.5">AI</span>
-              </span>
-              <span className="hidden sm:inline-block text-[11px] font-mono uppercase bg-[#EDF4EF] text-[#176B50] px-1.5 py-0.5 rounded-[3px] border border-[#176B50]/20 ml-1">
-                Workspace Console
-              </span>
-            </Link>
+            {/* Brand Logo with Workspace Subtitle */}
+            <BrandLogo to="/app/documents" size="sm" subtitle="CONSOLE" />
 
             {/* Workspace Selector Dropdown */}
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setWorkspaceMenuOpen(!workspaceMenuOpen)}
-                className="flex items-center gap-2 px-2.5 py-1.5 text-[13px] font-medium text-[#202722] bg-[#F7F8F6] hover:bg-[#E2E6E1]/50 border border-[#E2E6E1] rounded-[4px] transition-colors focus-ring"
+                className="flex items-center gap-2 px-2.5 py-1.5 text-[12px] font-mono text-[#111318] bg-[#F6F5F1] hover:bg-[#E2DFD7]/60 border border-[#E2DFD7] rounded-[3px] transition-colors focus-ring"
               >
-                <Building2 className="w-3.5 h-3.5 text-[#176B50]" />
-                <span className="max-w-[140px] sm:max-w-[180px] truncate">
+                <Building2 className="w-3.5 h-3.5 text-[#1D4ED8]" />
+                <span className="max-w-[140px] sm:max-w-[180px] truncate font-medium">
                   {currentWorkspace?.name || 'Loading Workspace...'}
                 </span>
-                <ChevronDown className="w-3.5 h-3.5 text-[#626B64]" />
+                <ChevronDown className="w-3 h-3 text-[#525866]" />
               </button>
 
               {workspaceMenuOpen && (
                 <div
-                  className="absolute left-0 mt-1 w-64 bg-[#FFFFFF] border border-[#E2E6E1] rounded-[4px] shadow-sm py-1 z-50 text-xs"
+                  className="absolute left-0 mt-1 w-64 bg-[#FFFFFF] border border-[#E2DFD7] rounded-[3px] shadow-datum py-1 z-50 text-xs"
                   onMouseLeave={() => setWorkspaceMenuOpen(false)}
                 >
-                  <div className="px-3 py-1.5 text-[11px] font-semibold uppercase text-[#626B64] border-b border-[#E2E6E1]">
-                    Your Workspaces
+                  <div className="px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#525866] border-b border-[#E2DFD7]">
+                    Workspaces
                   </div>
                   {workspaces.map((ws) => (
                     <button
@@ -79,14 +58,14 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
                         setCurrentWorkspace(ws);
                         setWorkspaceMenuOpen(false);
                       }}
-                      className="w-full px-3 py-2 text-left flex items-center justify-between hover:bg-[#F7F8F6] text-[#202722] transition-colors"
+                      className="w-full px-3 py-2 text-left flex items-center justify-between hover:bg-[#F6F5F1] text-[#111318] transition-colors"
                     >
                       <div className="truncate pr-2">
-                        <div className="font-medium truncate">{ws.name}</div>
-                        <div className="text-[10px] text-[#626B64] capitalize">{ws.role || 'member'}</div>
+                        <div className="font-medium truncate text-[13px]">{ws.name}</div>
+                        <div className="font-mono text-[10px] text-[#525866] capitalize">{ws.role || 'member'}</div>
                       </div>
                       {currentWorkspace?.id === ws.id && (
-                        <Check className="w-3.5 h-3.5 text-[#176B50] flex-shrink-0" />
+                        <Check className="w-3.5 h-3.5 text-[#1D4ED8] flex-shrink-0" />
                       )}
                     </button>
                   ))}
@@ -98,25 +77,25 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
             <nav className="hidden md:flex items-center gap-1 text-[13px] ml-2">
               <Link
                 to="/app/documents"
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] font-medium transition-colors ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[3px] font-medium transition-colors ${
                   isDocumentsActive
-                    ? 'bg-[#EDF4EF] text-[#176B50]'
-                    : 'text-[#626B64] hover:text-[#202722] hover:bg-[#F7F8F6]'
+                    ? 'bg-[#111318] text-white shadow-datum'
+                    : 'text-[#525866] hover:text-[#111318] hover:bg-[#F6F5F1]'
                 }`}
               >
-                <FileText className="w-4 h-4" />
+                <FileText className="w-3.5 h-3.5" />
                 <span>Documents</span>
               </Link>
 
               <Link
                 to="/app/settings"
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] font-medium transition-colors ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[3px] font-medium transition-colors ${
                   isSettingsActive
-                    ? 'bg-[#EDF4EF] text-[#176B50]'
-                    : 'text-[#626B64] hover:text-[#202722] hover:bg-[#F7F8F6]'
+                    ? 'bg-[#111318] text-white shadow-datum'
+                    : 'text-[#525866] hover:text-[#111318] hover:bg-[#F6F5F1]'
                 }`}
               >
-                <Settings className="w-4 h-4" />
+                <Settings className="w-3.5 h-3.5" />
                 <span>Settings</span>
               </Link>
             </nav>
@@ -128,38 +107,38 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
               <button
                 type="button"
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-2 p-1 text-[13px] text-[#202722] hover:bg-[#F7F8F6] rounded-[4px] border border-transparent hover:border-[#E2E6E1] focus-ring"
+                className="flex items-center gap-2 p-1 text-[13px] text-[#111318] hover:bg-[#F6F5F1] rounded-[3px] border border-transparent hover:border-[#E2DFD7] focus-ring"
               >
-                <div className="w-7 h-7 rounded-[4px] bg-[#EDF4EF] flex items-center justify-center text-[#176B50] font-semibold text-xs border border-[#176B50]/20">
+                <div className="w-7 h-7 rounded-[3px] bg-[#F6F5F1] flex items-center justify-center text-[#111318] font-semibold text-xs border border-[#E2DFD7]">
                   <User className="w-3.5 h-3.5" />
                 </div>
-                <span className="hidden sm:inline-block max-w-[150px] truncate text-[13px] font-medium">
+                <span className="hidden sm:inline-block max-w-[150px] truncate text-[12px] font-mono text-[#525866]">
                   {user?.email}
                 </span>
-                <ChevronDown className="w-3 h-3 text-[#626B64]" />
+                <ChevronDown className="w-3 h-3 text-[#525866]" />
               </button>
 
               {userMenuOpen && (
                 <div
-                  className="absolute right-0 mt-1 w-52 bg-[#FFFFFF] border border-[#E2E6E1] rounded-[4px] shadow-sm py-1 z-50 text-xs"
+                  className="absolute right-0 mt-1 w-52 bg-[#FFFFFF] border border-[#E2DFD7] rounded-[3px] shadow-datum py-1 z-50 text-xs"
                   onMouseLeave={() => setUserMenuOpen(false)}
                 >
-                  <div className="px-3 py-2 border-b border-[#E2E6E1]">
-                    <p className="font-semibold text-[#202722] truncate">{user?.email}</p>
-                    <p className="text-[10px] text-[#626B64] mt-0.5">Role: {currentWorkspace?.role || 'member'}</p>
+                  <div className="px-3 py-2 border-b border-[#E2DFD7]">
+                    <p className="font-semibold text-[#111318] truncate">{user?.email}</p>
+                    <p className="font-mono text-[10px] text-[#525866] mt-0.5">Role: {currentWorkspace?.role || 'member'}</p>
                   </div>
                   <Link
                     to="/app/settings"
                     onClick={() => setUserMenuOpen(false)}
-                    className="flex items-center gap-2 px-3 py-2 text-[#202722] hover:bg-[#F7F8F6]"
+                    className="flex items-center gap-2 px-3 py-2 text-[#111318] hover:bg-[#F6F5F1]"
                   >
-                    <Settings className="w-3.5 h-3.5 text-[#626B64]" />
+                    <Settings className="w-3.5 h-3.5 text-[#525866]" />
                     <span>Workspace Settings</span>
                   </Link>
                   <button
                     type="button"
                     onClick={handleSignOut}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-[#A33A32] hover:bg-[#A33A32]/10 border-t border-[#E2E6E1]"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-[#C2410C] hover:bg-[#FEF2F2] border-t border-[#E2DFD7]"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                     <span>Sign Out</span>
@@ -172,7 +151,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
       </header>
 
       {/* Main App Content Viewport */}
-      <main className="flex-1 max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {children}
       </main>
     </div>

@@ -8,47 +8,50 @@ export default {
     extend: {
       colors: {
         brand: {
-          bg: "#FFFFFF",
-          surface: "#F7F8F6",
-          text: "#202722",
-          muted: "#626B64",
-          accent: "#176B50",
-          accentHover: "#12563F",
-          border: "#E2E6E1",
-          verified: "#EDF4EF",
-          error: "#A33A32",
+          canvas: "#F6F5F1",
+          surface: "#FFFFFF",
+          surfaceMuted: "#ECEAE3",
+          ink: "#111318",
+          muted: "#525866",
+          border: "#E2DFD7",
+          borderDark: "#C5C1B6",
+          accent: "#1D4ED8",
+          accentHover: "#1E40AF",
+          discrepancy: "#C2410C",
+          discrepancyBg: "#FEF2F2",
+          verified: "#15803D",
+          verifiedBg: "#EDF7EE",
+          warning: "#B45309",
+          warningBg: "#FFFBEB",
         }
       },
       borderRadius: {
-        'status': '3px',
-        'btn': '4px',
-        'input': '4px',
-        'card': '6px',
-        'preview': '8px',
+        'status': '2px',
+        'btn': '3px',
+        'input': '3px',
+        'card': '4px',
+        'preview': '6px',
       },
       fontFamily: {
         sans: [
+          '"Plus Jakarta Sans"',
           'Inter',
           '-apple-system',
           'BlinkMacSystemFont',
           '"Segoe UI"',
           'Roboto',
-          'Helvetica',
-          'Arial',
           'sans-serif'
         ],
         mono: [
           '"JetBrains Mono"',
           '"SF Mono"',
           'Menlo',
-          'Monaco',
-          'Consolas',
           'monospace'
         ]
       },
       boxShadow: {
-        'subtle': '0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.02)',
-        'preview': '0 4px 12px 0 rgba(32, 39, 34, 0.05), 0 1px 2px 0 rgba(32, 39, 34, 0.03)',
+        'datum': '0 1px 2px 0 rgba(17, 19, 24, 0.04)',
+        'datum-lg': '0 4px 16px -2px rgba(17, 19, 24, 0.06), 0 1px 3px 0 rgba(17, 19, 24, 0.03)',
       }
     },
   },

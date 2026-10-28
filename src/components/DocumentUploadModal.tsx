@@ -118,23 +118,30 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/40 flex items-center justify-center p-4">
-      <div className="bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] shadow-preview max-w-lg w-full overflow-hidden">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-[2px] flex items-center justify-center p-4">
+      <div className="bg-[#FFFFFF] border border-[#DDD7CD] rounded-[2px] shadow-2xl max-w-lg w-full overflow-hidden">
         {/* Header */}
-        <div className="px-5 py-4 border-b border-[#E2E6E1] flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-[3px] bg-[#EDF4EF] flex items-center justify-center text-[#176B50]">
+        <div className="px-5 py-4 border-b border-[#E2DFD7] flex items-center justify-between bg-[#FAFAF8]">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-[2px] bg-[#111318] flex items-center justify-center text-white">
               <UploadCloud className="w-3.5 h-3.5" />
             </div>
-            <h3 className="text-[16px] font-bold text-[#202722]">
-              Upload Supplier Invoice
-            </h3>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-[9px] uppercase px-1 py-0.2 bg-[#F6F5F1] border border-[#DDD7CD] text-[#5A5852]">
+                  INGESTION
+                </span>
+                <h3 className="text-[15px] font-bold text-[#111318] tracking-tight">
+                  Upload Supplier Invoice
+                </h3>
+              </div>
+            </div>
           </div>
           <button
             type="button"
             disabled={isUploading}
             onClick={handleClose}
-            className="text-[#626B64] hover:text-[#202722] p-1 rounded-[3px] transition-colors disabled:opacity-50"
+            className="text-[#5A5852] hover:text-[#111318] p-1 rounded-[2px] transition-colors disabled:opacity-50"
           >
             <X className="w-4 h-4" />
           </button>
@@ -143,32 +150,38 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
         {/* Modal Body */}
         <div className="p-5 space-y-4">
           {error && (
-            <div className="p-3 bg-[#A33A32]/10 border border-[#A33A32]/30 rounded-[4px] flex items-start gap-2 text-[12px] text-[#A33A32]">
+            <div className="p-3 bg-[#FEF2F2] border border-[#FECACA] rounded-[2px] flex items-start gap-2 text-[12px] text-[#9B2C2C]">
               <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
           {duplicateWarning && (
-            <div className="p-3 bg-[#FFFBEB] border border-[#FDE68A] rounded-[4px] flex items-start gap-2 text-[12px] text-[#B45309]">
+            <div className="p-3 bg-[#FFFBEB] border border-[#FED7AA] rounded-[2px] flex items-start gap-2 text-[12px] text-[#C2410C]">
               <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
               <span>{duplicateWarning}</span>
             </div>
           )}
 
-          {/* Drag & Drop Upload Zone */}
+          {/* Drag & Drop Upload Zone with Alignment Marks */}
           <div
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
             onClick={() => !isUploading && fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-[4px] p-6 text-center cursor-pointer transition-colors ${
+            className={`relative border border-dashed rounded-[2px] p-8 text-center cursor-pointer transition-all ${
               dragActive
-                ? 'border-[#176B50] bg-[#EDF4EF]/40'
-                : 'border-[#E2E6E1] hover:border-[#176B50]/60 bg-[#F7F8F6]'
+                ? 'border-[#1D4ED8] bg-[#EFF6FF]'
+                : 'border-[#DDD7CD] hover:border-[#111318] bg-[#F6F5F1]/60'
             }`}
           >
+            {/* Registration Corner Ticks */}
+            <span className="absolute top-1 left-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+            <span className="absolute top-1 right-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+            <span className="absolute bottom-1 left-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+            <span className="absolute bottom-1 right-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+
             <input
               ref={fileInputRef}
               type="file"
@@ -181,23 +194,23 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
               className="hidden"
             />
 
-            <UploadCloud className="w-8 h-8 text-[#626B64] mx-auto mb-2" />
-            <p className="text-[14px] font-medium text-[#202722]">
-              Click to select or drag and drop invoice
+            <UploadCloud className="w-7 h-7 text-[#5A5852] mx-auto mb-2" />
+            <p className="text-[13px] font-semibold text-[#111318]">
+              Click to select or drag and drop invoice scan
             </p>
-            <p className="text-[12px] text-[#626B64] mt-1">
-              Supported formats: PDF, JPG, PNG (Max 20MB)
+            <p className="text-[11px] font-mono text-[#5A5852] mt-1">
+              SUPPORTED: PDF, JPG, PNG • MAXIMUM LIMIT: 20MB
             </p>
           </div>
 
           {/* Selected File Details */}
           {selectedFile && (
-            <div className="p-3 bg-[#FFFFFF] border border-[#E2E6E1] rounded-[4px] flex items-center justify-between">
+            <div className="p-3 bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] flex items-center justify-between">
               <div className="flex items-center gap-2.5 truncate pr-2">
-                <FileText className="w-4 h-4 text-[#176B50] flex-shrink-0" />
+                <FileText className="w-4 h-4 text-[#1D4ED8] flex-shrink-0" />
                 <div className="truncate">
-                  <p className="text-[13px] font-medium text-[#202722] truncate">{selectedFile.name}</p>
-                  <p className="text-[11px] text-[#626B64]">
+                  <p className="text-[13px] font-medium text-[#111318] truncate">{selectedFile.name}</p>
+                  <p className="text-[11px] font-mono text-[#5A5852]">
                     {(selectedFile.size / 1024).toFixed(1)} KB • {selectedFile.type || 'Document'}
                   </p>
                 </div>
@@ -207,7 +220,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedFile(null)}
-                  className="text-[#626B64] hover:text-[#A33A32] p-1"
+                  className="text-[#5A5852] hover:text-[#9B2C2C] p-1"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -218,13 +231,13 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
           {/* Upload Progress Bar */}
           {isUploading && (
             <div className="space-y-1.5 pt-1">
-              <div className="flex justify-between text-[11px] text-[#626B64]">
-                <span>Encrypting and uploading to private storage...</span>
-                <span className="font-mono">{uploadProgress}%</span>
+              <div className="flex justify-between text-[11px] font-mono text-[#5A5852]">
+                <span>ENCRYPTING & ATTESTING TO PRIVATE VAULT...</span>
+                <span>{uploadProgress}%</span>
               </div>
-              <div className="w-full h-1.5 bg-[#E2E6E1] rounded-full overflow-hidden">
+              <div className="w-full h-1 bg-[#E2DFD7] overflow-hidden">
                 <div
-                  className="h-full bg-[#176B50] transition-all duration-300"
+                  className="h-full bg-[#111318] transition-all duration-300"
                   style={{ width: `${uploadProgress}%` }}
                 />
               </div>
@@ -232,19 +245,19 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
           )}
 
           {/* Security & Verification Guarantee */}
-          <div className="pt-2 border-t border-[#E2E6E1] flex items-center gap-2 text-[11px] text-[#626B64]">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#176B50] flex-shrink-0" />
-            <span>Files are stored privately in encrypted workspace storage. No public bucket access.</span>
+          <div className="pt-2 border-t border-[#E2DFD7] flex items-center gap-2 text-[11px] text-[#5A5852]">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#1B4938] flex-shrink-0" />
+            <span>Encrypted workspace isolation with row-level security. Never shared across tenants.</span>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-5 py-3.5 bg-[#F7F8F6] border-t border-[#E2E6E1] flex justify-end gap-2.5">
+        <div className="px-5 py-3.5 bg-[#FAFAF8] border-t border-[#E2DFD7] flex justify-end gap-2.5">
           <button
             type="button"
             disabled={isUploading}
             onClick={handleClose}
-            className="px-4 py-2 text-[13px] font-medium text-[#202722] hover:bg-[#FFFFFF] border border-[#E2E6E1] rounded-[4px] transition-colors disabled:opacity-50"
+            className="px-4 py-2 text-[12px] font-medium text-[#111318] hover:bg-[#FFFFFF] border border-[#DDD7CD] rounded-[2px] transition-colors disabled:opacity-50"
           >
             Cancel
           </button>
@@ -252,9 +265,9 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
             type="button"
             disabled={!selectedFile || isUploading}
             onClick={handleUpload}
-            className="px-4 py-2 text-[13px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors focus-ring disabled:opacity-50"
+            className="px-4 py-2 text-[12px] font-semibold text-white bg-[#111318] hover:bg-[#1D4ED8] rounded-[2px] transition-colors focus-ring disabled:opacity-50"
           >
-            {isUploading ? 'Uploading...' : 'Confirm & Upload'}
+            {isUploading ? 'Registering...' : 'Confirm & Upload'}
           </button>
         </div>
       </div>

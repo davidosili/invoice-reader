@@ -46,17 +46,22 @@ const segments: Segment[] = [
 
 export const CustomerSection: React.FC = () => {
   return (
-    <section className="bg-[#F7F8F6] py-16 md:py-24 border-b border-[#E2E6E1]">
+    <section className="bg-[#F6F5F1] py-16 md:py-24 border-b border-[#E2DFD7]">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-2xl mb-12">
-          <p className="text-[12px] font-semibold tracking-wider uppercase text-[#176B50] mb-3">
-            Market Focus
-          </p>
-          <h2 className="text-[28px] sm:text-[36px] font-bold text-[#202722] tracking-tight leading-[1.15]">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="font-mono text-[9px] uppercase px-1.5 py-0.5 bg-[#FFFFFF] border border-[#DDD7CD] text-[#5A5852]">
+              REGISTER // 07
+            </span>
+            <p className="text-[11px] font-mono tracking-wider uppercase text-[#1D4ED8]">
+              Market Focus
+            </p>
+          </div>
+          <h2 className="text-[28px] sm:text-[36px] font-bold text-[#111318] tracking-tight leading-[1.15]">
             Built for businesses that process paperwork at scale.
           </h2>
-          <p className="mt-4 text-[16px] text-[#626B64] leading-relaxed">
+          <p className="mt-4 text-[15px] text-[#5A5852] leading-relaxed">
             LedgerLens AI is built specifically for operations where invoice volume and document complexity
             create substantial manual burden. Our initial focus is centered on wholesale distribution networks,
             with broader accounting and procurement workflows planned for future expansion.
@@ -68,34 +73,40 @@ export const CustomerSection: React.FC = () => {
           {segments.map((seg) => (
             <div
               key={seg.title}
-              className={`p-6 sm:p-7 rounded-[4px] border transition-all ${
+              className={`p-6 sm:p-7 rounded-[2px] border transition-all ${
                 seg.isInitialTarget
-                  ? 'bg-[#FFFFFF] border-[#176B50] shadow-sm'
-                  : 'bg-[#FFFFFF] border-[#E2E6E1]'
+                  ? 'bg-[#FFFFFF] border-[#111318] shadow-sm relative'
+                  : 'bg-[#FFFFFF] border-[#E2DFD7]'
               }`}
             >
+              {seg.isInitialTarget && (
+                <>
+                  <span className="absolute top-1 left-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+                  <span className="absolute top-1 right-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+                </>
+              )}
               <div className="flex items-center justify-between mb-3">
                 <span
-                  className={`text-[11px] font-mono px-2 py-0.5 rounded-[3px] font-medium ${
+                  className={`text-[10px] font-mono px-2 py-0.5 rounded-[2px] font-medium uppercase tracking-wider ${
                     seg.isInitialTarget
-                      ? 'bg-[#EDF4EF] text-[#176B50] border border-[#176B50]/30'
-                      : 'bg-[#F7F8F6] text-[#626B64] border border-[#E2E6E1]'
+                      ? 'bg-[#111318] text-white'
+                      : 'bg-[#FAFAF8] text-[#5A5852] border border-[#DDD7CD]'
                   }`}
                 >
                   {seg.badge}
                 </span>
-                <ArrowUpRight className="w-4 h-4 text-[#626B64]" />
+                <ArrowUpRight className="w-4 h-4 text-[#5A5852]" />
               </div>
 
-              <h3 className="text-[20px] font-bold text-[#202722] mb-2">
+              <h3 className="text-[19px] font-bold text-[#111318] mb-2 font-sans">
                 {seg.title}
               </h3>
 
-              <p className="text-[15px] font-medium text-[#202722] leading-relaxed mb-3">
+              <p className="text-[14px] font-medium text-[#111318] leading-relaxed mb-3">
                 {seg.summary}
               </p>
 
-              <p className="text-[13px] text-[#626B64] leading-relaxed pt-3 border-t border-[#E2E6E1]">
+              <p className="text-[13px] text-[#5A5852] leading-relaxed pt-3 border-t border-[#E2DFD7]">
                 {seg.workflowContext}
               </p>
             </div>
@@ -103,9 +114,9 @@ export const CustomerSection: React.FC = () => {
         </div>
 
         {/* Market Note */}
-        <div className="mt-8 pt-4 border-t border-[#E2E6E1] text-[12px] text-[#626B64] flex items-center justify-between flex-wrap gap-2">
+        <div className="mt-8 pt-4 border-t border-[#E2DFD7] text-[12px] text-[#5A5852] flex items-center justify-between flex-wrap gap-2">
           <span>Focused on commercial distributors, wholesale networks, and growing operations.</span>
-          <span className="italic">LedgerLens AI does not claim existing enterprise customer relationships.</span>
+          <span className="italic font-mono text-[11px]">LedgerLens AI does not claim unverified enterprise customer relationships.</span>
         </div>
       </div>
     </section>

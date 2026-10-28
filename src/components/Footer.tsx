@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { BrandLogo } from './BrandLogo';
 
 export const Footer: React.FC = () => {
   const location = useLocation();
@@ -10,45 +11,26 @@ export const Footer: React.FC = () => {
   const isTermsPage = location.pathname === '/terms';
 
   return (
-    <footer className="bg-[#FFFFFF] border-t border-[#E2E6E1] py-12 text-[#626B64]">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-8 pb-10 border-b border-[#E2E6E1]">
+    <footer className="bg-[#FFFFFF] border-t border-[#E2DFD7] py-12 text-[#525866]">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-8 pb-10 border-b border-[#E2DFD7]">
           {/* Brand & Mission Column */}
-          <div className="sm:col-span-2 md:col-span-4 space-y-3">
-            <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-7 h-7 rounded-[3px] bg-[#176B50] flex items-center justify-center text-white">
-                <svg
-                  className="w-3.5 h-3.5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                  <polyline points="14 2 14 8 20 8" />
-                  <path d="m9 15 2 2 4-4" />
-                </svg>
-              </div>
-              <span className="text-[16px] font-semibold tracking-tight text-[#202722]">
-                LedgerLens<span className="text-[#176B50] font-normal ml-0.5">AI</span>
-              </span>
-            </Link>
+          <div className="sm:col-span-2 md:col-span-4 space-y-3.5">
+            <BrandLogo to="/" size="sm" />
 
-            <p className="text-[14px] text-[#626B64] leading-relaxed max-w-sm">
-              AI-native invoice intelligence platform for extracting, validating, and organizing business paperwork.
+            <p className="text-[13px] text-[#525866] leading-relaxed max-w-sm">
+              AI-native document intelligence and invoice reconciliation platform. Traceable source-to-ledger proof for distributors, wholesalers, and accounting operations.
             </p>
 
-            <div className="pt-2">
-              <span className="text-[11px] font-mono uppercase bg-[#EDF4EF] text-[#176B50] px-2 py-1 rounded-[3px] border border-[#176B50]/20 font-semibold">
-                Technical status: Working MVP
+            <div className="pt-1">
+              <span className="font-mono text-[10px] tracking-wider uppercase bg-[#F6F5F1] text-[#111318] px-2 py-1 rounded-[2px] border border-[#E2DFD7] font-semibold">
+                [PLATFORM STATUS: FUNCTIONAL MVP]
               </span>
             </div>
 
             <div className="text-[13px] pt-1">
-              <span className="text-[#202722] font-medium">Support:</span>{' '}
-              <a href="mailto:support@myledgerlens.com" className="text-[#176B50] hover:underline">
+              <span className="text-[#111318] font-medium">Support:</span>{' '}
+              <a href="mailto:support@myledgerlens.com" className="text-[#1D4ED8] hover:underline font-mono text-[12px]">
                 support@myledgerlens.com
               </a>
             </div>
@@ -56,14 +38,14 @@ export const Footer: React.FC = () => {
 
           {/* Quick Links Column */}
           <div className="sm:col-span-1 md:col-span-3">
-            <h4 className="text-[12px] font-semibold uppercase tracking-wider text-[#202722] mb-3">
+            <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#111318] mb-3">
               Platform Navigation
             </h4>
-            <ul className="space-y-2 text-[14px]">
+            <ul className="space-y-2 text-[13px]">
               <li>
                 <a
                   href={isSubPage ? "/#product" : "#product"}
-                  className="hover:text-[#202722] transition-colors"
+                  className="hover:text-[#111318] transition-colors"
                 >
                   Product Capabilities
                 </a>
@@ -71,16 +53,16 @@ export const Footer: React.FC = () => {
               <li>
                 <a
                   href={isSubPage ? "/#how-it-works" : "#how-it-works"}
-                  className="hover:text-[#202722] transition-colors"
+                  className="hover:text-[#111318] transition-colors"
                 >
-                  How It Works
+                  Verification Pipeline
                 </a>
               </li>
               <li>
                 <Link
                   to="/pricing"
                   className={`transition-colors ${
-                    isPricingPage ? "text-[#176B50] font-semibold" : "hover:text-[#202722]"
+                    isPricingPage ? "text-[#111318] font-semibold" : "hover:text-[#111318]"
                   }`}
                 >
                   Proposed Pricing
@@ -90,7 +72,7 @@ export const Footer: React.FC = () => {
                 <Link
                   to="/about"
                   className={`transition-colors ${
-                    isAboutPage ? "text-[#176B50] font-semibold" : "hover:text-[#202722]"
+                    isAboutPage ? "text-[#111318] font-semibold" : "hover:text-[#111318]"
                   }`}
                 >
                   About LedgerLens AI
@@ -99,7 +81,7 @@ export const Footer: React.FC = () => {
               <li>
                 <a
                   href={isSubPage ? "/#contact" : "#contact"}
-                  className="hover:text-[#202722] transition-colors"
+                  className="hover:text-[#111318] transition-colors"
                 >
                   Contact &amp; Pilots
                 </a>
@@ -107,7 +89,7 @@ export const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/app/auth"
-                  className="hover:text-[#202722] transition-colors"
+                  className="hover:text-[#111318] transition-colors"
                 >
                   Sign In to Workspace
                 </Link>
@@ -117,15 +99,15 @@ export const Footer: React.FC = () => {
 
           {/* Legal & Compliance Column */}
           <div className="sm:col-span-1 md:col-span-2">
-            <h4 className="text-[12px] font-semibold uppercase tracking-wider text-[#202722] mb-3">
+            <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#111318] mb-3">
               Legal &amp; Policy
             </h4>
-            <ul className="space-y-2 text-[14px]">
+            <ul className="space-y-2 text-[13px]">
               <li>
                 <Link
                   to="/privacy"
                   className={`transition-colors ${
-                    isPrivacyPage ? "text-[#176B50] font-semibold" : "hover:text-[#202722]"
+                    isPrivacyPage ? "text-[#111318] font-semibold" : "hover:text-[#111318]"
                   }`}
                 >
                   Privacy Policy
@@ -135,7 +117,7 @@ export const Footer: React.FC = () => {
                 <Link
                   to="/terms"
                   className={`transition-colors ${
-                    isTermsPage ? "text-[#176B50] font-semibold" : "hover:text-[#202722]"
+                    isTermsPage ? "text-[#111318] font-semibold" : "hover:text-[#111318]"
                   }`}
                 >
                   Terms of Service
@@ -145,7 +127,7 @@ export const Footer: React.FC = () => {
                 <Link
                   to="/pricing"
                   className={`transition-colors ${
-                    isPricingPage ? "text-[#176B50] font-semibold" : "hover:text-[#202722]"
+                    isPricingPage ? "text-[#111318] font-semibold" : "hover:text-[#111318]"
                   }`}
                 >
                   Commercial Model
@@ -154,7 +136,7 @@ export const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/about#security"
-                  className="hover:text-[#202722] transition-colors"
+                  className="hover:text-[#111318] transition-colors"
                 >
                   Security Architecture
                 </Link>
@@ -164,45 +146,45 @@ export const Footer: React.FC = () => {
 
           {/* Architectural Principles Column */}
           <div className="sm:col-span-2 md:col-span-3">
-            <h4 className="text-[12px] font-semibold uppercase tracking-wider text-[#202722] mb-3">
-              Core Principles
+            <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#111318] mb-3">
+              Verification Standards
             </h4>
-            <p className="text-[13px] text-[#626B64] leading-relaxed mb-3">
-              Evidence-backed extraction via Google Gemini 2.5 Flash, deterministic arithmetic verification within 2 cents, and transparent human oversight.
+            <p className="text-[12px] text-[#525866] leading-relaxed mb-3">
+              Multimodal extraction with Gemini vision models, deterministic arithmetic verification within 2-cent rounding tolerance, and immutable PostgreSQL audit logs.
             </p>
-            <div className="p-3 bg-[#F7F8F6] rounded-[4px] border border-[#E2E6E1] text-[12px] text-[#626B64] space-y-1">
+            <div className="p-3 bg-[#F6F5F1] rounded-[3px] border border-[#E2DFD7] text-[11px] font-mono text-[#525866] space-y-1">
               <div>
-                <strong className="text-[#202722]">Multi-Tenancy:</strong> PostgreSQL RLS isolation
+                <strong className="text-[#111318]">Tenant Isolation:</strong> PostgreSQL RLS policies
               </div>
               <div>
-                <strong className="text-[#202722]">Audit Trail:</strong> Append-only event logging
+                <strong className="text-[#111318]">Audit Trail:</strong> Append-only event history
               </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between text-[12px] text-[#626B64] gap-4">
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between text-[12px] text-[#525866] gap-4">
           <p>© {new Date().getFullYear()} LedgerLens AI. All rights reserved.</p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <a
               href="https://linkedin.com/in/davidosili"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#626B64]/90 font-medium hover:text-[#176B50] underline transition-colors"
+              className="text-[#525866] font-medium hover:text-[#111318] underline transition-colors"
             >
               Built by David Osili
             </a>
-            <Link to="/privacy" className="hover:text-[#202722] underline">
+            <Link to="/privacy" className="hover:text-[#111318] underline">
               Privacy Policy
             </Link>
-            <Link to="/terms" className="hover:text-[#202722] underline">
+            <Link to="/terms" className="hover:text-[#111318] underline">
               Terms of Service
             </Link>
-            <Link to="/pricing" className="hover:text-[#202722] underline">
+            <Link to="/pricing" className="hover:text-[#111318] underline">
               Proposed Pricing
             </Link>
-            <Link to="/about" className="hover:text-[#202722] underline">
+            <Link to="/about" className="hover:text-[#111318] underline">
               About &amp; Roadmap
             </Link>
           </div>

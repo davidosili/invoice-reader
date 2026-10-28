@@ -12,7 +12,7 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
   // If backend configuration is missing, present customer-safe service unavailable screen
   if (!isSupabaseConfigured) {
     return (
-      <div className="min-h-screen bg-[#F7F8F6] p-4 sm:p-6 flex flex-col justify-center">
+      <div className="min-h-screen bg-[#F6F5F1] p-4 sm:p-6 flex flex-col justify-center">
         <ServiceUnavailable />
       </div>
     );
@@ -21,10 +21,10 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
   // Session verification loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#FFFFFF] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#F6F5F1] flex items-center justify-center p-4">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-6 h-6 border-2 border-[#176B50] border-t-transparent rounded-full animate-spin" />
-          <span className="text-[13px] text-[#626B64] font-medium">Verifying session...</span>
+          <div className="w-5 h-5 border-2 border-[#1D4ED8] border-t-transparent rounded-full animate-spin" />
+          <span className="text-[12px] font-mono text-[#525866] font-medium">Verifying workspace session...</span>
         </div>
       </div>
     );

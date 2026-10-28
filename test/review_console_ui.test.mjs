@@ -58,7 +58,12 @@ test('UI Extraction State - Successful extraction produces exact customer label'
   assert.equal(successResult?.label, 'Extraction completed.');
   assert.ok(!successResult?.label.includes('gemini'));
   assert.ok(!successResult?.label.includes('flash'));
-  assert.ok(successResult?.badgeClass.includes('text-[#176B50]'));
+  // Supports both redesigned verified green (#1B4938) and legacy token (#176B50)
+  assert.ok(
+    successResult?.badgeClass.includes('text-[#1B4938]') ||
+    successResult?.badgeClass.includes('text-[#176B50]'),
+    'Badge class must include the verified green color token'
+  );
 });
 
 test('UI Extraction State - Extraction with validation issues flags review required', () => {

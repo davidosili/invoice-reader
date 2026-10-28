@@ -281,29 +281,29 @@ export const DocumentDetailPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="p-16 text-center space-y-3">
-        <div className="w-6 h-6 border-2 border-[#176B50] border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-[13px] text-[#626B64]">Loading invoice data & validation history...</p>
+        <div className="w-6 h-6 border-2 border-[#111318] border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-[13px] font-mono text-[#5A5852]">INITIALIZING SOURCE REGISTRY & AUDIT REPOSITORIES...</p>
       </div>
     );
   }
 
   if (error || !document) {
     return (
-      <div className="max-w-2xl mx-auto my-12 p-6 bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px]">
-        <div className="flex items-start gap-3 text-[#A33A32]">
+      <div className="max-w-2xl mx-auto my-12 p-6 bg-[#FFFFFF] border border-[#DDD7CD] rounded-[2px]">
+        <div className="flex items-start gap-3 text-[#9B2C2C]">
           <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
           <div>
-            <h2 className="text-[16px] font-bold">Document Unavailable</h2>
-            <p className="text-[13px] text-[#626B64] mt-1">{error}</p>
+            <h2 className="text-[16px] font-bold text-[#111318]">Document Inaccessible</h2>
+            <p className="text-[13px] text-[#5A5852] mt-1">{error}</p>
           </div>
         </div>
-        <div className="mt-5 pt-4 border-t border-[#E2E6E1]">
+        <div className="mt-5 pt-4 border-t border-[#E2DFD7]">
           <Link
             to="/app/documents"
-            className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#176B50] hover:underline"
+            className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#1D4ED8] hover:underline"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Return to document list</span>
+            <span>Return to document register</span>
           </Link>
         </div>
       </div>
@@ -313,27 +313,27 @@ export const DocumentDetailPage: React.FC = () => {
   const renderAuditIcon = (iconType: string) => {
     switch (iconType) {
       case 'upload':
-        return <UploadCloud className="w-3.5 h-3.5 text-[#176B50]" />;
+        return <UploadCloud className="w-3.5 h-3.5 text-[#111318]" />;
       case 'start':
-        return <RotateCw className="w-3.5 h-3.5 text-[#176B50]" />;
+        return <RotateCw className="w-3.5 h-3.5 text-[#1D4ED8]" />;
       case 'check':
-        return <CheckCircle2 className="w-3.5 h-3.5 text-[#176B50]" />;
+        return <CheckCircle2 className="w-3.5 h-3.5 text-[#1B4938]" />;
       case 'review':
       case 'warning':
-        return <AlertTriangle className="w-3.5 h-3.5 text-[#B45309]" />;
+        return <AlertTriangle className="w-3.5 h-3.5 text-[#C2410C]" />;
       case 'edit':
-        return <Edit3 className="w-3.5 h-3.5 text-[#176B50]" />;
+        return <Edit3 className="w-3.5 h-3.5 text-[#1D4ED8]" />;
       case 'approved':
-        return <ShieldCheck className="w-3.5 h-3.5 text-[#176B50]" />;
+        return <ShieldCheck className="w-3.5 h-3.5 text-[#1B4938]" />;
       case 'rejected':
-        return <XCircle className="w-3.5 h-3.5 text-[#A33A32]" />;
+        return <XCircle className="w-3.5 h-3.5 text-[#9B2C2C]" />;
       case 'export':
-        return <FileSpreadsheet className="w-3.5 h-3.5 text-[#176B50]" />;
+        return <FileSpreadsheet className="w-3.5 h-3.5 text-[#111318]" />;
       case 'error':
       case 'failed':
-        return <AlertCircle className="w-3.5 h-3.5 text-[#A33A32]" />;
+        return <AlertCircle className="w-3.5 h-3.5 text-[#9B2C2C]" />;
       default:
-        return <FileText className="w-3.5 h-3.5 text-[#626B64]" />;
+        return <FileText className="w-3.5 h-3.5 text-[#5A5852]" />;
     }
   };
 
@@ -342,37 +342,40 @@ export const DocumentDetailPage: React.FC = () => {
   return (
     <div className="space-y-6 max-w-[1400px] mx-auto pb-12">
       {/* Top Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E2E6E1]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E2DFD7]">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => navigate('/app/documents')}
-            className="p-1.5 text-[#626B64] hover:text-[#202722] hover:bg-[#F7F8F6] rounded-[4px] transition-colors"
+            className="p-1.5 text-[#5A5852] hover:text-[#111318] hover:bg-[#F6F5F1] rounded-[2px] transition-colors border border-transparent hover:border-[#DDD7CD]"
             title="Return to Documents"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-[18px] font-bold text-[#202722] tracking-tight">
+              <span className="font-mono text-[9px] uppercase px-1 py-0.2 bg-[#F6F5F1] border border-[#DDD7CD] text-[#5A5852]">
+                RECORD
+              </span>
+              <h1 className="text-[18px] font-bold text-[#111318] tracking-tight font-sans">
                 {document.original_filename}
               </h1>
               <span
-                className={`inline-flex items-center px-2 py-0.5 rounded-[3px] text-[11px] font-mono font-medium ${
+                className={`inline-flex items-center px-2 py-0.5 rounded-[2px] text-[10px] font-mono font-medium ${
                   document.status === 'approved'
-                    ? 'bg-[#EDF4EF] text-[#176B50] border border-[#176B50]/30 font-semibold'
+                    ? 'bg-[#EBF3EE] text-[#1B4938] border border-[#1B4938]/30 font-semibold'
                     : document.status === 'review_required'
-                    ? 'bg-[#FFFBEB] text-[#B45309] border border-[#FDE68A]'
+                    ? 'bg-[#FFFBEB] text-[#C2410C] border border-[#FED7AA]'
                     : document.status === 'rejected' || document.status === 'failed'
-                    ? 'bg-[#FEF2F2] text-[#A33A32] border border-[#FECACA]'
-                    : 'bg-[#F7F8F6] text-[#626B64] border border-[#E2E6E1]'
+                    ? 'bg-[#FEF2F2] text-[#9B2C2C] border border-[#FECACA]'
+                    : 'bg-[#F6F5F1] text-[#5A5852] border border-[#E2DFD7]'
                 }`}
               >
-                Status: {document.status.replace('_', ' ')}
+                [{document.status.replace('_', ' ').toUpperCase()}]
               </span>
             </div>
-            <p className="text-[11px] font-mono text-[#626B64] mt-0.5">
-              ID: {document.id} • {formatFileSize(document.file_size_bytes)} • Uploaded {new Date(document.created_at).toLocaleString('en-GB')}
+            <p className="text-[11px] font-mono text-[#5A5852] mt-0.5">
+              ID: {document.id} • {formatFileSize(document.file_size_bytes)} • INGESTED: {new Date(document.created_at).toLocaleString('en-GB')}
             </p>
           </div>
         </div>
@@ -384,9 +387,9 @@ export const DocumentDetailPage: React.FC = () => {
               href={previewSignedUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-[#202722] bg-[#FFFFFF] hover:bg-[#F7F8F6] border border-[#E2E6E1] rounded-[4px] transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-[#111318] bg-[#FFFFFF] hover:bg-[#F6F5F1] border border-[#DDD7CD] rounded-[2px] transition-colors"
             >
-              <Download className="w-3.5 h-3.5 text-[#626B64]" />
+              <Download className="w-3.5 h-3.5 text-[#5A5852]" />
               <span>Download Original</span>
             </a>
           )}
@@ -396,7 +399,7 @@ export const DocumentDetailPage: React.FC = () => {
               type="button"
               disabled={isProcessing}
               onClick={handleRunProcessing}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[12px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors focus-ring disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[12px] font-medium text-white bg-[#111318] hover:bg-[#1D4ED8] rounded-[2px] transition-colors focus-ring disabled:opacity-50"
             >
               <RotateCw className={`w-3.5 h-3.5 ${isProcessing ? 'animate-spin' : ''}`} />
               <span>{isProcessing ? 'Processing Pipeline...' : extraction ? 'Re-run Extraction' : 'Extract & Validate'}</span>
@@ -408,7 +411,7 @@ export const DocumentDetailPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleReject}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-[#A33A32] bg-[#FFFFFF] hover:bg-[#FEF2F2] border border-[#A33A32]/30 rounded-[4px] transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-[#9B2C2C] bg-[#FEF2F2] hover:bg-[#FEE2E2] border border-[#FECACA] rounded-[2px] transition-colors"
               >
                 <XCircle className="w-3.5 h-3.5" />
                 <span>Reject</span>
@@ -417,10 +420,10 @@ export const DocumentDetailPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleApprove}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[12px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors shadow-sm"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[12px] font-semibold text-white bg-[#111318] hover:bg-[#1D4ED8] rounded-[2px] transition-colors shadow-sm"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Approve Invoice</span>
+                <span>Certify & Approve</span>
               </button>
             </>
           )}
@@ -430,10 +433,10 @@ export const DocumentDetailPage: React.FC = () => {
       {/* Action Notification Banner */}
       {actionNotice && (
         <div
-          className={`p-3 rounded-[4px] text-[13px] border flex items-center justify-between ${
+          className={`p-3 rounded-[2px] text-[13px] border flex items-center justify-between ${
             actionNotice.type === 'success'
-              ? 'bg-[#EDF4EF] border-[#176B50]/30 text-[#176B50]'
-              : 'bg-[#FEF2F2] border-[#A33A32]/30 text-[#A33A32]'
+              ? 'bg-[#EBF3EE] border-[#1B4938]/30 text-[#1B4938]'
+              : 'bg-[#FEF2F2] border-[#FECACA] text-[#9B2C2C]'
           }`}
         >
           <span>{actionNotice.text}</span>
@@ -449,16 +452,16 @@ export const DocumentDetailPage: React.FC = () => {
 
       {/* Validation Discrepancies Alert */}
       {customerIssues.length > 0 && (
-        <div className="bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] p-4 shadow-sm">
+        <div className="bg-[#FFFFFF] border-l-4 border-l-[#C2410C] border border-[#E2DFD7] rounded-[2px] p-4 shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-[#B45309]" />
-              <h2 className="text-[13px] font-bold text-[#202722] uppercase tracking-wider">
-                Audit Validation Discrepancies ({customerIssues.length})
+              <AlertTriangle className="w-4 h-4 text-[#C2410C]" />
+              <h2 className="text-[13px] font-bold text-[#111318] uppercase tracking-wider">
+                Reconciliation Discrepancies Detected ({customerIssues.length})
               </h2>
             </div>
-            <span className="text-[11px] font-mono text-[#626B64]">
-              Human review required before certification
+            <span className="text-[11px] font-mono text-[#5A5852]">
+              HUMAN AUDIT REQUIRED BEFORE CERTIFICATION
             </span>
           </div>
 
@@ -466,26 +469,26 @@ export const DocumentDetailPage: React.FC = () => {
             {customerIssues.map((issue) => (
               <div
                 key={issue.id}
-                className={`p-2.5 rounded-[4px] text-[12px] border flex items-start gap-2.5 ${
+                className={`p-2.5 rounded-[2px] text-[12px] border flex items-start gap-2.5 ${
                   issue.severity === 'error'
-                    ? 'bg-[#FEF2F2]/60 border-[#A33A32]/30 text-[#202722]'
+                    ? 'bg-[#FEF2F2] border-[#FECACA] text-[#111318]'
                     : issue.severity === 'warning'
-                    ? 'bg-[#FFFBEB]/60 border-[#FDE68A] text-[#202722]'
-                    : 'bg-[#F7F8F6] border-[#E2E6E1] text-[#202722]'
+                    ? 'bg-[#FFFBEB] border-[#FED7AA] text-[#111318]'
+                    : 'bg-[#F6F5F1] border-[#E2DFD7] text-[#111318]'
                 }`}
               >
                 <span
                   className={`px-1.5 py-0.5 rounded-[2px] font-mono uppercase text-[9px] font-bold mt-0.5 flex-shrink-0 ${
                     issue.severity === 'error'
-                      ? 'bg-[#A33A32] text-white'
+                      ? 'bg-[#9B2C2C] text-white'
                       : issue.severity === 'warning'
-                      ? 'bg-[#B45309] text-white'
-                      : 'bg-[#626B64] text-white'
+                      ? 'bg-[#C2410C] text-white'
+                      : 'bg-[#5A5852] text-white'
                   }`}
                 >
                   {issue.issue_type.replace('_', ' ')}
                 </span>
-                <p className="leading-relaxed flex-grow text-[#202722]">{issue.message}</p>
+                <p className="leading-relaxed flex-grow text-[#111318] font-sans">{issue.message}</p>
               </div>
             ))}
           </div>
@@ -494,33 +497,37 @@ export const DocumentDetailPage: React.FC = () => {
 
       {/* Main Two-Panel Interface */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Panel: Original Document Viewer */}
-        <div className="lg:col-span-5 bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] shadow-sm flex flex-col overflow-hidden">
-          <div className="p-3 bg-[#F7F8F6] border-b border-[#E2E6E1] flex items-center justify-between text-xs">
-            <div className="flex items-center gap-1.5 text-[#202722] font-semibold">
-              <Eye className="w-3.5 h-3.5 text-[#176B50]" />
-              <span>Document Scan Source</span>
+        {/* Left Panel: Original Document Viewer with Alignment Register Frame */}
+        <div className="lg:col-span-5 bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] shadow-sm flex flex-col overflow-hidden relative">
+          {/* Subtle Corner Registration Ticks */}
+          <span className="absolute top-1 left-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none z-20">+</span>
+          <span className="absolute top-1 right-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none z-20">+</span>
+
+          <div className="p-3 bg-[#FAFAF8] border-b border-[#E2DFD7] flex items-center justify-between text-xs">
+            <div className="flex items-center gap-1.5 text-[#111318] font-semibold">
+              <Eye className="w-3.5 h-3.5 text-[#1D4ED8]" />
+              <span className="font-mono text-[11px] uppercase tracking-wider">Document Scan Source</span>
             </div>
             {activeHighlightKey && (
-              <span className="text-[11px] font-mono text-[#176B50] bg-[#EDF4EF] px-1.5 py-0.5 rounded-[2px]">
-                Tracing: {activeHighlightKey}
+              <span className="text-[10px] font-mono text-[#1D4ED8] bg-[#EFF6FF] border border-[#BFDBFE] px-1.5 py-0.5 rounded-[2px]">
+                TRACING: {activeHighlightKey}
               </span>
             )}
           </div>
 
-          <div className="relative bg-[#202722]/5 min-h-[500px] flex items-center justify-center p-2 overflow-auto">
+          <div className="relative bg-[#F6F5F1]/80 min-h-[500px] flex items-center justify-center p-2 overflow-auto">
             {previewSignedUrl ? (
               document.mime_type === 'application/pdf' ? (
                 <div className="relative w-full h-[650px]">
                   <iframe
                     src={`${previewSignedUrl}#toolbar=0`}
                     title="Invoice PDF Viewer"
-                    className="w-full h-full rounded-[4px] border border-[#E2E6E1]"
+                    className="w-full h-full rounded-[2px] border border-[#DDD7CD]"
                   />
                   {/* Bounding box visual overlay */}
                   {activeBox && (
                     <div
-                      className="absolute border-2 border-[#176B50] bg-[#176B50]/15 pointer-events-none transition-all duration-200 z-10"
+                      className="absolute border-2 border-[#1D4ED8] bg-[#1D4ED8]/15 pointer-events-none transition-all duration-200 z-10"
                       style={{
                         left: `${activeBox.x}%`,
                         top: `${activeBox.y}%`,
@@ -528,7 +535,7 @@ export const DocumentDetailPage: React.FC = () => {
                         height: `${activeBox.height}%`,
                       }}
                     >
-                      <span className="absolute -top-5 left-0 text-[10px] bg-[#176B50] text-white px-1 py-0.2 rounded font-mono">
+                      <span className="absolute -top-5 left-0 text-[9px] bg-[#1D4ED8] text-white px-1 py-0.2 rounded font-mono uppercase">
                         {activeHighlightKey}
                       </span>
                     </div>
@@ -539,11 +546,11 @@ export const DocumentDetailPage: React.FC = () => {
                   <img
                     src={previewSignedUrl}
                     alt="Invoice scan preview"
-                    className="max-h-[650px] object-contain rounded-[4px] border border-[#E2E6E1]"
+                    className="max-h-[650px] object-contain rounded-[2px] border border-[#DDD7CD]"
                   />
                   {activeBox && (
                     <div
-                      className="absolute border-2 border-[#176B50] bg-[#176B50]/15 pointer-events-none transition-all duration-200"
+                      className="absolute border-2 border-[#1D4ED8] bg-[#1D4ED8]/15 pointer-events-none transition-all duration-200"
                       style={{
                         left: `${activeBox.x}%`,
                         top: `${activeBox.y}%`,
@@ -555,9 +562,9 @@ export const DocumentDetailPage: React.FC = () => {
                 </div>
               )
             ) : (
-              <div className="p-8 text-center text-[12px] text-[#626B64]">
-                <FileText className="w-8 h-8 text-[#626B64] mx-auto mb-2 opacity-50" />
-                <p>Preview loading...</p>
+              <div className="p-8 text-center text-[12px] text-[#5A5852]">
+                <FileText className="w-8 h-8 text-[#5A5852] mx-auto mb-2 opacity-50" />
+                <p className="font-mono">INITIALIZING SCAN PREVIEW...</p>
               </div>
             )}
           </div>
@@ -567,57 +574,62 @@ export const DocumentDetailPage: React.FC = () => {
         <div className="lg:col-span-7 space-y-4">
           {!extraction ? (
             document.status === 'failed' ? (
-              <div className="p-8 bg-[#FFFFFF] border border-[#FECACA] rounded-[6px] text-center space-y-3">
-                <AlertCircle className="w-8 h-8 text-[#A33A32] mx-auto opacity-90" />
+              <div className="p-8 bg-[#FFFFFF] border border-[#FECACA] rounded-[2px] text-center space-y-3">
+                <AlertCircle className="w-8 h-8 text-[#9B2C2C] mx-auto opacity-90" />
                 <div>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-[3px] text-[11px] font-medium bg-[#FEF2F2] text-[#991B1B] border border-[#FCA5A5] font-semibold">
-                    Extraction failed — try again.
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-[2px] text-[11px] font-mono font-medium bg-[#FEF2F2] text-[#9B2C2C] border border-[#FECACA]">
+                    EXTRACTION FAILED — PLEASE RETRY
                   </span>
                 </div>
-                <h3 className="text-[15px] font-bold text-[#202722]">Extraction Failed</h3>
-                <p className="text-[13px] text-[#626B64] max-w-md mx-auto">
-                  The automated extraction pipeline could not process this document. You can retry the extraction or inspect the scan manually.
+                <h3 className="text-[15px] font-bold text-[#111318]">Extraction Failed</h3>
+                <p className="text-[13px] text-[#5A5852] max-w-md mx-auto">
+                  The automated extraction cascade could not process this document layout. You can retry extraction or inspect manually.
                 </p>
                 <button
                   type="button"
                   disabled={isProcessing}
                   onClick={handleRunProcessing}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors focus-ring"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium text-white bg-[#111318] hover:bg-[#1D4ED8] rounded-[2px] transition-colors focus-ring"
                 >
                   <RotateCw className={`w-4 h-4 ${isProcessing ? 'animate-spin' : ''}`} />
                   <span>{isProcessing ? 'Processing Pipeline...' : 'Retry Extraction'}</span>
                 </button>
               </div>
             ) : (
-              <div className="p-8 bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] text-center space-y-3">
-                <FileText className="w-8 h-8 text-[#176B50] mx-auto opacity-70" />
-                <h3 className="text-[15px] font-bold text-[#202722]">Invoice Metadata Registered</h3>
-                <p className="text-[13px] text-[#626B64] max-w-md mx-auto">
-                  This document is ready for extraction. Click <strong>Extract & Validate</strong> to queue automated field
-                  extraction, arithmetic cross-sum validation, and duplicate detection.
+              <div className="p-8 bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] text-center space-y-3">
+                <FileText className="w-8 h-8 text-[#111318] mx-auto opacity-70" />
+                <h3 className="text-[15px] font-bold text-[#111318]">Invoice Metadata Ingested</h3>
+                <p className="text-[13px] text-[#5A5852] max-w-md mx-auto">
+                  This document is registered in your workspace. Click <strong>Extract & Validate</strong> to execute OCR,
+                  line-item bounding box registration, and arithmetic cross-sum validation.
                 </p>
                 <button
                   type="button"
                   disabled={isProcessing}
                   onClick={handleRunProcessing}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors focus-ring"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium text-white bg-[#111318] hover:bg-[#1D4ED8] rounded-[2px] transition-colors focus-ring"
                 >
                   <RotateCw className={`w-4 h-4 ${isProcessing ? 'animate-spin' : ''}`} />
-                  <span>{isProcessing ? 'Processing Pipeline...' : 'Run Extraction & Validation'}</span>
+                  <span>{isProcessing ? 'Processing Pipeline...' : 'Execute Extraction & Validation'}</span>
                 </button>
               </div>
             )
           ) : (
-            <div className="bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] p-5 shadow-sm space-y-5">
-              <div className="flex items-center justify-between pb-3 border-b border-[#E2E6E1]">
+            <div className="bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] p-5 shadow-sm space-y-5">
+              <div className="flex items-center justify-between pb-3 border-b border-[#E2DFD7]">
                 <div>
-                  <h2 className="text-[14px] font-bold text-[#202722] uppercase tracking-wider">
-                    Extracted Intelligence & Review Console
-                  </h2>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[9px] uppercase px-1 py-0.2 bg-[#F6F5F1] border border-[#DDD7CD] text-[#5A5852]">
+                      REVIEW CONSOLE
+                    </span>
+                    <h2 className="text-[13px] font-bold text-[#111318] uppercase tracking-wider">
+                      Extracted Financial Intelligence
+                    </h2>
+                  </div>
                   {extractionState && (
                     <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-[3px] text-[11px] font-medium border font-semibold ${extractionState.badgeClass}`}
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-[2px] text-[11px] font-mono border font-medium ${extractionState.badgeClass}`}
                       >
                         {extractionState.label}
                       </span>
@@ -629,20 +641,20 @@ export const DocumentDetailPage: React.FC = () => {
                   type="button"
                   disabled={isSaving}
                   onClick={handleSaveCorrections}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-[#202722] bg-[#F7F8F6] hover:bg-[#EDF4EF] border border-[#E2E6E1] rounded-[4px] transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-[#111318] bg-[#FAFAF8] hover:bg-[#F6F5F1] border border-[#DDD7CD] rounded-[2px] transition-colors"
                 >
-                  <Save className="w-3.5 h-3.5 text-[#176B50]" />
+                  <Save className="w-3.5 h-3.5 text-[#1D4ED8]" />
                   <span>{isSaving ? 'Saving...' : 'Save Corrections'}</span>
                 </button>
               </div>
 
               {/* Partial Extraction Warning Banner */}
               {extractionState?.status === 'partial' && (
-                <div className="p-3 bg-[#FFFBEB] border border-[#FDE68A] rounded-[4px] text-[12px] text-[#92400E] flex items-start gap-2.5">
-                  <AlertTriangle className="w-4 h-4 text-[#B45309] flex-shrink-0 mt-0.5" />
+                <div className="p-3 bg-[#FFFBEB] border border-[#FED7AA] rounded-[2px] text-[12px] text-[#C2410C] flex items-start gap-2.5">
+                  <AlertTriangle className="w-4 h-4 text-[#C2410C] flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-bold">Partial Extraction Notice</p>
-                    <p className="mt-0.5 text-[11px] text-[#B45309] leading-relaxed">
+                    <p className="mt-0.5 text-[11px] leading-relaxed">
                       Automated visual extraction was partially complete. Please inspect and verify all fields against the source scan before certifying or approving.
                     </p>
                   </div>
@@ -655,22 +667,22 @@ export const DocumentDetailPage: React.FC = () => {
                 <div
                   onMouseEnter={() => setActiveHighlightKey('supplier_name')}
                   onMouseLeave={() => setActiveHighlightKey(null)}
-                  className="p-3 bg-[#F7F8F6] rounded-[4px] border border-[#E2E6E1] transition-colors focus-within:border-[#176B50]"
+                  className="p-3 bg-[#FAFAF8] rounded-[2px] border border-[#E2DFD7] transition-colors focus-within:border-[#1D4ED8]"
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#626B64] flex items-center gap-1">
-                      <Building className="w-3 h-3 text-[#176B50]" />
+                    <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#5A5852] flex items-center gap-1">
+                      <Building className="w-3 h-3 text-[#1D4ED8]" />
                       Supplier Name
                     </label>
-                    <span className="text-[10px] font-mono text-[#176B50] bg-[#EDF4EF] px-1 rounded">
-                      {extraction.field_metadata?.supplier_name?.confidence || 'high'}
+                    <span className="text-[9px] font-mono text-[#5A5852] bg-[#F6F5F1] border border-[#DDD7CD] px-1 rounded">
+                      {extraction.field_metadata?.supplier_name?.confidence || 'HIGH'}
                     </span>
                   </div>
                   <input
                     type="text"
                     value={formData.supplier_name || ''}
                     onChange={(e) => setFormData({ ...formData, supplier_name: e.target.value })}
-                    className="w-full text-[13px] font-medium bg-[#FFFFFF] border border-[#E2E6E1] rounded-[3px] px-2.5 py-1 text-[#202722] focus:border-[#176B50] outline-none"
+                    className="w-full text-[13px] font-medium bg-[#FFFFFF] border border-[#DDD7CD] rounded-[2px] px-2.5 py-1 text-[#111318] focus:border-[#1D4ED8] outline-none"
                   />
                 </div>
 
@@ -678,22 +690,22 @@ export const DocumentDetailPage: React.FC = () => {
                 <div
                   onMouseEnter={() => setActiveHighlightKey('invoice_number')}
                   onMouseLeave={() => setActiveHighlightKey(null)}
-                  className="p-3 bg-[#F7F8F6] rounded-[4px] border border-[#E2E6E1] transition-colors focus-within:border-[#176B50]"
+                  className="p-3 bg-[#FAFAF8] rounded-[2px] border border-[#E2DFD7] transition-colors focus-within:border-[#1D4ED8]"
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#626B64] flex items-center gap-1">
-                      <Hash className="w-3 h-3 text-[#176B50]" />
+                    <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#5A5852] flex items-center gap-1">
+                      <Hash className="w-3 h-3 text-[#1D4ED8]" />
                       Invoice Number
                     </label>
-                    <span className="text-[10px] font-mono text-[#176B50] bg-[#EDF4EF] px-1 rounded">
-                      {extraction.field_metadata?.invoice_number?.confidence || 'high'}
+                    <span className="text-[9px] font-mono text-[#5A5852] bg-[#F6F5F1] border border-[#DDD7CD] px-1 rounded">
+                      {extraction.field_metadata?.invoice_number?.confidence || 'HIGH'}
                     </span>
                   </div>
                   <input
                     type="text"
                     value={formData.invoice_number || ''}
                     onChange={(e) => setFormData({ ...formData, invoice_number: e.target.value })}
-                    className="w-full text-[13px] font-mono font-medium bg-[#FFFFFF] border border-[#E2E6E1] rounded-[3px] px-2.5 py-1 text-[#202722] focus:border-[#176B50] outline-none"
+                    className="w-full text-[13px] font-mono font-medium bg-[#FFFFFF] border border-[#DDD7CD] rounded-[2px] px-2.5 py-1 text-[#111318] focus:border-[#1D4ED8] outline-none"
                   />
                 </div>
 
@@ -701,22 +713,22 @@ export const DocumentDetailPage: React.FC = () => {
                 <div
                   onMouseEnter={() => setActiveHighlightKey('invoice_date')}
                   onMouseLeave={() => setActiveHighlightKey(null)}
-                  className="p-3 bg-[#F7F8F6] rounded-[4px] border border-[#E2E6E1] transition-colors focus-within:border-[#176B50]"
+                  className="p-3 bg-[#FAFAF8] rounded-[2px] border border-[#E2DFD7] transition-colors focus-within:border-[#1D4ED8]"
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#626B64] flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-[#176B50]" />
+                    <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#5A5852] flex items-center gap-1">
+                      <Calendar className="w-3 h-3 text-[#1D4ED8]" />
                       Invoice Date
                     </label>
-                    <span className="text-[10px] font-mono text-[#176B50] bg-[#EDF4EF] px-1 rounded">
-                      {extraction.field_metadata?.invoice_date?.confidence || 'high'}
+                    <span className="text-[9px] font-mono text-[#5A5852] bg-[#F6F5F1] border border-[#DDD7CD] px-1 rounded">
+                      {extraction.field_metadata?.invoice_date?.confidence || 'HIGH'}
                     </span>
                   </div>
                   <input
                     type="date"
                     value={formData.invoice_date || ''}
                     onChange={(e) => setFormData({ ...formData, invoice_date: e.target.value })}
-                    className="w-full text-[13px] font-mono bg-[#FFFFFF] border border-[#E2E6E1] rounded-[3px] px-2.5 py-1 text-[#202722] focus:border-[#176B50] outline-none"
+                    className="w-full text-[13px] font-mono bg-[#FFFFFF] border border-[#DDD7CD] rounded-[2px] px-2.5 py-1 text-[#111318] focus:border-[#1D4ED8] outline-none"
                   />
                 </div>
 
@@ -724,48 +736,48 @@ export const DocumentDetailPage: React.FC = () => {
                 <div
                   onMouseEnter={() => setActiveHighlightKey('due_date')}
                   onMouseLeave={() => setActiveHighlightKey(null)}
-                  className="p-3 bg-[#F7F8F6] rounded-[4px] border border-[#E2E6E1] transition-colors focus-within:border-[#176B50]"
+                  className="p-3 bg-[#FAFAF8] rounded-[2px] border border-[#E2DFD7] transition-colors focus-within:border-[#1D4ED8]"
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#626B64] flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-[#176B50]" />
+                    <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#5A5852] flex items-center gap-1">
+                      <Calendar className="w-3 h-3 text-[#1D4ED8]" />
                       Payment Due Date
                     </label>
-                    <span className="text-[10px] font-mono text-[#B45309] bg-[#FFFBEB] px-1 rounded">
-                      {extraction.field_metadata?.due_date?.confidence || 'medium'}
+                    <span className="text-[9px] font-mono text-[#C2410C] bg-[#FFFBEB] border border-[#FED7AA] px-1 rounded">
+                      {extraction.field_metadata?.due_date?.confidence || 'MEDIUM'}
                     </span>
                   </div>
                   <input
                     type="date"
                     value={formData.due_date || ''}
                     onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
-                    className="w-full text-[13px] font-mono bg-[#FFFFFF] border border-[#E2E6E1] rounded-[3px] px-2.5 py-1 text-[#202722] focus:border-[#176B50] outline-none"
+                    className="w-full text-[13px] font-mono bg-[#FFFFFF] border border-[#DDD7CD] rounded-[2px] px-2.5 py-1 text-[#111318] focus:border-[#1D4ED8] outline-none"
                   />
                 </div>
 
                 {/* Currency */}
-                <div className="p-3 bg-[#F7F8F6] rounded-[4px] border border-[#E2E6E1]">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#626B64] mb-1">
+                <div className="p-3 bg-[#FAFAF8] rounded-[2px] border border-[#E2DFD7]">
+                  <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-[#5A5852] mb-1">
                     Currency Code
                   </label>
                   <input
                     type="text"
                     value={formData.currency || 'USD'}
                     onChange={(e) => setFormData({ ...formData, currency: e.target.value.toUpperCase() })}
-                    className="w-full text-[13px] font-mono uppercase bg-[#FFFFFF] border border-[#E2E6E1] rounded-[3px] px-2.5 py-1 text-[#202722] outline-none"
+                    className="w-full text-[13px] font-mono uppercase bg-[#FFFFFF] border border-[#DDD7CD] rounded-[2px] px-2.5 py-1 text-[#111318] outline-none"
                   />
                 </div>
 
                 {/* Tax ID */}
-                <div className="p-3 bg-[#F7F8F6] rounded-[4px] border border-[#E2E6E1]">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#626B64] mb-1">
+                <div className="p-3 bg-[#FAFAF8] rounded-[2px] border border-[#E2DFD7]">
+                  <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-[#5A5852] mb-1">
                     Supplier Tax ID / TIN
                   </label>
                   <input
                     type="text"
                     value={formData.supplier_tax_id || ''}
                     onChange={(e) => setFormData({ ...formData, supplier_tax_id: e.target.value })}
-                    className="w-full text-[13px] font-mono bg-[#FFFFFF] border border-[#E2E6E1] rounded-[3px] px-2.5 py-1 text-[#202722] outline-none"
+                    className="w-full text-[13px] font-mono bg-[#FFFFFF] border border-[#DDD7CD] rounded-[2px] px-2.5 py-1 text-[#111318] outline-none"
                   />
                 </div>
               </div>
@@ -773,23 +785,23 @@ export const DocumentDetailPage: React.FC = () => {
               {/* Line Items Table */}
               <div className="pt-2">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-[12px] font-bold uppercase tracking-wider text-[#202722] flex items-center gap-1.5">
-                    <Tag className="w-3.5 h-3.5 text-[#176B50]" />
-                    Extracted Line Items ({(formData.line_items || []).length})
+                  <h3 className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#111318] flex items-center gap-1.5">
+                    <Tag className="w-3.5 h-3.5 text-[#1D4ED8]" />
+                    REGISTERED LINE ITEMS ({(formData.line_items || []).length})
                   </h3>
                   <button
                     type="button"
                     onClick={handleAddLineItem}
-                    className="inline-flex items-center gap-1 text-[11px] font-medium text-[#176B50] hover:underline"
+                    className="inline-flex items-center gap-1 text-[11px] font-mono font-medium text-[#1D4ED8] hover:underline"
                   >
                     <Plus className="w-3 h-3" />
-                    <span>Add Item</span>
+                    <span>ADD ITEM</span>
                   </button>
                 </div>
 
-                <div className="border border-[#E2E6E1] rounded-[4px] overflow-x-auto">
+                <div className="border border-[#E2DFD7] rounded-[2px] overflow-x-auto">
                   <table className="w-full text-left text-[12px]">
-                    <thead className="bg-[#F7F8F6] text-[#626B64] font-semibold border-b border-[#E2E6E1]">
+                    <thead className="bg-[#FAFAF8] text-[#5A5852] font-mono text-[11px] uppercase tracking-wider border-b border-[#E2DFD7]">
                       <tr>
                         <th className="py-2 px-3">Description</th>
                         <th className="py-2 px-3 w-16 text-right">Qty</th>
@@ -798,15 +810,15 @@ export const DocumentDetailPage: React.FC = () => {
                         <th className="py-2 px-2 w-10 text-center"></th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#E2E6E1]">
+                    <tbody className="divide-y divide-[#E2DFD7]">
                       {(formData.line_items || []).map((item, idx) => (
-                        <tr key={item.id || idx} className="hover:bg-[#F7F8F6]/50">
+                        <tr key={item.id || idx} className="hover:bg-[#F6F5F1]/60">
                           <td className="py-1.5 px-3">
                             <input
                               type="text"
                               value={item.description}
                               onChange={(e) => handleLineItemChange(idx, 'description', e.target.value)}
-                              className="w-full bg-transparent border-none text-[#202722] text-[12px] outline-none focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#176B50] rounded px-1"
+                              className="w-full bg-transparent border-none text-[#111318] text-[12px] outline-none focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#1D4ED8] rounded px-1"
                             />
                           </td>
                           <td className="py-1.5 px-3 text-right">
@@ -815,7 +827,7 @@ export const DocumentDetailPage: React.FC = () => {
                               step="any"
                               value={item.quantity}
                               onChange={(e) => handleLineItemChange(idx, 'quantity', parseFloat(e.target.value) || 0)}
-                              className="w-14 text-right font-mono bg-transparent border-none text-[#202722] text-[12px] outline-none focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#176B50] rounded px-1"
+                              className="w-14 text-right font-mono bg-transparent border-none text-[#111318] text-[12px] outline-none focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#1D4ED8] rounded px-1"
                             />
                           </td>
                           <td className="py-1.5 px-3 text-right">
@@ -824,17 +836,17 @@ export const DocumentDetailPage: React.FC = () => {
                               step="any"
                               value={item.unit_price}
                               onChange={(e) => handleLineItemChange(idx, 'unit_price', parseFloat(e.target.value) || 0)}
-                              className="w-24 text-right font-mono bg-transparent border-none text-[#202722] text-[12px] outline-none focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#176B50] rounded px-1"
+                              className="w-24 text-right font-mono bg-transparent border-none text-[#111318] text-[12px] outline-none focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#1D4ED8] rounded px-1"
                             />
                           </td>
-                          <td className="py-1.5 px-3 text-right font-mono font-medium text-[#202722]">
+                          <td className="py-1.5 px-3 text-right font-mono font-medium text-[#111318]">
                             {item.total.toFixed(2)}
                           </td>
                           <td className="py-1.5 px-2 text-center">
                             <button
                               type="button"
                               onClick={() => handleRemoveLineItem(idx)}
-                              className="text-[#626B64] hover:text-[#A33A32] p-1"
+                              className="text-[#5A5852] hover:text-[#9B2C2C] p-1"
                               title="Delete Item"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -848,53 +860,53 @@ export const DocumentDetailPage: React.FC = () => {
               </div>
 
               {/* Financial Cross-Sums & Totals */}
-              <div className="pt-2 border-t border-[#E2E6E1]">
+              <div className="pt-2 border-t border-[#E2DFD7]">
                 <div className="flex flex-col items-end space-y-2 text-[13px]">
                   <div className="flex items-center gap-4 w-full sm:w-72 justify-between">
-                    <span className="text-[#626B64]">Subtotal:</span>
+                    <span className="text-[#5A5852] font-mono text-[11px] uppercase">Subtotal:</span>
                     <input
                       type="number"
                       step="any"
                       value={formData.subtotal ?? ''}
                       onChange={(e) => setFormData({ ...formData, subtotal: parseFloat(e.target.value) || 0 })}
-                      className="w-32 text-right font-mono font-medium bg-[#F7F8F6] border border-[#E2E6E1] rounded px-2 py-0.5 outline-none"
+                      className="w-32 text-right font-mono font-medium bg-[#FAFAF8] border border-[#DDD7CD] rounded-[2px] px-2 py-0.5 outline-none"
                     />
                   </div>
 
                   <div className="flex items-center gap-4 w-full sm:w-72 justify-between">
-                    <span className="text-[#626B64]">Tax Amount:</span>
+                    <span className="text-[#5A5852] font-mono text-[11px] uppercase">Tax Amount:</span>
                     <input
                       type="number"
                       step="any"
                       value={formData.tax_amount ?? ''}
                       onChange={(e) => setFormData({ ...formData, tax_amount: parseFloat(e.target.value) || 0 })}
-                      className="w-32 text-right font-mono font-medium bg-[#F7F8F6] border border-[#E2E6E1] rounded px-2 py-0.5 outline-none"
+                      className="w-32 text-right font-mono font-medium bg-[#FAFAF8] border border-[#DDD7CD] rounded-[2px] px-2 py-0.5 outline-none"
                     />
                   </div>
 
-                  <div className="flex items-center gap-4 w-full sm:w-72 justify-between pt-2 border-t border-[#E2E6E1]">
-                    <span className="font-bold text-[#202722]">Grand Total ({formData.currency}):</span>
+                  <div className="flex items-center gap-4 w-full sm:w-72 justify-between pt-2 border-t border-[#E2DFD7]">
+                    <span className="font-bold text-[#111318] font-mono text-[12px] uppercase">Grand Total ({formData.currency}):</span>
                     <input
                       type="number"
                       step="any"
                       value={formData.grand_total ?? ''}
                       onChange={(e) => setFormData({ ...formData, grand_total: parseFloat(e.target.value) || 0 })}
-                      className="w-32 text-right font-mono font-bold text-[#176B50] bg-[#EDF4EF] border border-[#176B50]/30 rounded px-2 py-1 outline-none text-[14px]"
+                      className="w-32 text-right font-mono font-bold text-[#111318] bg-[#FAFAF8] border border-[#111318] rounded-[2px] px-2 py-1 outline-none text-[14px]"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Save Changes Prompt */}
-              <div className="pt-3 border-t border-[#E2E6E1] flex items-center justify-between">
-                <span className="text-[12px] text-[#626B64]">
-                  Reviewer edits are logged to the immutable workspace audit trail.
+              <div className="pt-3 border-t border-[#E2DFD7] flex items-center justify-between">
+                <span className="text-[11px] font-mono text-[#5A5852]">
+                  ALL CORRECTIONS AUDITED & APPENDED TO SECURE VAULT
                 </span>
                 <button
                   type="button"
                   disabled={isSaving}
                   onClick={handleSaveCorrections}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[12px] font-medium text-white bg-[#176B50] hover:bg-[#12563F] rounded-[4px] transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[12px] font-semibold text-white bg-[#111318] hover:bg-[#1D4ED8] rounded-[2px] transition-colors"
                 >
                   <Save className="w-3.5 h-3.5" />
                   <span>{isSaving ? 'Saving...' : 'Save Corrections'}</span>
@@ -905,16 +917,16 @@ export const DocumentDetailPage: React.FC = () => {
 
           {/* Audit Event History */}
           {auditEvents.length > 0 && (
-            <div className="bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] p-4 shadow-sm space-y-3">
+            <div className="bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] p-4 shadow-sm space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-[12px] font-bold text-[#202722] uppercase tracking-wider flex items-center gap-1.5">
-                  <History className="w-3.5 h-3.5 text-[#176B50]" />
-                  Document Lifecycle & Audit Trail ({auditEvents.length})
+                <h3 className="text-[11px] font-mono font-bold text-[#111318] uppercase tracking-wider flex items-center gap-1.5">
+                  <History className="w-3.5 h-3.5 text-[#111318]" />
+                  DOCUMENT LIFECYCLE & AUDIT TRAIL ({auditEvents.length})
                 </h3>
                 <button
                   type="button"
                   onClick={() => setShowTechnicalAudit(!showTechnicalAudit)}
-                  className="text-[11px] font-mono text-[#176B50] hover:underline"
+                  className="text-[11px] font-mono text-[#1D4ED8] hover:underline"
                 >
                   {showTechnicalAudit ? 'Hide Technical Diagnostics' : 'View Technical Diagnostics'}
                 </button>
@@ -927,20 +939,20 @@ export const DocumentDetailPage: React.FC = () => {
                   return (
                     <div
                       key={evt.id}
-                      className="p-2.5 bg-[#F7F8F6] rounded-[4px] border border-[#E2E6E1] flex items-start justify-between gap-3 text-[12px]"
+                      className="p-2.5 bg-[#FAFAF8] rounded-[2px] border border-[#E2DFD7] flex items-start justify-between gap-3 text-[12px]"
                     >
                       <div className="flex items-start gap-2.5">
                         <div className="mt-0.5 flex-shrink-0">
                           {renderAuditIcon(formatted.iconType)}
                         </div>
                         <div>
-                          <p className="font-semibold text-[#202722]">{formatted.title}</p>
-                          <p className="text-[11px] text-[#626B64] mt-0.5 leading-relaxed">
+                          <p className="font-semibold text-[#111318]">{formatted.title}</p>
+                          <p className="text-[11px] text-[#5A5852] mt-0.5 leading-relaxed font-sans">
                             {formatted.description}
                           </p>
                         </div>
                       </div>
-                      <span className="text-[#626B64] text-[10px] font-mono whitespace-nowrap flex-shrink-0">
+                      <span className="text-[#5A5852] text-[10px] font-mono whitespace-nowrap flex-shrink-0">
                         {new Date(evt.created_at).toLocaleString('en-GB')}
                       </span>
                     </div>
@@ -950,24 +962,24 @@ export const DocumentDetailPage: React.FC = () => {
 
               {/* Collapsible Technical Diagnostics (for debugging & engineering accountability) */}
               {showTechnicalAudit && (
-                <div className="mt-3 pt-3 border-t border-[#E2E6E1] space-y-2">
+                <div className="mt-3 pt-3 border-t border-[#E2DFD7] space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-mono font-bold text-[#626B64] uppercase">
+                    <span className="text-[10px] font-mono font-bold text-[#5A5852] uppercase">
                       Technical Diagnostics & Raw Event Stream
                     </span>
-                    <span className="text-[10px] font-mono text-[#626B64]">
-                      Internal system logs & provider attributions
+                    <span className="text-[9px] font-mono text-[#5A5852]">
+                      Cryptographic attributions & pipeline logs
                     </span>
                   </div>
-                  <div className="space-y-1.5 max-h-48 overflow-y-auto bg-[#202722] text-[#E2E6E1] p-2.5 rounded-[4px] font-mono text-[10px]">
+                  <div className="space-y-1.5 max-h-48 overflow-y-auto bg-[#111318] text-[#E2DFD7] p-2.5 rounded-[2px] font-mono text-[10px]">
                     {auditEvents.map((evt) => (
-                      <div key={`tech-${evt.id}`} className="py-1 border-b border-[#333E35] last:border-0">
+                      <div key={`tech-${evt.id}`} className="py-1 border-b border-[#2A2E39] last:border-0">
                         <div className="flex items-center justify-between text-[#8E9B90]">
-                          <span className="text-[#4ADE80] font-semibold">{evt.event_type}</span>
+                          <span className="text-[#60A5FA] font-semibold">{evt.event_type}</span>
                           <span>{new Date(evt.created_at).toISOString()}</span>
                         </div>
                         {evt.actor_id && (
-                          <div className="text-[#A5B4A8]">Actor ID: {evt.actor_id}</div>
+                          <div className="text-[#9CA3AF]">Actor ID: {evt.actor_id}</div>
                         )}
                         {evt.details && (
                           <pre className="text-[#D1D5DB] whitespace-pre-wrap break-all mt-0.5">

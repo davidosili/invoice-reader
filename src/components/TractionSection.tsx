@@ -80,20 +80,22 @@ const pilotCohorts: PilotCohort[] = [
 
 export const TractionSection: React.FC = () => {
   return (
-    <section className="bg-[#FFFFFF] py-16 md:py-24 border-b border-[#E2E6E1]">
+    <section className="bg-[#FFFFFF] py-16 md:py-24 border-b border-[#E2DFD7]">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-2xl mb-14">
-          <div className="inline-flex items-center gap-2 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#176B50]" />
-            <p className="text-[12px] font-semibold tracking-wider uppercase text-[#176B50] font-mono">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="font-mono text-[9px] uppercase px-1.5 py-0.5 bg-[#F6F5F1] border border-[#DDD7CD] text-[#5A5852]">
+              REGISTER // 08
+            </span>
+            <p className="text-[11px] font-mono tracking-wider uppercase text-[#1D4ED8]">
               Product Traction & Validation
             </p>
           </div>
-          <h2 className="text-[28px] sm:text-[36px] font-bold text-[#202722] tracking-tight leading-[1.15]">
+          <h2 className="text-[28px] sm:text-[36px] font-bold text-[#111318] tracking-tight leading-[1.15]">
             Tested on real invoices. Validated by real finance operators.
           </h2>
-          <p className="mt-4 text-[16px] text-[#626B64] leading-relaxed">
+          <p className="mt-4 text-[15px] text-[#5A5852] leading-relaxed">
             LedgerLens AI is grounded in empirical testing and active design-partner evaluation. We measure
             our progress by extraction reliability, mathematical precision, and real operational hours saved.
           </p>
@@ -106,21 +108,21 @@ export const TractionSection: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="p-6 rounded-[6px] bg-[#F7F8F6] border border-[#E2E6E1] flex flex-col justify-between hover:border-[#176B50]/30 transition-colors"
+                className="p-6 rounded-[2px] bg-[#FAFAF8] border border-[#E2DFD7] flex flex-col justify-between hover:border-[#111318] transition-colors relative"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-[32px] sm:text-[36px] font-bold text-[#176B50] font-mono tracking-tight">
+                    <span className="text-[32px] sm:text-[36px] font-bold text-[#111318] font-mono tracking-tight">
                       {item.value}
                     </span>
-                    <div className="w-8 h-8 rounded-[4px] bg-[#EDF4EF] flex items-center justify-center text-[#176B50]">
-                      <Icon className="w-4 h-4" />
+                    <div className="w-8 h-8 rounded-[2px] bg-[#FFFFFF] border border-[#DDD7CD] flex items-center justify-center text-[#111318]">
+                      <Icon className="w-4 h-4 text-[#1D4ED8]" />
                     </div>
                   </div>
-                  <h3 className="text-[15px] font-bold text-[#202722] mb-2">
+                  <h3 className="text-[14px] font-bold text-[#111318] mb-2 font-sans">
                     {item.label}
                   </h3>
-                  <p className="text-[13px] text-[#626B64] leading-relaxed">
+                  <p className="text-[12px] text-[#5A5852] leading-relaxed">
                     {item.detail}
                   </p>
                 </div>
@@ -130,17 +132,17 @@ export const TractionSection: React.FC = () => {
         </div>
 
         {/* Pilot Cohort Evaluations Header */}
-        <div className="border-t border-[#E2E6E1] pt-12 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="border-t border-[#E2DFD7] pt-12 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h3 className="text-[20px] sm:text-[24px] font-bold text-[#202722] tracking-tight">
+            <h3 className="text-[20px] sm:text-[24px] font-bold text-[#111318] tracking-tight">
               Active Design Partner Pilots
             </h3>
-            <p className="text-[14px] text-[#626B64] mt-1">
+            <p className="text-[13px] text-[#5A5852] mt-1">
               Currently testing real-world invoice processing across wholesale distribution and bookkeeping workflows.
             </p>
           </div>
-          <span className="text-[11px] font-mono text-[#176B50] bg-[#EDF4EF] px-2.5 py-1 rounded-[3px] border border-[#176B50]/20 font-semibold self-start sm:self-auto">
-            Stage: Closed Beta Pilots
+          <span className="text-[10px] font-mono text-[#1B4938] bg-[#EBF3EE] px-2.5 py-1 rounded-[2px] border border-[#1B4938]/30 font-semibold self-start sm:self-auto uppercase">
+            CLOSED BETA PILOTS
           </span>
         </div>
 
@@ -151,52 +153,55 @@ export const TractionSection: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="bg-[#FFFFFF] border border-[#E2E6E1] rounded-[6px] p-6 sm:p-8 flex flex-col justify-between shadow-sm"
+                className="bg-[#FAFAF8] border border-[#E2DFD7] rounded-[2px] p-6 sm:p-8 flex flex-col justify-between shadow-sm relative"
               >
+                <span className="absolute top-1 left-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+                <span className="absolute top-1 right-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+
                 <div>
                   {/* Segment Badge & Icon */}
-                  <div className="flex items-center justify-between pb-4 border-b border-[#E2E6E1] mb-5">
+                  <div className="flex items-center justify-between pb-4 border-b border-[#E2DFD7] mb-5">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-[4px] bg-[#EDF4EF] flex items-center justify-center text-[#176B50]">
+                      <div className="w-8 h-8 rounded-[2px] bg-[#111318] flex items-center justify-center text-white">
                         <Icon className="w-4 h-4" />
                       </div>
-                      <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-[#176B50] bg-[#EDF4EF] px-2 py-0.5 rounded-[3px]">
+                      <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-[#1B4938] bg-[#EBF3EE] border border-[#1B4938]/30 px-2 py-0.5 rounded-[2px]">
                         {cohort.badge}
                       </span>
                     </div>
-                    <span className="text-[11px] font-mono text-[#626B64]">
-                      Pilot Evaluation
+                    <span className="text-[11px] font-mono text-[#5A5852]">
+                      PILOT REGISTER
                     </span>
                   </div>
 
-                  <h4 className="text-[18px] sm:text-[20px] font-bold text-[#202722] mb-3">
+                  <h4 className="text-[18px] sm:text-[20px] font-bold text-[#111318] mb-3 font-sans">
                     {cohort.segment}
                   </h4>
 
-                  <p className="text-[14px] text-[#626B64] leading-relaxed mb-4">
+                  <p className="text-[13px] text-[#5A5852] leading-relaxed mb-4">
                     {cohort.profile}
                   </p>
 
-                  <div className="space-y-2.5 mb-6 text-[13px] bg-[#F7F8F6] p-4 rounded-[4px] border border-[#E2E6E1]">
+                  <div className="space-y-2.5 mb-6 text-[12px] bg-[#FFFFFF] p-4 rounded-[2px] border border-[#E2DFD7]">
                     <div>
-                      <strong className="text-[#202722]">Workload Profile:</strong>{' '}
-                      <span className="text-[#626B64]">{cohort.workload}</span>
+                      <strong className="text-[#111318]">Workload Profile:</strong>{' '}
+                      <span className="text-[#5A5852]">{cohort.workload}</span>
                     </div>
-                    <div className="pt-2 border-t border-[#E2E6E1]">
-                      <strong className="text-[#202722]">Key Finding:</strong>{' '}
-                      <span className="text-[#626B64]">{cohort.keyFinding}</span>
+                    <div className="pt-2 border-t border-[#E2DFD7]">
+                      <strong className="text-[#111318]">Key Finding:</strong>{' '}
+                      <span className="text-[#5A5852]">{cohort.keyFinding}</span>
                     </div>
                   </div>
 
                   {/* Quote from Evaluator */}
-                  <div className="relative pl-6 border-l-2 border-[#176B50] italic text-[14px] text-[#202722] leading-relaxed mb-4">
-                    <Quote className="w-4 h-4 text-[#176B50]/40 absolute -left-2 -top-1 fill-current" />
+                  <div className="relative pl-6 border-l-2 border-[#111318] italic text-[13px] text-[#111318] leading-relaxed mb-4">
+                    <Quote className="w-4 h-4 text-[#DDD7CD] absolute -left-2 -top-1 fill-current" />
                     "{cohort.quote}"
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-[#E2E6E1] flex items-center gap-2 text-[12px] text-[#626B64] font-medium">
-                  <CheckCircle2 className="w-4 h-4 text-[#176B50] flex-shrink-0" />
+                <div className="pt-3 border-t border-[#E2DFD7] flex items-center gap-2 text-[11px] font-mono text-[#5A5852]">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#1B4938] flex-shrink-0" />
                   <span>{cohort.authorTitle}</span>
                 </div>
               </div>
@@ -205,13 +210,13 @@ export const TractionSection: React.FC = () => {
         </div>
 
         {/* Evaluation Summary Box */}
-        <div className="p-5 rounded-[4px] bg-[#F7F8F6] border border-[#E2E6E1] flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-[13px] text-[#626B64]">
+        <div className="p-5 rounded-[2px] bg-[#FAFAF8] border border-[#E2DFD7] flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-[13px] text-[#5A5852]">
           <p>
-            <strong className="text-[#202722]">Structured Pilot Methodology:</strong> Pilot evaluations run on isolated, single-tenant workspace instances with zero cross-tenant data exposure. All extracted data is verified against ground-truth physical scans before approval.
+            <strong className="text-[#111318]">Structured Pilot Methodology:</strong> Pilot evaluations run on isolated, single-tenant workspace instances with zero cross-tenant data exposure. All extracted data is verified against ground-truth physical scans before approval.
           </p>
           <a
             href="mailto:support@myledgerlens.com?subject=LedgerLens%20Pilot%20Inquiry"
-            className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#176B50] hover:underline whitespace-nowrap self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 text-[12px] font-mono font-bold text-[#1D4ED8] hover:underline whitespace-nowrap self-start sm:self-auto uppercase"
           >
             Inquire About Pilot Program →
           </a>
