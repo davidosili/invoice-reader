@@ -27,7 +27,7 @@ test('Legal & Commercial Pages - Footer links and verified contact', () => {
   assert.ok(footerFile.includes('to="/privacy"'), 'Footer must link to /privacy');
   assert.ok(footerFile.includes('to="/terms"'), 'Footer must link to /terms');
   assert.ok(footerFile.includes('to="/pricing"'), 'Footer must link to /pricing');
-  assert.ok(footerFile.includes('support@ledgerlens.ai'), 'Footer must reference verified support email');
+  assert.ok(footerFile.includes('support@myledgerlens.com'), 'Footer must reference verified support email');
   assert.ok(footerFile.includes('David Osili'), 'Footer must credit founder David Osili');
 });
 
@@ -54,7 +54,7 @@ test('Terms of Service - Disclaimers and operational truth', () => {
   assert.ok(termsFile.includes('Deterministic Calculations') && termsFile.includes('Probabilistic AI Extraction'), 'Terms must distinguish deterministic math from probabilistic AI');
   assert.ok(termsFile.includes('AS-IS') && termsFile.includes('AS-AVAILABLE'), 'Terms must include AS-IS disclaimer');
   assert.ok(termsFile.includes('proposed commercial model'), 'Terms must state that paid tiers are proposed');
-  assert.ok(termsFile.includes('support@ledgerlens.ai'), 'Terms must provide working contact email');
+  assert.ok(termsFile.includes('support@myledgerlens.com'), 'Terms must provide working contact email');
 });
 
 test('Pricing Page - Honest commercial positioning without false billing claims', () => {
@@ -66,7 +66,7 @@ test('Pricing Page - Honest commercial positioning without false billing claims'
   assert.ok(pricingFile.includes('USD'), 'Pricing page must explicitly label currency as USD');
   assert.ok(pricingFile.includes('Nigerian Naira') || pricingFile.includes('NGN'), 'Pricing page must address local regional currency');
   assert.ok(pricingFile.includes('/app/auth'), 'Pricing page CTA must direct to functional auth route');
-  assert.ok(pricingFile.includes('mailto:support@ledgerlens.ai'), 'Pricing page CTA must provide working pilot email link');
+  assert.ok(pricingFile.includes('mailto:support@myledgerlens.com'), 'Pricing page CTA must provide working pilot email link');
   assert.ok(!pricingFile.includes('checkout.stripe.com'), 'Pricing page must not link to fake checkout URLs');
   assert.ok(!pricingFile.includes('credit card required'), 'Pricing page must not falsely claim credit card requirement');
 });

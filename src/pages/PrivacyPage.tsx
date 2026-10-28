@@ -292,7 +292,7 @@ export const PrivacyPage: React.FC = () => {
                 <strong className="text-[#202722]">Platform Security:</strong> Authenticating users, enforcing workspace multi-tenant Row Level Security boundaries, and rejecting spoofed or oversized files.
               </li>
               <li>
-                <strong className="text-[#202722]">Customer Support:</strong> Diagnosing service issues and responding to direct inquiries sent to <a href="mailto:support@ledgerlens.ai" className="text-[#176B50] hover:underline">support@ledgerlens.ai</a>.
+                <strong className="text-[#202722]">Customer Support:</strong> Diagnosing service issues and responding to direct inquiries sent to <a href="mailto:support@myledgerlens.com" className="text-[#176B50] hover:underline">support@myledgerlens.com</a>.
               </li>
             </ul>
 
@@ -421,7 +421,7 @@ export const PrivacyPage: React.FC = () => {
               </div>
               <div>
                 <strong className="text-[#202722] block mb-0.5">Current Deletion Capabilities:</strong>
-                While database Row Level Security policies permit document deletions, the current frontend MVP user interface does not yet expose a self-service "Delete Document" or "Delete Account" button. Account or document removal requests must be submitted directly to our support team at <a href="mailto:support@ledgerlens.ai" className="text-[#176B50] underline">support@ledgerlens.ai</a> for manual administrative fulfillment.
+                While database Row Level Security policies permit document deletions, the current frontend MVP user interface does not yet expose a self-service "Delete Document" or "Delete Account" button. Account or document removal requests must be submitted directly to our support team at <a href="mailto:support@myledgerlens.com" className="text-[#176B50] underline">support@myledgerlens.com</a> for manual administrative fulfillment.
               </div>
             </div>
           </section>
@@ -466,7 +466,7 @@ export const PrivacyPage: React.FC = () => {
                 <strong className="text-[#202722]">Right to Rectification:</strong> Reviewers can correct any extracted invoice field, supplier information, or line item directly via the Human Review Console prior to approval.
               </li>
               <li>
-                <strong className="text-[#202722]">Right to Erasure (Deletion):</strong> You may request the deletion of your account, workspace, or uploaded documents by contacting <a href="mailto:support@ledgerlens.ai" className="text-[#176B50] hover:underline">support@ledgerlens.ai</a>.
+                <strong className="text-[#202722]">Right to Erasure (Deletion):</strong> You may request the deletion of your account, workspace, or uploaded documents by contacting <a href="mailto:support@myledgerlens.com" className="text-[#176B50] hover:underline">support@myledgerlens.com</a>.
               </li>
             </ul>
 
@@ -479,7 +479,7 @@ export const PrivacyPage: React.FC = () => {
                 LedgerLens AI seeks to adhere to core data-protection principles under the <strong>Nigeria Data Protection Act 2023 (NDPA)</strong>, as well as international principles of purpose limitation, storage minimization, and data accuracy. Formal registration with national data protection authorities (such as the Nigeria Data Protection Commission - NDPC) and appointment of an external Data Protection Officer (DPO) will be completed upon corporate entity incorporation.
               </p>
               <p className="text-[12px] text-[#626B64] italic">
-                *Pre-launch note: Prospective enterprise customers requiring customized Data Processing Agreements (DPAs) or Standard Contractual Clauses (SCCs) may contact <a href="mailto:support@ledgerlens.ai" className="text-[#176B50] underline">support@ledgerlens.ai</a>.
+                *Pre-launch note: Prospective enterprise customers requiring customized Data Processing Agreements (DPAs) or Standard Contractual Clauses (SCCs) may contact <a href="mailto:support@myledgerlens.com" className="text-[#176B50] underline">support@myledgerlens.com</a>.
               </p>
             </div>
           </section>
@@ -509,8 +509,8 @@ export const PrivacyPage: React.FC = () => {
                 </div>
                 <div>
                   <span className="text-[#626B64]">Contact Email:</span>{' '}
-                  <a href="mailto:support@ledgerlens.ai" className="text-[#176B50] underline">
-                    support@ledgerlens.ai
+                  <a href="mailto:support@myledgerlens.com" className="text-[#176B50] underline">
+                    support@myledgerlens.com
                   </a>
                 </div>
                 <div>

@@ -151,7 +151,7 @@ function sanitizeAuthError(err, fallbackMessage = 'Authentication failed. Please
     lower.includes('claim') ||
     lower.includes('supabase')
   ) {
-    return 'Our authentication service encountered a temporary error. Please try again shortly or contact support@ledgerlens.ai.';
+    return 'Our authentication service encountered a temporary error. Please try again shortly or contact support@myledgerlens.com.';
   }
   return rawMessage;
 }
@@ -172,7 +172,7 @@ test('Error Sanitization - Masks PostgreSQL and Supabase internal errors from cu
     assert.ok(!s.includes('PostgreSQL'));
     assert.ok(!s.includes('row-level security'));
     assert.ok(!s.includes('Supabase'));
-    assert.equal(s, 'Our authentication service encountered a temporary error. Please try again shortly or contact support@ledgerlens.ai.');
+    assert.equal(s, 'Our authentication service encountered a temporary error. Please try again shortly or contact support@myledgerlens.com.');
   }
 });
 

@@ -154,7 +154,7 @@ In the Supabase Dashboard:
 If `VITE_SUPABASE_URL` or `VITE_SUPABASE_ANON_KEY` is missing in production:
 - Customers see a clean, branded **"Service Temporarily Unavailable"** interface.
 - Customers are never shown technical instructions, API keys, or database setup guides.
-- Action buttons allow users to return to the homepage or contact support (`support@ledgerlens.ai`).
+- Action buttons allow users to return to the homepage or contact support (`support@myledgerlens.com`).
 
 ### Operator Diagnostics Mode
 Authorized developers and platform operators can inspect configuration status:
@@ -170,7 +170,7 @@ Authorized developers and platform operators can inspect configuration status:
 All raw error responses from the backend are filtered through `src/lib/authErrors.ts`:
 - Invalid credentials: *"The email address or password you entered is incorrect. Please verify your details and try again."*
 - Unconfirmed email: *"Please check your email inbox and confirm your address before signing in."*
-- Database or RLS violation: *"Our authentication service encountered a temporary error. Please try again shortly or contact support@ledgerlens.ai."*
+- Database or RLS violation: *"Our authentication service encountered a temporary error. Please try again shortly or contact support@myledgerlens.com."*
 - Raw strings containing `PGRST`, `PostgreSQL`, `row-level security`, `jwt`, or `schema` are strictly intercepted and suppressed.
 
 ---

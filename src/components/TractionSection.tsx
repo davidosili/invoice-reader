@@ -210,7 +210,7 @@ export const TractionSection: React.FC = () => {
             <strong className="text-[#202722]">Structured Pilot Methodology:</strong> Pilot evaluations run on isolated, single-tenant workspace instances with zero cross-tenant data exposure. All extracted data is verified against ground-truth physical scans before approval.
           </p>
           <a
-            href="mailto:support@ledgerlens.ai?subject=LedgerLens%20Pilot%20Inquiry"
+            href="mailto:support@myledgerlens.com?subject=LedgerLens%20Pilot%20Inquiry"
             className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#176B50] hover:underline whitespace-nowrap self-start sm:self-auto"
           >
             Inquire About Pilot Program →

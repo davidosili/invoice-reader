@@ -84,7 +84,7 @@ export const PricingPage: React.FC = () => {
         'Cross-document 2-way Purchase Order matching (Roadmap)',
       ],
       ctaText: 'Inquire About Pilot Program',
-      ctaHref: 'mailto:support@ledgerlens.ai?subject=LedgerLens%20Business%20Pilot%20Inquiry',
+      ctaHref: 'mailto:support@myledgerlens.com?subject=LedgerLens%20Business%20Pilot%20Inquiry',
       ctaType: 'email',
     },
     {
@@ -110,7 +110,7 @@ export const PricingPage: React.FC = () => {
         'Dedicated API access & webhook notifications (Planned)',
       ],
       ctaText: 'Request Commercial Consultation',
-      ctaHref: 'mailto:support@ledgerlens.ai?subject=LedgerLens%20Professional%20Inquiry',
+      ctaHref: 'mailto:support@myledgerlens.com?subject=LedgerLens%20Professional%20Inquiry',
       ctaType: 'email',
     },
   ];
@@ -434,7 +434,7 @@ export const PricingPage: React.FC = () => {
                 How can our business participate in a pilot program?
               </h3>
               <p className="text-[#626B64] leading-relaxed">
-                You can sign in to explore the live application immediately, or email our founding team directly at <a href="mailto:support@ledgerlens.ai" className="text-[#176B50] underline">support@ledgerlens.ai</a> with details about your typical monthly invoice volume, document formats, and accounting workflow requirements.
+                You can sign in to explore the live application immediately, or email our founding team directly at <a href="mailto:support@myledgerlens.com" className="text-[#176B50] underline">support@myledgerlens.com</a> with details about your typical monthly invoice volume, document formats, and accounting workflow requirements.
               </p>
             </div>
           </div>
@@ -457,7 +457,7 @@ export const PricingPage: React.FC = () => {
               <ArrowRight className="w-4 h-4" />
             </Link>
             <a
-              href="mailto:support@ledgerlens.ai"
+              href="mailto:support@myledgerlens.com"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-[14px] font-medium text-[#202722] bg-[#FFFFFF] hover:bg-[#F7F8F6] border border-[#E2E6E1] hover:border-[#176B50] rounded-[4px] transition-colors focus-ring"
             >
               <Mail className="w-4 h-4 text-[#176B50]" />

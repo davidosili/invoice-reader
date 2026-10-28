@@ -48,8 +48,8 @@ export const Footer: React.FC = () => {
 
             <div className="text-[13px] pt-1">
               <span className="text-[#202722] font-medium">Support:</span>{' '}
-              <a href="mailto:support@ledgerlens.ai" className="text-[#176B50] hover:underline">
-                support@ledgerlens.ai
+              <a href="mailto:support@myledgerlens.com" className="text-[#176B50] hover:underline">
+                support@myledgerlens.com
               </a>
             </div>
           </div>

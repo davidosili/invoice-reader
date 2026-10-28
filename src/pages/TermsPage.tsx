@@ -306,7 +306,7 @@ export const TermsPage: React.FC = () => {
                 <strong>No Active Automated Billing:</strong> The platform does not currently incorporate active payment gateway checkout (e.g., Stripe, Paystack). No credit card information is collected through the website, and no user will be automatically charged or enrolled in a recurring subscription without explicit written agreement and prior consent.
               </p>
               <p>
-                Organizations interested in participating in pilot programs or enterprise evaluations may contact <a href="mailto:support@ledgerlens.ai" className="text-[#176B50] underline">support@ledgerlens.ai</a> to discuss bespoke pilot terms and volume arrangements.
+                Organizations interested in participating in pilot programs or enterprise evaluations may contact <a href="mailto:support@myledgerlens.com" className="text-[#176B50] underline">support@myledgerlens.com</a> to discuss bespoke pilot terms and volume arrangements.
               </p>
             </div>
           </section>
@@ -326,7 +326,7 @@ export const TermsPage: React.FC = () => {
               <li>Extended operational inactivity or technical security threats to the platform.</li>
             </ul>
             <p className="text-[14px] text-[#626B64]">
-              <strong>Data Deletion Requests:</strong> Because automated self-service account and data deletion workflows are currently in development, users wishing to close an account or permanently expunge workspace files may send a written request to <a href="mailto:support@ledgerlens.ai" className="text-[#176B50] underline">support@ledgerlens.ai</a>.
+              <strong>Data Deletion Requests:</strong> Because automated self-service account and data deletion workflows are currently in development, users wishing to close an account or permanently expunge workspace files may send a written request to <a href="mailto:support@myledgerlens.com" className="text-[#176B50] underline">support@myledgerlens.com</a>.
             </p>
           </section>
 
@@ -383,8 +383,8 @@ export const TermsPage: React.FC = () => {
                 </div>
                 <div>
                   <span className="text-[#626B64]">Email:</span>{' '}
-                  <a href="mailto:support@ledgerlens.ai" className="text-[#176B50] underline">
-                    support@ledgerlens.ai
+                  <a href="mailto:support@myledgerlens.com" className="text-[#176B50] underline">
+                    support@myledgerlens.com
                   </a>
                 </div>
                 <div>

@@ -60,7 +60,7 @@ export function sanitizeAuthError(err: unknown, fallbackMessage = 'Authenticatio
     lower.includes('claim') ||
     lower.includes('supabase')
   ) {
-    return 'Our authentication service encountered a temporary error. Please try again shortly or contact support@ledgerlens.ai.';
+    return 'Our authentication service encountered a temporary error. Please try again shortly or contact support@myledgerlens.com.';
   }
 
   return rawMessage;

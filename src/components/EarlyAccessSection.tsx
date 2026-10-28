@@ -40,10 +40,10 @@ export const GetStartedSection: React.FC = () => {
                 <span>
                   Direct team email:{' '}
                   <a
-                    href="mailto:support@ledgerlens.ai"
+                    href="mailto:support@myledgerlens.com"
                     className="text-[#176B50] font-medium hover:underline"
                   >
-                    support@ledgerlens.ai
+                    support@myledgerlens.com
                   </a>
                 </span>
               </div>
@@ -68,7 +68,7 @@ export const GetStartedSection: React.FC = () => {
 
               {/* Secondary CTA */}
               <a
-                href="mailto:support@ledgerlens.ai"
+                href="mailto:support@myledgerlens.com"
                 className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 text-[15px] font-medium text-[#202722] bg-[#FFFFFF] hover:bg-[#F7F8F6] border border-[#E2E6E1] hover:border-[#176B50] rounded-[4px] transition-colors focus-ring"
               >
                 <Mail className="w-4 h-4 text-[#176B50]" />
@@ -89,10 +89,10 @@ export const GetStartedSection: React.FC = () => {
               <p className="mt-4 text-[12px] text-[#626B64] leading-relaxed">
                 Contact us at{' '}
                 <a
-                  href="mailto:support@ledgerlens.ai"
+                  href="mailto:support@myledgerlens.com"
                   className="text-[#176B50] underline font-medium"
                 >
-                  support@ledgerlens.ai
+                  support@myledgerlens.com
                 </a>{' '}
                 for questions about invoice intelligence capabilities, feedback on the MVP, or technical questions.
               </p>

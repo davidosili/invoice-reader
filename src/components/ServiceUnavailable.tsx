@@ -50,7 +50,7 @@ export const ServiceUnavailable: React.FC = () => {
         </Link>
 
         <a
-          href="mailto:support@ledgerlens.ai"
+          href="mailto:support@myledgerlens.com"
           className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 text-[14px] font-medium text-[#626B64] hover:text-[#202722] hover:bg-[#F7F8F6] border border-[#E2E6E1] rounded-[4px] transition-colors"
         >
           <Mail className="w-4 h-4" />
