@@ -44,7 +44,7 @@ export const Hero: React.FC = () => {
               <div className="w-4 h-4 rounded-full bg-[#F6F5F1] flex items-center justify-center text-[#1D4ED8]">
                 <Play className="w-2.5 h-2.5 fill-current ml-0.5" />
               </div>
-              <span>Watch 15-Sec Demo</span>
+              <span>Watch Product Demo</span>
             </button>
           </div>
 

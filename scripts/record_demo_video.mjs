@@ -1,11 +1,11 @@
 /**
  * scripts/record_demo_video.mjs
  *
- * Automatically records a high-definition 60-second video walkthrough
- * of LedgerLens AI's working MVP using Chrome CDP screencasting and ffmpeg.
+ * Automatically records a high-definition video walkthrough of MyLedgerLens's
+ * live working MVP using Chrome CDP screencasting and ffmpeg.
  *
  * Implements a constant 24 FPS wall-clock pump so static reading intervals
- * and pauses are fully preserved, ensuring an exact ~60-second runtime.
+ * and pauses are fully preserved, ensuring smooth playback and accurate timing.
  */
 
 import { spawn } from 'node:child_process';
@@ -50,6 +50,7 @@ const publicClient = createClient(SUPABASE_URL, ANON_KEY, {
 });
 
 const DOC_ID = '8fe0ca79-bbeb-4719-9d5d-d572201e43d9';
+const WORKSPACE_ID = '801ac8bb-a390-4d65-96b6-ed8c2457f91e';
 const USER_EMAIL = 'davidosili93@gmail.com';
 const USER_ID = '5b70f957-0473-4e62-9ea3-60f8d978e2a4';
 
@@ -57,6 +58,9 @@ const CDP_PORT = 9229;
 const OUTPUT_DIR = path.resolve('public');
 fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 const OUTPUT_VIDEO = path.join(OUTPUT_DIR, 'demo-walkthrough.mp4');
+if (fs.existsSync(OUTPUT_VIDEO)) {
+  fs.unlinkSync(OUTPUT_VIDEO);
+}
 
 const TARGET_FPS = 24;
 const FRAME_DURATION_MS = 1000 / TARGET_FPS;
@@ -67,32 +71,60 @@ async function wait(ms) {
 
 async function main() {
   console.log('================================================================');
-  console.log('RECORDING LEDGERLENS AI 60-SECOND PRODUCT DEMONSTRATION VIDEO');
+  console.log('RECORDING MYLEDGERLENS PRODUCT DEMONSTRATION WALKTHROUGH VIDEO');
   console.log('================================================================\n');
 
-  // Step 1: Sign in as workspace owner
-  console.log(`[1] Authenticating as workspace owner (${USER_EMAIL})...`);
-  const tempPassword = `DemoPass_${Date.now()}!Aa1`;
-  await adminClient.auth.admin.updateUserById(USER_ID, { password: tempPassword });
+  // Step 1: Update workspace name to professional title
+  console.log(`[1] Configuring workspace branding...`);
+  await adminClient
+    .from('workspaces')
+    .update({ name: 'Apex Wholesale Logistics' })
+    .eq('id', WORKSPACE_ID);
+
+  // Step 2: Sign in as workspace owner
+  console.log(`[2] Authenticating as workspace owner (${USER_EMAIL})...`);
+  const demoPassword = 'DemoPassword123!Aa';
+  let session = null;
 
   const { data: authData, error: authErr } = await publicClient.auth.signInWithPassword({
     email: USER_EMAIL,
-    password: tempPassword,
+    password: demoPassword,
   });
-  if (authErr || !authData.session) {
-    throw new Error(`Authentication failed: ${authErr?.message}`);
+
+  if (authData?.session) {
+    session = authData.session;
+  } else {
+    console.log('  ⚠️ Updating demo credentials via admin client...');
+    await adminClient.auth.admin.updateUserById(USER_ID, {
+      password: demoPassword,
+      email_confirm: true,
+    });
+    await wait(800);
+    const { data: retryData, error: retryErr } = await publicClient.auth.signInWithPassword({
+      email: USER_EMAIL,
+      password: demoPassword,
+    });
+    if (retryErr || !retryData.session) {
+      throw new Error(`Authentication failed: ${retryErr?.message || authErr?.message}`);
+    }
+    session = retryData.session;
   }
-  const session = authData.session;
   console.log('  ✅ Authenticated successfully. Session established.');
 
-  // Step 2: Reset document to review_required state for a dynamic review demo
+  // Step 3: Reset document to review_required state for a dynamic review demo
+  console.log(`[3] Resetting document state for live demonstration...`);
   await adminClient
     .from('documents')
     .update({ status: 'review_required' })
     .eq('id', DOC_ID);
 
-  // Step 3: Launch Chrome via CDP
-  console.log(`\n[2] Launching Chrome on CDP port ${CDP_PORT}...`);
+  await adminClient
+    .from('invoice_extractions')
+    .update({ supplier_tax_id: null })
+    .eq('document_id', DOC_ID);
+
+  // Step 4: Launch Chrome via CDP
+  console.log(`\n[4] Launching Chrome on CDP port ${CDP_PORT}...`);
   const chromeProc = spawn('google-chrome', [
     '--headless=new',
     `--remote-debugging-port=${CDP_PORT}`,
@@ -113,12 +145,13 @@ async function main() {
   let msgId = 0;
   const callbacks = new Map();
 
-  // Step 4: Setup ffmpeg stream input
-  console.log(`\n[3] Spawning ffmpeg encoder at ${FFMPEG_PATH}...`);
+  // Step 5: Setup ffmpeg stream input
+  console.log(`\n[5] Spawning ffmpeg encoder at ${FFMPEG_PATH}...`);
   const ffmpegProc = spawn(FFMPEG_PATH, [
     '-y',
     '-f', 'image2pipe',
     '-vcodec', 'mjpeg',
+    '-s', '1440x900',
     '-r', String(TARGET_FPS),
     '-i', '-',
     '-vcodec', 'libx264',
@@ -168,7 +201,7 @@ async function main() {
   await sendCmd('Emulation.setDeviceMetricsOverride', {
     width: 1440,
     height: 900,
-    deviceScaleFactor: 1.5,
+    deviceScaleFactor: 1,
     mobile: false,
   });
 
@@ -192,10 +225,10 @@ async function main() {
   await wait(2500);
 
   // Start Screencast
-  console.log('\n[4] Starting video screencast capture...');
+  console.log('\n[6] Starting video screencast capture...');
   await sendCmd('Page.startScreencast', {
     format: 'jpeg',
-    quality: 85,
+    quality: 88,
     maxWidth: 1440,
     maxHeight: 900,
     everyNthFrame: 1,
@@ -205,7 +238,7 @@ async function main() {
   while (!latestFrameBuffer) {
     await wait(50);
   }
-  console.log('  ✅ First screencast frame received. Starting 24 FPS drift-corrected pump...');
+  console.log('  ✅ First screencast frame received. Starting 24 FPS pump...');
 
   const recordStartTime = Date.now();
   pumpInterval = setInterval(() => {
@@ -231,9 +264,9 @@ async function main() {
         cursor.style.width = '18px';
         cursor.style.height = '18px';
         cursor.style.borderRadius = '50%';
-        cursor.style.backgroundColor = 'rgba(23, 107, 80, 0.9)';
+        cursor.style.backgroundColor = 'rgba(29, 78, 216, 0.95)';
         cursor.style.border = '2px solid #FFFFFF';
-        cursor.style.boxShadow = '0 3px 12px rgba(0,0,0,0.35)';
+        cursor.style.boxShadow = '0 3px 12px rgba(17, 19, 24, 0.4)';
         cursor.style.pointerEvents = 'none';
         cursor.style.zIndex = '999999';
         cursor.style.transform = 'translate(-50%, -50%)';
@@ -257,7 +290,7 @@ async function main() {
         rip.style.width = '36px';
         rip.style.height = '36px';
         rip.style.borderRadius = '50%';
-        rip.style.border = '2px solid rgba(23, 107, 80, 0.8)';
+        rip.style.border = '2px solid rgba(29, 78, 216, 0.85)';
         rip.style.transform = 'translate(-50%, -50%) scale(0.2)';
         rip.style.pointerEvents = 'none';
         rip.style.zIndex = '999998';
@@ -282,27 +315,27 @@ async function main() {
         banner.style.bottom = '24px';
         banner.style.left = '50%';
         banner.style.transform = 'translateX(-50%)';
-        banner.style.backgroundColor = 'rgba(32, 39, 34, 0.94)';
-        banner.style.backdropFilter = 'blur(10px)';
+        banner.style.backgroundColor = 'rgba(17, 19, 24, 0.95)';
+        banner.style.backdropFilter = 'blur(12px)';
         banner.style.color = '#FFFFFF';
         banner.style.padding = '10px 22px';
         banner.style.borderRadius = '30px';
-        banner.style.boxShadow = '0 12px 30px -4px rgba(0, 0, 0, 0.4)';
+        banner.style.boxShadow = '0 12px 32px -4px rgba(0, 0, 0, 0.5)';
         banner.style.zIndex = '999997';
-        banner.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        banner.style.fontFamily = '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
         banner.style.fontSize = '13px';
         banner.style.display = 'flex';
         banner.style.alignItems = 'center';
         banner.style.gap = '12px';
-        banner.style.border = '1px solid rgba(255, 255, 255, 0.16)';
+        banner.style.border = '1px solid rgba(226, 223, 215, 0.25)';
         banner.style.transition = 'all 0.3s ease';
         document.body.appendChild(banner);
       }
 
       window.setBanner = (step, detail) => {
         banner.innerHTML = \`
-          <span style="background: #176B50; color: #FFFFFF; font-weight: 700; font-size: 11px; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px; text-transform: uppercase;">\${step}</span>
-          <span style="font-weight: 500; color: #E2E6E1;">\${detail}</span>
+          <span style="background: #1D4ED8; color: #FFFFFF; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 11px; padding: 3px 8px; border-radius: 2px; letter-spacing: 0.5px; text-transform: uppercase;">\${step}</span>
+          <span style="font-weight: 500; color: #F6F5F1;">\${detail}</span>
         \`;
       };
     })()`);
@@ -319,12 +352,28 @@ async function main() {
   await setupHud('1 / 6 • Intake', 'Live documents queue with automated extraction and confidence scoring');
   await wait(3000);
 
-  // Move cursor toward invoice row in the table
-  await evalInBrowser(`window.moveCursorTo(680, 310);`);
+  // Move cursor toward invoice row in the table dynamically
+  await evalInBrowser(`(() => {
+    const row = Array.from(document.querySelectorAll('tr')).find(r =>
+      r.innerText.includes('images.png') || r.innerText.includes('Juliana Silva')
+    );
+    if (row) {
+      const rect = row.getBoundingClientRect();
+      window.moveCursorTo(rect.left + rect.width * 0.45, rect.top + rect.height / 2);
+    } else {
+      window.moveCursorTo(680, 310);
+    }
+  })()`);
   await wait(2500);
 
   // Click on the invoice row to enter Review Console
   await evalInBrowser(`window.clickCursor();`);
+  await evalInBrowser(`(() => {
+    const link = Array.from(document.querySelectorAll('a')).find(a =>
+      a.href && a.href.includes('/app/documents/${DOC_ID}')
+    );
+    if (link) link.click();
+  })()`);
   await wait(2500);
 
   // =========================================================================
@@ -346,12 +395,38 @@ async function main() {
   // =========================================================================
   console.log('  🎥 [00:16 - 00:26] Scene 3: Highlighting Audit Validation Discrepancy...');
   await setupHud('3 / 6 • Anomaly Detection', 'Validation engine flags due-date discrepancy before payment approval');
-  await evalInBrowser(`window.moveCursorTo(520, 160);`);
-  await wait(5000);
+
+  // Move cursor to the discrepancy alert banner dynamically
+  await evalInBrowser(`(() => {
+    try {
+      const alert = Array.from(document.querySelectorAll('h2')).find(h =>
+        h.textContent && h.textContent.includes('Reconciliation Discrepancies')
+      );
+      if (alert) {
+        const rect = alert.getBoundingClientRect();
+        window.moveCursorTo(rect.left + 80, rect.top + rect.height / 2);
+      } else {
+        window.moveCursorTo(520, 160);
+      }
+    } catch {
+      window.moveCursorTo(520, 160);
+    }
+  })()`);
+  await wait(4500);
 
   // Focus on Due Date field
-  await evalInBrowser(`window.moveCursorTo(1060, 440);`);
-  await wait(5000);
+  await evalInBrowser(`(() => {
+    const inputs = Array.from(document.querySelectorAll('input'));
+    const dueInput = inputs.find(i => i.value && i.value.includes('2025-07-10'));
+    if (dueInput) {
+      const rect = dueInput.getBoundingClientRect();
+      window.moveCursorTo(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      dueInput.focus();
+    } else {
+      window.moveCursorTo(1060, 440);
+    }
+  })()`);
+  await wait(4500);
 
   // =========================================================================
   // SCENE 4: Synchronized Bounding Box & Math Cross-Sums (26s - 36s)
@@ -361,19 +436,56 @@ async function main() {
 
   // Focus supplier name to highlight bounding box
   await evalInBrowser(`(() => {
-    window.moveCursorTo(780, 320);
     const inputs = Array.from(document.querySelectorAll('input'));
-    const supInput = inputs.find(i => i.value.includes('Juliana'));
-    if (supInput) supInput.focus();
+    const supInput = inputs.find(i => i.value && i.value.includes('Juliana'));
+    if (supInput) {
+      const rect = supInput.getBoundingClientRect();
+      window.moveCursorTo(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      supInput.focus();
+      const parent = supInput.closest('[class*="border"]');
+      if (parent && parent.dispatchEvent) {
+        parent.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+      }
+    } else {
+      window.moveCursorTo(780, 320);
+    }
   })()`);
   await wait(3500);
 
   // Hover subtotal and tax
-  await evalInBrowser(`window.moveCursorTo(1050, 580);`);
+  await evalInBrowser(`(() => {
+    try {
+      const el = Array.from(document.querySelectorAll('*')).find(el =>
+        (el.textContent && el.textContent.includes('870.00'))
+      );
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        window.moveCursorTo(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      } else {
+        window.moveCursorTo(1050, 580);
+      }
+    } catch {
+      window.moveCursorTo(1050, 580);
+    }
+  })()`);
   await wait(3000);
 
   // Hover grand total
-  await evalInBrowser(`window.moveCursorTo(1150, 680);`);
+  await evalInBrowser(`(() => {
+    try {
+      const el = Array.from(document.querySelectorAll('*')).find(el =>
+        (el.textContent && el.textContent.includes('957.00'))
+      );
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        window.moveCursorTo(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      } else {
+        window.moveCursorTo(1150, 680);
+      }
+    } catch {
+      window.moveCursorTo(1150, 680);
+    }
+  })()`);
   await wait(3500);
 
   // =========================================================================
@@ -383,25 +495,53 @@ async function main() {
   await setupHud('5 / 6 • Correction', 'Human-in-the-loop: Reviewer updates Tax ID with instant audit trail logging');
 
   await evalInBrowser(`(() => {
-    window.moveCursorTo(820, 440);
-    const inputs = Array.from(document.querySelectorAll('input'));
-    const taxInput = inputs.find(i => i.closest('div').innerText.includes('Tax ID'));
-    if (taxInput) {
-      taxInput.focus();
-      taxInput.value = 'US-TIN-9948102';
-      taxInput.dispatchEvent(new Event('input', { bubbles: true }));
-      taxInput.dispatchEvent(new Event('change', { bubbles: true }));
+    try {
+      const inputs = Array.from(document.querySelectorAll('input'));
+      const taxInput = inputs.find(i => {
+        const parent = i.closest('div');
+        return parent && parent.textContent && parent.textContent.includes('Tax ID');
+      });
+      if (taxInput) {
+        const rect = taxInput.getBoundingClientRect();
+        window.moveCursorTo(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        taxInput.focus();
+        taxInput.value = 'US-TIN-9948102';
+        taxInput.dispatchEvent(new Event('input', { bubbles: true }));
+        taxInput.dispatchEvent(new Event('change', { bubbles: true }));
+      } else {
+        window.moveCursorTo(820, 440);
+      }
+    } catch {
+      window.moveCursorTo(820, 440);
     }
   })()`);
   await wait(3000);
 
   // Move to Save Corrections button and click
-  await evalInBrowser(`window.moveCursorTo(1180, 240);`);
+  await evalInBrowser(`(() => {
+    try {
+      const saveBtn = Array.from(document.querySelectorAll('button')).find(b =>
+        b.textContent && b.textContent.includes('Save Corrections')
+      );
+      if (saveBtn) {
+        const rect = saveBtn.getBoundingClientRect();
+        window.moveCursorTo(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      } else {
+        window.moveCursorTo(1180, 240);
+      }
+    } catch {
+      window.moveCursorTo(1180, 240);
+    }
+  })()`);
   await wait(1500);
   await evalInBrowser(`window.clickCursor();`);
   await evalInBrowser(`(() => {
-    const saveBtn = Array.from(document.querySelectorAll('button')).find(b => b.innerText.includes('Save Corrections'));
-    if (saveBtn) saveBtn.click();
+    try {
+      const saveBtn = Array.from(document.querySelectorAll('button')).find(b =>
+        b.textContent && b.textContent.includes('Save Corrections')
+      );
+      if (saveBtn) saveBtn.click();
+    } catch {}
   })()`);
   await wait(5500);
 
@@ -412,13 +552,33 @@ async function main() {
   await setupHud('6 / 6 • Certification', 'One-click certification marks document approved and ready for ERP disbursement');
 
   await evalInBrowser(`window.confirm = () => true;`);
-  await evalInBrowser(`window.moveCursorTo(1260, 85);`);
+
+  // Move to Certify & Approve button
+  await evalInBrowser(`(() => {
+    try {
+      const approveBtn = Array.from(document.querySelectorAll('button')).find(b =>
+        b.textContent && (b.textContent.includes('Certify & Approve') || b.textContent.includes('Approve'))
+      );
+      if (approveBtn) {
+        const rect = approveBtn.getBoundingClientRect();
+        window.moveCursorTo(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      } else {
+        window.moveCursorTo(1260, 85);
+      }
+    } catch {
+      window.moveCursorTo(1260, 85);
+    }
+  })()`);
   await wait(2000);
 
   await evalInBrowser(`window.clickCursor();`);
   await evalInBrowser(`(() => {
-    const approveBtn = Array.from(document.querySelectorAll('button')).find(b => b.innerText.includes('Approve Invoice'));
-    if (approveBtn) approveBtn.click();
+    try {
+      const approveBtn = Array.from(document.querySelectorAll('button')).find(b =>
+        b.textContent && (b.textContent.includes('Certify & Approve') || b.textContent.includes('Approve'))
+      );
+      if (approveBtn) approveBtn.click();
+    } catch {}
   })()`);
   await wait(6000);
 
@@ -432,29 +592,61 @@ async function main() {
   await evalInBrowser(`window.scrollTo({ top: 400, behavior: 'smooth' });`);
   await wait(1500);
 
-  await evalInBrowser(`window.moveCursorTo(1180, 800);`);
+  await evalInBrowser(`(() => {
+    try {
+      const btn = Array.from(document.querySelectorAll('button')).find(b =>
+        b.textContent && b.textContent.includes('View Technical Diagnostics')
+      );
+      if (btn) {
+        const rect = btn.getBoundingClientRect();
+        window.moveCursorTo(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      } else {
+        window.moveCursorTo(1180, 800);
+      }
+    } catch {
+      window.moveCursorTo(1180, 800);
+    }
+  })()`);
   await wait(1000);
   await evalInBrowser(`window.clickCursor();`);
   await evalInBrowser(`(() => {
-    const btn = Array.from(document.querySelectorAll('button')).find(b => b.innerText.includes('View Technical Diagnostics'));
-    if (btn) btn.click();
+    try {
+      const btn = Array.from(document.querySelectorAll('button')).find(b =>
+        b.textContent && b.textContent.includes('View Technical Diagnostics')
+      );
+      if (btn) btn.click();
+    } catch {}
   })()`);
   await wait(4500);
 
   // Navigate back to documents list for export
   await sendCmd('Page.navigate', { url: 'http://localhost:5173/app/documents' });
-  await wait(2000);
+  await wait(2500);
 
   await setupHud('Complete', 'Verified accounting pipeline: invoices certified, audited, and export-ready');
-  await evalInBrowser(`window.moveCursorTo(1200, 120);`);
+  await evalInBrowser(`(() => {
+    try {
+      const exportBtn = Array.from(document.querySelectorAll('button')).find(b =>
+        b.textContent && (b.textContent.includes('Export Certified') || b.textContent.includes('Export'))
+      );
+      if (exportBtn) {
+        const rect = exportBtn.getBoundingClientRect();
+        window.moveCursorTo(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      } else {
+        window.moveCursorTo(1200, 120);
+      }
+    } catch {
+      window.moveCursorTo(1200, 120);
+    }
+  })()`);
   await wait(1500);
   await evalInBrowser(`window.clickCursor();`);
-  await wait(2000);
+  await wait(2500);
 
   // =========================================================================
   // Finalizing video capture
   // =========================================================================
-  console.log('\n[5] Finalizing video recording...');
+  console.log('\n[7] Finalizing video recording...');
   clearInterval(pumpInterval);
   await sendCmd('Page.stopScreencast');
   await wait(500);
@@ -468,10 +660,16 @@ async function main() {
   ws.close();
   chromeProc.kill();
 
+  const distVideo = path.resolve('dist', 'demo-walkthrough.mp4');
+  if (fs.existsSync(path.resolve('dist'))) {
+    fs.copyFileSync(OUTPUT_VIDEO, distVideo);
+    console.log(`📁 Synced:      ${distVideo}`);
+  }
+
   const stats = fs.statSync(OUTPUT_VIDEO);
   const totalRecordedSeconds = (pumpedFrames / TARGET_FPS).toFixed(1);
   console.log('\n================================================================');
-  console.log(`🎉 VIDEO RECORDED SUCCESSFULLY!`);
+  console.log(`🎉 CURRENT VIDEO RECORDED SUCCESSFULLY!`);
   console.log(`📁 File:        ${OUTPUT_VIDEO}`);
   console.log(`📊 Size:        ${(stats.size / (1024 * 1024)).toFixed(2)} MB`);
   console.log(`🎞️  Raw CDP:     ${rawCdpFrames} dirty-rect frames`);

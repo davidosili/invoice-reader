@@ -92,7 +92,7 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ isOpen, onClose 
               <span className="text-[#DDD7CD]">|</span>
               <a
                 href="/demo-walkthrough.mp4"
-                download="ledgerlens-ai-demo.mp4"
+                download="myledgerlens-demo.mp4"
                 className="inline-flex items-center gap-1 text-[#5A5852] hover:text-[#111318] font-medium"
               >
                 <Download className="w-3.5 h-3.5" />
