@@ -21,7 +21,7 @@ export const GetStartedSection: React.FC = () => {
               Ready to work with your invoices?
             </h2>
             <p className="text-[15px] text-[#5A5852] leading-relaxed mb-6">
-              Explore LedgerLens AI's invoice-processing workflow. Upload a supported document, inspect
+              Explore MyLedgerLens's invoice-processing workflow. Upload a supported document, inspect
               extracted information, review validation issues, and manage invoice decisions through the workspace.
             </p>
             <div className="p-4 bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] mb-6">

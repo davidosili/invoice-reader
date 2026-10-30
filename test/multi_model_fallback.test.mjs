@@ -411,12 +411,36 @@ test('Multi-Model: Vercel routing configuration maps dynamic serverless function
 });
 
 test('Multi-Model: API endpoint rejects unsupported HTTP methods with HTTP 405 Method Not Allowed', async () => {
-  const res = await fetch('http://localhost:3001/api/documents/00000000-0000-0000-0000-000000000000/process', {
-    method: 'GET',
-  });
-  assert.equal(res.status, 405, 'GET on /api/documents/:id/process must return HTTP 405 Method Not Allowed');
-  const allowHeader = res.headers.get('allow');
-  assert.ok(allowHeader?.includes('POST'), 'Allow header must include POST');
-  const body = await res.json();
-  assert.ok(body.error?.includes('requires POST'), 'Error message must explain required method');
+  let serverProcess = null;
+  try {
+    await fetch('http://localhost:3001/api/health', { signal: AbortSignal.timeout(400) });
+  } catch {
+    const { spawn } = await import('node:child_process');
+    serverProcess = spawn('node', ['server/index.mjs'], {
+      env: { ...process.env, PORT: '3001' },
+      stdio: 'ignore',
+    });
+    for (let i = 0; i < 25; i++) {
+      await new Promise((r) => setTimeout(r, 100));
+      try {
+        await fetch('http://localhost:3001/api/health', { signal: AbortSignal.timeout(400) });
+        break;
+      } catch {}
+    }
+  }
+
+  try {
+    const res = await fetch('http://localhost:3001/api/documents/00000000-0000-0000-0000-000000000000/process', {
+      method: 'GET',
+    });
+    assert.equal(res.status, 405, 'GET on /api/documents/:id/process must return HTTP 405 Method Not Allowed');
+    const allowHeader = res.headers.get('allow');
+    assert.ok(allowHeader?.includes('POST'), 'Allow header must include POST');
+    const body = await res.json();
+    assert.ok(body.error?.includes('requires POST'), 'Error message must explain required method');
+  } finally {
+    if (serverProcess) {
+      serverProcess.kill('SIGTERM');
+    }
+  }
 });

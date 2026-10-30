@@ -46,7 +46,7 @@ export function sanitizeAuthError(err: unknown, fallbackMessage = 'Authenticatio
     lower.includes('networkerror') ||
     lower.includes('network error')
   ) {
-    return 'Unable to connect to LedgerLens AI services. Please check your internet connection or try again shortly.';
+    return 'Unable to connect to MyLedgerLens services. Please check your internet connection or try again shortly.';
   }
 
   // Database, RLS, or internal infrastructure error (hide internal terms like PGRST, PostgreSQL, RLS)

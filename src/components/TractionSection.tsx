@@ -62,7 +62,7 @@ const pilotCohorts: PilotCohort[] = [
     profile: 'Regional distributor processing high-frequency multi-item supplier shipments with variable vendor terms.',
     workload: '40–80 multi-item supplier invoices weekly, ranging from ₦50,000 to ₦2,500,000 in transaction value.',
     keyFinding: 'Automated date anomaly detection catches accelerated payment terms (e.g. Net 14 vs. agreed Net 30) before disbursement approval, eliminating month-end vendor disputes.',
-    quote: 'Our biggest bottleneck was never typing figures—it was catching vendor calculation errors and duplicate delivery invoices before payment sign-off. LedgerLens AI catches discrepancies before money leaves the account.',
+    quote: 'Our biggest bottleneck was never typing figures—it was catching vendor calculation errors and duplicate delivery invoices before payment sign-off. MyLedgerLens catches discrepancies before money leaves the account.',
     authorTitle: 'Operations & Receiving Lead, Regional FMCG Distributor',
     icon: Building2,
   },
@@ -96,7 +96,7 @@ export const TractionSection: React.FC = () => {
             Tested on real invoices. Validated by real finance operators.
           </h2>
           <p className="mt-4 text-[15px] text-[#5A5852] leading-relaxed">
-            LedgerLens AI is grounded in empirical testing and active design-partner evaluation. We measure
+            MyLedgerLens is grounded in empirical testing and active design-partner evaluation. We measure
             our progress by extraction reliability, mathematical precision, and real operational hours saved.
           </p>
         </div>
@@ -215,7 +215,7 @@ export const TractionSection: React.FC = () => {
             <strong className="text-[#111318]">Structured Pilot Methodology:</strong> Pilot evaluations run on isolated, single-tenant workspace instances with zero cross-tenant data exposure. All extracted data is verified against ground-truth physical scans before approval.
           </p>
           <a
-            href="mailto:support@myledgerlens.com?subject=LedgerLens%20Pilot%20Inquiry"
+            href="mailto:support@myledgerlens.com?subject=MyLedgerLens%20Pilot%20Inquiry"
             className="inline-flex items-center gap-1.5 text-[12px] font-mono font-bold text-[#1D4ED8] hover:underline whitespace-nowrap self-start sm:self-auto uppercase"
           >
             Inquire About Pilot Program →

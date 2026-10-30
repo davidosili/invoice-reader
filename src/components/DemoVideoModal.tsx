@@ -42,7 +42,7 @@ export const DemoVideoModal: React.FC<DemoVideoModalProps> = ({ isOpen, onClose 
             </div>
             <div>
               <h3 className="text-[14px] font-bold text-[#111318] tracking-tight flex items-center gap-2 font-sans">
-                LedgerLens AI — Product Walkthrough
+                MyLedgerLens — Product Walkthrough
                 <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-[2px] bg-[#EBF3EE] text-[#1B4938] border border-[#1B4938]/30">
                   LIVE WORKING MVP
                 </span>

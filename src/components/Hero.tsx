@@ -22,7 +22,7 @@ export const Hero: React.FC = () => {
           </h1>
 
           <p className="text-[15px] sm:text-[16px] md:text-[17px] text-[#525866] leading-relaxed max-w-2xl mb-5 sm:mb-7">
-            LedgerLens AI extracts B2B invoice lines, reconciles multi-item arithmetic, flags term discrepancies,
+            MyLedgerLens extracts B2B invoice lines, reconciles multi-item arithmetic, flags term discrepancies,
             and preserves an unbreakable chain of custody from original file bytes to approved CSV records.
           </p>
 

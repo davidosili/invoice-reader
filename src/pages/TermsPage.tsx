@@ -9,23 +9,23 @@ import {
 
 export const TermsPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'Terms of Service | LedgerLens AI';
+    document.title = 'Terms of Service | MyLedgerLens';
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute(
         'content',
-        'Read the LedgerLens AI Terms of Service. Understand terms of use, human review requirements, limitations of AI extraction, data responsibilities, and proposed commercial terms.'
+        'Read the MyLedgerLens Terms of Service. Understand terms of use, human review requirements, limitations of AI extraction, data responsibilities, and proposed commercial terms.'
       );
     }
     const ogTitle = document.querySelector('meta[property="og:title"]');
     if (ogTitle) {
-      ogTitle.setAttribute('content', 'Terms of Service | LedgerLens AI');
+      ogTitle.setAttribute('content', 'Terms of Service | MyLedgerLens');
     }
     const ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogDesc) {
       ogDesc.setAttribute(
         'content',
-        'Read the LedgerLens AI Terms of Service. Understand terms of use, human review requirements, limitations of AI extraction, data responsibilities, and proposed commercial terms.'
+        'Read the MyLedgerLens Terms of Service. Understand terms of use, human review requirements, limitations of AI extraction, data responsibilities, and proposed commercial terms.'
       );
     }
     window.scrollTo(0, 0);
@@ -76,7 +76,7 @@ export const TermsPage: React.FC = () => {
             <span>Important Notice for Evaluators &amp; Business Users</span>
           </div>
           <p className="text-[13px] text-[#5A5852] leading-relaxed">
-            These Terms of Service govern the use of the LedgerLens AI platform. LedgerLens AI provides assisted document extraction, deterministic validation, and review tooling. It is not an autonomous certified public accountant, licensed auditor, legal adviser, or infallible fraud-prevention system. Commercial decisions, tax filings, and disbursements require independent human verification.
+            These Terms of Service govern the use of the MyLedgerLens platform. MyLedgerLens provides assisted document extraction, deterministic validation, and review tooling. It is not an autonomous certified public accountant, licensed auditor, legal adviser, or infallible fraud-prevention system. Commercial decisions, tax filings, and disbursements require independent human verification.
           </p>
         </div>
 
@@ -145,10 +145,10 @@ export const TermsPage: React.FC = () => {
               1. Acceptance &amp; Eligibility
             </h2>
             <p>
-              By accessing, browsing, creating an account on, or otherwise using LedgerLens AI ("the Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to all terms and conditions set forth herein, you must immediately discontinue use of the platform.
+              By accessing, browsing, creating an account on, or otherwise using MyLedgerLens ("the Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to all terms and conditions set forth herein, you must immediately discontinue use of the platform.
             </p>
             <p>
-              <strong>B2B Representation:</strong> LedgerLens AI is designed exclusively for business entities, organizations, commercial enterprises, and professionals acting in their business capacity. By using this service, you represent and warrant that:
+              <strong>B2B Representation:</strong> MyLedgerLens is designed exclusively for business entities, organizations, commercial enterprises, and professionals acting in their business capacity. By using this service, you represent and warrant that:
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-[14px] text-[#5A5852] pl-2">
               <li>You have the full legal capacity and requisite corporate or organizational authority to bind yourself or the legal entity on whose behalf you are accessing the service.</li>
@@ -163,7 +163,7 @@ export const TermsPage: React.FC = () => {
               2. Description of the Service
             </h2>
             <p>
-              LedgerLens AI provides software tools to assist businesses in structuring and verifying incoming invoice documents. The platform currently includes the following operational capabilities:
+              MyLedgerLens provides software tools to assist businesses in structuring and verifying incoming invoice documents. The platform currently includes the following operational capabilities:
             </p>
             <ul className="list-disc list-inside space-y-2 text-[14px] text-[#5A5852] pl-2">
               <li>
@@ -195,7 +195,7 @@ export const TermsPage: React.FC = () => {
             <div className="p-4 rounded-[4px] bg-[#EBF3EE] border border-[#1D4ED8]/30 text-[13px] text-[#1D4ED8] space-y-1">
               <strong>Professional Disclaimer:</strong>
               <p>
-                LedgerLens AI is a software assistance tool intended to reduce manual data entry and highlight arithmetic inconsistencies. The platform does <strong>not</strong> provide certified accounting, tax, legal, or licensed audit advice. It is not an autonomous fiduciary or certified public accountant. You remain solely responsible for the financial accuracy of your enterprise books, accounts, supplier payments, and statutory filings.
+                MyLedgerLens is a software assistance tool intended to reduce manual data entry and highlight arithmetic inconsistencies. The platform does <strong>not</strong> provide certified accounting, tax, legal, or licensed audit advice. It is not an autonomous fiduciary or certified public accountant. You remain solely responsible for the financial accuracy of your enterprise books, accounts, supplier payments, and statutory filings.
               </p>
             </div>
           </section>
@@ -206,11 +206,11 @@ export const TermsPage: React.FC = () => {
               3. User Responsibilities &amp; Acceptable Use
             </h2>
             <p>
-              As a user of LedgerLens AI, you agree to adhere to the following operational standards:
+              As a user of MyLedgerLens, you agree to adhere to the following operational standards:
             </p>
             <ul className="list-disc list-inside space-y-2 text-[14px] text-[#5A5852] pl-2">
               <li>
-                <strong className="text-[#111318]">Document Rights &amp; Lawful Authority:</strong> You represent and warrant that you hold all necessary rights, licenses, consents, and business authorizations to upload each document submitted to LedgerLens AI, and that doing so does not infringe upon any third-party intellectual property, privacy, or trade secret rights.
+                <strong className="text-[#111318]">Document Rights &amp; Lawful Authority:</strong> You represent and warrant that you hold all necessary rights, licenses, consents, and business authorizations to upload each document submitted to MyLedgerLens, and that doing so does not infringe upon any third-party intellectual property, privacy, or trade secret rights.
               </li>
               <li>
                 <strong className="text-[#111318]">Mandatory Human Verification:</strong> You agree to review and verify extracted values, arithmetic flags, and supplier details before authorizing payments, signing checks, or transferring data into downstream accounting and ERP systems.
@@ -244,7 +244,7 @@ export const TermsPage: React.FC = () => {
             </p>
             <div className="space-y-3 text-[14px] text-[#5A5852]">
               <p>
-                <strong className="text-[#111318]">Deterministic Checks vs. Probabilistic AI:</strong> LedgerLens AI combines two distinct calculation approaches:
+                <strong className="text-[#111318]">Deterministic Checks vs. Probabilistic AI:</strong> MyLedgerLens combines two distinct calculation approaches:
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-2">
                 <div className="p-4 rounded-[4px] border border-[#E2DFD7] bg-[#F7F8F6]">
@@ -265,7 +265,7 @@ export const TermsPage: React.FC = () => {
                 </div>
               </div>
               <p>
-                <strong className="text-[#111318]">No Extraction Accuracy Guarantee:</strong> While LedgerLens AI strives for high fidelity, we make <strong>no representation or warranty</strong> that AI extraction will achieve 100% accuracy, that all duplicate invoices will be identified, or that fraudulent or altered invoices will be detected. The platform is an assistive verification aid, not an autonomous audit system.
+                <strong className="text-[#111318]">No Extraction Accuracy Guarantee:</strong> While MyLedgerLens strives for high fidelity, we make <strong>no representation or warranty</strong> that AI extraction will achieve 100% accuracy, that all duplicate invoices will be identified, or that fraudulent or altered invoices will be detected. The platform is an assistive verification aid, not an autonomous audit system.
               </p>
               <p>
                 <strong className="text-[#111318]">Field Confidence Indicators:</strong> Confidence levels (<code className="text-[#1D4ED8] font-mono">high</code>, <code className="text-[#1D4ED8] font-mono">medium</code>, <code className="text-[#1D4ED8] font-mono">review</code>) and bounding-box coordinates presented in the UI are heuristic indicators designed to guide visual inspection. They do not constitute an absolute guarantee that a field is error-free.
@@ -279,7 +279,7 @@ export const TermsPage: React.FC = () => {
               5. Service Availability &amp; Modifications
             </h2>
             <p>
-              LedgerLens AI is currently provided on an <strong>"AS-IS"</strong> and <strong>"AS-AVAILABLE"</strong> basis as a technical Minimum Viable Product (MVP):
+              MyLedgerLens is currently provided on an <strong>"AS-IS"</strong> and <strong>"AS-AVAILABLE"</strong> basis as a technical Minimum Viable Product (MVP):
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-[14px] text-[#5A5852] pl-2">
               <li>We do not warrant that the service will operate uninterrupted, timely, secure, or completely error-free.</li>
@@ -295,7 +295,7 @@ export const TermsPage: React.FC = () => {
               6. Proposed Commercial Model &amp; Billing Status
             </h2>
             <p>
-              Please review the commercial status of LedgerLens AI carefully:
+              Please review the commercial status of MyLedgerLens carefully:
             </p>
             <div className="p-4 rounded-[4px] bg-[#F7F8F6] border border-[#E2DFD7] space-y-2 text-[13px] text-[#5A5852]">
               <div className="font-semibold text-[#111318] flex items-center gap-1.5">
@@ -320,7 +320,7 @@ export const TermsPage: React.FC = () => {
               7. Suspension, Account Closure &amp; Data Deletion
             </h2>
             <p>
-              We reserve the right to immediately suspend, restrict, or terminate account access to LedgerLens AI, with or without notice, in the event of:
+              We reserve the right to immediately suspend, restrict, or terminate account access to MyLedgerLens, with or without notice, in the event of:
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-[14px] text-[#5A5852] pl-2">
               <li>A material breach of these Terms or suspected fraudulent activity.</li>
@@ -343,10 +343,10 @@ export const TermsPage: React.FC = () => {
                 <strong>"AS-IS" DISCLAIMER:</strong> TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, INCLUDING WITHOUT LIMITATION WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
               </p>
               <p>
-                <strong>LIMITATION OF CONSEQUENTIAL DAMAGES:</strong> IN NO EVENT SHALL LEDGERLENS AI, ITS FOUNDERS, OPERATORS, AFFILIATES, OR SUPPLIERS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, DATA, USE, GOODWILL, BUSINESS INTERRUPTION, OVERPAYMENTS MADE TO SUPPLIERS, INCORRECT TAX FILINGS, OR DISCREPANCIES RESULTING FROM UNVERIFIED AI EXTRACTION OR SYSTEM DOWNTIME.
+                <strong>LIMITATION OF CONSEQUENTIAL DAMAGES:</strong> IN NO EVENT SHALL MYLEDGERLENS, ITS FOUNDERS, OPERATORS, AFFILIATES, OR SUPPLIERS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, DATA, USE, GOODWILL, BUSINESS INTERRUPTION, OVERPAYMENTS MADE TO SUPPLIERS, INCORRECT TAX FILINGS, OR DISCREPANCIES RESULTING FROM UNVERIFIED AI EXTRACTION OR SYSTEM DOWNTIME.
               </p>
               <p>
-                <strong>AGGREGATE LIABILITY CAP:</strong> TO THE MAXIMUM EXTENT PERMITTED BY LAW, OUR TOTAL CUMULATIVE LIABILITY ARISING OUT OF OR RELATING TO THESE TERMS OR THE USE OF THE SERVICE SHALL BE LIMITED TO THE GREATER OF: (A) THE TOTAL AMOUNT PAID BY YOU TO LEDGERLENS AI IN THE TWELVE (12) MONTHS PRECEDING THE EVENT GIVING RISE TO LIABILITY, OR (B) ONE HUNDRED UNITED STATES DOLLARS ($100 USD).
+                <strong>AGGREGATE LIABILITY CAP:</strong> TO THE MAXIMUM EXTENT PERMITTED BY LAW, OUR TOTAL CUMULATIVE LIABILITY ARISING OUT OF OR RELATING TO THESE TERMS OR THE USE OF THE SERVICE SHALL BE LIMITED TO THE GREATER OF: (A) THE TOTAL AMOUNT PAID BY YOU TO MYLEDGERLENS IN THE TWELVE (12) MONTHS PRECEDING THE EVENT GIVING RISE TO LIABILITY, OR (B) ONE HUNDRED UNITED STATES DOLLARS ($100 USD).
               </p>
             </div>
           </section>
@@ -379,7 +379,7 @@ export const TermsPage: React.FC = () => {
               </p>
               <div className="text-[13px] font-mono space-y-1 text-[#111318] bg-[#FAFAF8] p-4 rounded-[2px] border border-[#E2DFD7]">
                 <div>
-                  <span className="text-[#5A5852]">Project:</span> LedgerLens AI
+                  <span className="text-[#5A5852]">Project:</span> MyLedgerLens
                 </div>
                 <div>
                   <span className="text-[#5A5852]">Product Owner:</span> David Osili

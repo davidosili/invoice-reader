@@ -11,23 +11,23 @@ import {
 
 export const PrivacyPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'Privacy Policy | LedgerLens AI';
+    document.title = 'Privacy Policy | MyLedgerLens';
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute(
         'content',
-        'Read the LedgerLens AI Privacy Policy. Learn how we handle invoice documents, authentication data, AI extraction via Google Gemini, private storage, and workspace isolation.'
+        'Read the MyLedgerLens Privacy Policy. Learn how we handle invoice documents, authentication data, AI extraction via Google Gemini, private storage, and workspace isolation.'
       );
     }
     const ogTitle = document.querySelector('meta[property="og:title"]');
     if (ogTitle) {
-      ogTitle.setAttribute('content', 'Privacy Policy | LedgerLens AI');
+      ogTitle.setAttribute('content', 'Privacy Policy | MyLedgerLens');
     }
     const ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogDesc) {
       ogDesc.setAttribute(
         'content',
-        'Read the LedgerLens AI Privacy Policy. Learn how we handle invoice documents, authentication data, AI extraction via Google Gemini, private storage, and workspace isolation.'
+        'Read the MyLedgerLens Privacy Policy. Learn how we handle invoice documents, authentication data, AI extraction via Google Gemini, private storage, and workspace isolation.'
       );
     }
     window.scrollTo(0, 0);
@@ -78,7 +78,7 @@ export const PrivacyPage: React.FC = () => {
             <span>Transparency &amp; Pre-Publication Notice</span>
           </div>
           <p className="text-[13px] text-[#5A5852] leading-relaxed">
-            This Privacy Policy reflects the actual technical implementation and data-handling architecture of the LedgerLens AI platform as of October 23, 2026. Certain administrative identity placeholders (such as registered commercial entity name and registered office address) are marked for pre-launch confirmation prior to formal corporate incorporation.
+            This Privacy Policy reflects the actual technical implementation and data-handling architecture of the MyLedgerLens platform as of October 23, 2026. Certain administrative identity placeholders (such as registered commercial entity name and registered office address) are marked for pre-launch confirmation prior to formal corporate incorporation.
           </p>
         </div>
 
@@ -142,13 +142,13 @@ export const PrivacyPage: React.FC = () => {
               1. Introduction &amp; Scope
             </h2>
             <p>
-              LedgerLens AI ("we", "us", or "our") provides an AI-native business document intelligence and verification platform. The service is designed specifically for business-to-business (B2B) operations—including distributors, wholesalers, accounting firms, and commercial enterprises—processing incoming supplier invoices, receipts, and associated paperwork.
+              MyLedgerLens ("we", "us", or "our") provides an AI-native business document intelligence and verification platform. The service is designed specifically for business-to-business (B2B) operations—including distributors, wholesalers, accounting firms, and commercial enterprises—processing incoming supplier invoices, receipts, and associated paperwork.
             </p>
             <p>
-              This Privacy Policy explains how LedgerLens AI collects, processes, stores, and protects information when authorized users access our public website, register for an account, create workspaces, upload invoice documents, and utilize our verification and export workflows.
+              This Privacy Policy explains how MyLedgerLens collects, processes, stores, and protects information when authorized users access our public website, register for an account, create workspaces, upload invoice documents, and utilize our verification and export workflows.
             </p>
             <p>
-              <strong>Target Audience:</strong> LedgerLens AI is intended exclusively for commercial entities and business representatives acting on behalf of an enterprise. It is not directed to consumers or individuals acting for personal, family, or household purposes, nor is it directed to children under 18 years of age.
+              <strong>Target Audience:</strong> MyLedgerLens is intended exclusively for commercial entities and business representatives acting on behalf of an enterprise. It is not directed to consumers or individuals acting for personal, family, or household purposes, nor is it directed to children under 18 years of age.
             </p>
           </section>
 
@@ -171,7 +171,7 @@ export const PrivacyPage: React.FC = () => {
                 </p>
                 <ul className="list-disc list-inside text-[13px] text-[#5A5852] space-y-1 pl-2">
                   <li>Email address</li>
-                  <li>Encrypted password credentials (managed securely via Supabase Auth; raw passwords are never visible to or stored by LedgerLens AI)</li>
+                  <li>Encrypted password credentials (managed securely via Supabase Auth; raw passwords are never visible to or stored by MyLedgerLens)</li>
                   <li>Assigned internal user UUID and email confirmation status</li>
                   <li>Authentication session tokens and login timestamps</li>
                 </ul>
@@ -270,7 +270,7 @@ export const PrivacyPage: React.FC = () => {
               3. How Information Is Used
             </h2>
             <p>
-              LedgerLens AI uses the collected information strictly for operational and functional purposes to deliver our core B2B invoice intelligence service:
+              MyLedgerLens uses the collected information strictly for operational and functional purposes to deliver our core B2B invoice intelligence service:
             </p>
             <ul className="list-disc list-inside space-y-2 text-[14px] text-[#5A5852] pl-2">
               <li>
@@ -302,7 +302,7 @@ export const PrivacyPage: React.FC = () => {
             <div className="p-4 rounded-[4px] bg-[#EBF3EE] border border-[#1D4ED8]/30 text-[13px] text-[#1D4ED8] space-y-1">
               <strong>Explicit Negative Assurances:</strong>
               <p>
-                LedgerLens AI does <strong>not</strong> sell, rent, or trade customer documents, financial records, or personal data. We do <strong>not</strong> use uploaded documents or extracted invoice data to train public foundation models or third-party artificial intelligence engines. We do <strong>not</strong> run third-party advertising networks, behavioral profiling, or cross-site tracking scripts.
+                MyLedgerLens does <strong>not</strong> sell, rent, or trade customer documents, financial records, or personal data. We do <strong>not</strong> use uploaded documents or extracted invoice data to train public foundation models or third-party artificial intelligence engines. We do <strong>not</strong> run third-party advertising networks, behavioral profiling, or cross-site tracking scripts.
               </p>
             </div>
           </section>
@@ -313,7 +313,7 @@ export const PrivacyPage: React.FC = () => {
               4. AI Extraction &amp; Third-Party Processors
             </h2>
             <p>
-              To provide multimodal visual extraction, database storage, and hosting, LedgerLens AI utilizes established cloud infrastructure providers:
+              To provide multimodal visual extraction, database storage, and hosting, MyLedgerLens utilizes established cloud infrastructure providers:
             </p>
 
             <div className="space-y-4 mt-3">
@@ -333,10 +333,10 @@ export const PrivacyPage: React.FC = () => {
                   <strong>Role:</strong> When an authorized user requests invoice processing, the document image or PDF is transmitted server-side via encrypted HTTPS to Google Gemini (<code className="text-[#1D4ED8] font-mono">gemini-2.5-flash</code>) using structured multimodal vision prompts.
                 </p>
                 <p className="text-[13px] text-[#5A5852] leading-relaxed mb-3">
-                  <strong>Data Handling Disclosures:</strong> Invoices contain commercial and financial data. When processed via the Gemini API, document content is transmitted to Google's infrastructure. Google processes requests under Google Cloud and Google AI Studio API Terms of Service. Enterprise API tiers generally stipulate that user inputs are not used to train Google models; however, customers should review Google's published developer terms. LedgerLens AI cannot independently guarantee that upstream providers do not maintain transient security or diagnostic logs.
+                  <strong>Data Handling Disclosures:</strong> Invoices contain commercial and financial data. When processed via the Gemini API, document content is transmitted to Google's infrastructure. Google processes requests under Google Cloud and Google AI Studio API Terms of Service. Enterprise API tiers generally stipulate that user inputs are not used to train Google models; however, customers should review Google's published developer terms. MyLedgerLens cannot independently guarantee that upstream providers do not maintain transient security or diagnostic logs.
                 </p>
                 <p className="text-[13px] text-[#5A5852] leading-relaxed">
-                  <strong>Offline / Heuristic Fallback:</strong> If the external Gemini API is unreachable, unconfigured, or encounters an upstream timeout, LedgerLens AI utilizes a local, deterministic server-side heuristic fallback extractor (<code className="text-[#1D4ED8] font-mono">server_heuristic_v1</code>) that processes documents locally without communicating with external AI services.
+                  <strong>Offline / Heuristic Fallback:</strong> If the external Gemini API is unreachable, unconfigured, or encounters an upstream timeout, MyLedgerLens utilizes a local, deterministic server-side heuristic fallback extractor (<code className="text-[#1D4ED8] font-mono">server_heuristic_v1</code>) that processes documents locally without communicating with external AI services.
                 </p>
               </div>
 
@@ -435,7 +435,7 @@ export const PrivacyPage: React.FC = () => {
               6. Multi-Tenant Workspace Isolation
             </h2>
             <p>
-              LedgerLens AI employs a centralized multi-tenant architecture where organizational data is isolated by workspace:
+              MyLedgerLens employs a centralized multi-tenant architecture where organizational data is isolated by workspace:
             </p>
             <ul className="list-disc list-inside space-y-2 text-[14px] text-[#5A5852] pl-2">
               <li>
@@ -479,7 +479,7 @@ export const PrivacyPage: React.FC = () => {
                 <span>Applicable Data Protection Frameworks &amp; Legal Flag</span>
               </div>
               <p>
-                LedgerLens AI seeks to adhere to core data-protection principles under the <strong>Nigeria Data Protection Act 2023 (NDPA)</strong>, as well as international principles of purpose limitation, storage minimization, and data accuracy. Formal registration with national data protection authorities (such as the Nigeria Data Protection Commission - NDPC) and appointment of an external Data Protection Officer (DPO) will be completed upon corporate entity incorporation.
+                MyLedgerLens seeks to adhere to core data-protection principles under the <strong>Nigeria Data Protection Act 2023 (NDPA)</strong>, as well as international principles of purpose limitation, storage minimization, and data accuracy. Formal registration with national data protection authorities (such as the Nigeria Data Protection Commission - NDPC) and appointment of an external Data Protection Officer (DPO) will be completed upon corporate entity incorporation.
               </p>
               <p className="text-[12px] text-[#5A5852] italic">
                 *Pre-launch note: Prospective enterprise customers requiring customized Data Processing Agreements (DPAs) or Standard Contractual Clauses (SCCs) may contact <a href="mailto:support@myledgerlens.com" className="text-[#1D4ED8] underline">support@myledgerlens.com</a>.
@@ -505,7 +505,7 @@ export const PrivacyPage: React.FC = () => {
               </p>
               <div className="text-[13px] font-mono space-y-1 text-[#111318] bg-[#FAFAF8] p-4 rounded-[2px] border border-[#E2DFD7]">
                 <div>
-                  <span className="text-[#5A5852]">Project:</span> LedgerLens AI
+                  <span className="text-[#5A5852]">Project:</span> MyLedgerLens
                 </div>
                 <div>
                   <span className="text-[#5A5852]">Lead Developer / Product Owner:</span> David Osili

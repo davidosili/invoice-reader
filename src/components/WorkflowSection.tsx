@@ -59,7 +59,7 @@ export const WorkflowSection: React.FC = () => {
             From invoice upload to review-ready data
           </h2>
           <p className="mt-4 text-[15px] text-[#5A5852] leading-relaxed">
-            LedgerLens AI's working MVP establishes a clean, repeatable path from raw invoice documents
+            MyLedgerLens's working MVP establishes a clean, repeatable path from raw invoice documents
             to structured, validated, and human-reviewed financial records.
           </p>
         </div>

@@ -90,7 +90,7 @@ export const AuthPage: React.FC = () => {
         <p className="mt-1 text-center text-[13px] text-[#525866]">
           {mode === 'signin' ? (
             <>
-              New to LedgerLens AI?{' '}
+              New to MyLedgerLens?{' '}
               <button
                 type="button"
                 onClick={() => {

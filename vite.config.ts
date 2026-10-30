@@ -7,6 +7,7 @@ function apiServerDevPlugin() {
   let serverProcess: any = null;
   return {
     name: 'api-server-dev-runner',
+    apply: 'serve' as const,
     configureServer(server: any) {
       // Check if server is already running on port 3001
       const ping = http.get('http://localhost:3001/api/health', () => {

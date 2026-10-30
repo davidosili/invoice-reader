@@ -12,12 +12,12 @@ import { GetStartedSection } from '../components/EarlyAccessSection';
 
 export const HomePage: React.FC = () => {
   useEffect(() => {
-    document.title = "LedgerLens AI | Intelligent Business Document Processing";
+    document.title = "MyLedgerLens — AI-Powered Financial Document Intelligence";
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute(
         'content',
-        'Explore LedgerLens AI, an AI-native document intelligence platform designed to extract, validate, and organize information from invoices and business paperwork.'
+        'MyLedgerLens helps businesses extract, validate, and review financial document data with AI-assisted processing and structured verification workflows.'
       );
     }
   }, []);

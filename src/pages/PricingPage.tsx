@@ -13,7 +13,7 @@ import {
 
 export const PricingPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'Pricing & Commercial Model | LedgerLens AI';
+    document.title = 'Pricing & Commercial Model | MyLedgerLens';
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute(
@@ -23,7 +23,7 @@ export const PricingPage: React.FC = () => {
     }
     const ogTitle = document.querySelector('meta[property="og:title"]');
     if (ogTitle) {
-      ogTitle.setAttribute('content', 'Pricing & Commercial Model | LedgerLens AI');
+      ogTitle.setAttribute('content', 'Pricing & Commercial Model | MyLedgerLens');
     }
     const ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogDesc) {
@@ -84,7 +84,7 @@ export const PricingPage: React.FC = () => {
         'Cross-document 2-way Purchase Order matching (Roadmap)',
       ],
       ctaText: 'Inquire About Pilot Program',
-      ctaHref: 'mailto:support@myledgerlens.com?subject=LedgerLens%20Business%20Pilot%20Inquiry',
+      ctaHref: 'mailto:support@myledgerlens.com?subject=MyLedgerLens%20Business%20Pilot%20Inquiry',
       ctaType: 'email',
     },
     {
@@ -110,7 +110,7 @@ export const PricingPage: React.FC = () => {
         'Dedicated API access & webhook notifications (Planned)',
       ],
       ctaText: 'Request Commercial Consultation',
-      ctaHref: 'mailto:support@myledgerlens.com?subject=LedgerLens%20Professional%20Inquiry',
+      ctaHref: 'mailto:support@myledgerlens.com?subject=MyLedgerLens%20Professional%20Inquiry',
       ctaType: 'email',
     },
   ];
@@ -120,7 +120,7 @@ export const PricingPage: React.FC = () => {
       title: 'Distributors & Wholesalers',
       role: 'High-volume recurring supplier orders',
       description:
-        'Receive hundreds of multi-item supplier packing lists and manifests each month. LedgerLens AI extracts supplier TINs, checks arithmetic consistency, and catches identical duplicate invoice numbers before payment approval.',
+        'Receive hundreds of multi-item supplier packing lists and manifests each month. MyLedgerLens extracts supplier TINs, checks arithmetic consistency, and catches identical duplicate invoice numbers before payment approval.',
     },
     {
       title: 'Accounts-Payable Teams',
@@ -179,7 +179,7 @@ export const PricingPage: React.FC = () => {
             <span>Notice on Commercial Stage &amp; Proposed Pricing</span>
           </div>
           <p className="text-[13px] text-[#5A5852] leading-relaxed">
-            LedgerLens AI is currently operating as a working technical Minimum Viable Product (MVP). The tiers, document allowances, and pricing figures below represent our <strong>proposed commercial model</strong> for upcoming commercial launch. The application does not currently process active credit card transactions, and no recurring charges will be incurred. Organizations interested in participating in our structured pilot program are invited to explore the working MVP or contact our team directly.
+            MyLedgerLens is currently operating as a working technical Minimum Viable Product (MVP). The tiers, document allowances, and pricing figures below represent our <strong>proposed commercial model</strong> for upcoming commercial launch. The application does not currently process active credit card transactions, and no recurring charges will be incurred. Organizations interested in participating in our structured pilot program are invited to explore the working MVP or contact our team directly.
           </p>
         </div>
 
@@ -309,7 +309,7 @@ export const PricingPage: React.FC = () => {
               </p>
             </div>
             <h2 className="text-[24px] sm:text-[30px] font-bold text-[#111318] tracking-tight">
-              How LedgerLens AI Structures Commercial Value
+              How MyLedgerLens Structures Commercial Value
             </h2>
             <p className="mt-2 text-[14px] text-[#5A5852] leading-relaxed">
               We believe business software pricing should reflect underlying computational realities and actual operational value rather than opaque arbitrary markups.
@@ -333,7 +333,7 @@ export const PricingPage: React.FC = () => {
                 <h3>Deterministic Verification</h3>
               </div>
               <p className="text-[#5A5852] leading-relaxed">
-                Unlike pure OCR scanners, LedgerLens AI validates arithmetic across every line item, matches workspace supplier histories, and enforces state machine integrity, catching billing errors before invoices reach your ledger.
+                Unlike pure OCR scanners, MyLedgerLens validates arithmetic across every line item, matches workspace supplier histories, and enforces state machine integrity, catching billing errors before invoices reach your ledger.
               </p>
             </div>
 
@@ -368,7 +368,7 @@ export const PricingPage: React.FC = () => {
               Designed for Recurring Invoice Operations
             </h2>
             <p className="mt-2 text-[14px] text-[#5A5852]">
-              LedgerLens AI is positioned specifically for commercial workflows where paperwork volume creates operational drag.
+              MyLedgerLens is positioned specifically for commercial workflows where paperwork volume creates operational drag.
             </p>
           </div>
 
@@ -409,7 +409,7 @@ export const PricingPage: React.FC = () => {
                 Can I purchase a paid subscription on the website today?
               </h3>
               <p className="text-[#5A5852] leading-relaxed">
-                No. LedgerLens AI is currently operating as a functional technical MVP. Payment processing (credit card checkouts, subscriptions) is not yet active. You can register for an account and evaluate the working application at no cost during this phase.
+                No. MyLedgerLens is currently operating as a functional technical MVP. Payment processing (credit card checkouts, subscriptions) is not yet active. You can register for an account and evaluate the working application at no cost during this phase.
               </p>
             </div>
 
@@ -436,7 +436,7 @@ export const PricingPage: React.FC = () => {
                 Are our commercial invoices or extracted financial figures used to train AI models?
               </h3>
               <p className="text-[#5A5852] leading-relaxed">
-                No. LedgerLens AI does not use customer documents or extracted financial data for foundation model training or commercial profiling. Data is processed strictly to extract structured fields into your isolated workspace. See our <Link to="/privacy" className="text-[#1D4ED8] underline font-medium">Privacy Policy</Link> for detailed third-party processor disclosures.
+                No. MyLedgerLens does not use customer documents or extracted financial data for foundation model training or commercial profiling. Data is processed strictly to extract structured fields into your isolated workspace. See our <Link to="/privacy" className="text-[#1D4ED8] underline font-medium">Privacy Policy</Link> for detailed third-party processor disclosures.
               </p>
             </div>
 

@@ -242,7 +242,7 @@ export const ProductCapabilities: React.FC = () => {
             Verified operational features
           </h2>
           <p className="mt-4 text-[15px] text-[#5A5852] leading-relaxed">
-            LedgerLens AI has a working invoice-processing workflow that uses AI to extract structured
+            MyLedgerLens has a working invoice-processing workflow that uses AI to extract structured
             information, applies validation checks, and supports human review of potential discrepancies.
             The 8 capabilities below are implemented and working today.
           </p>
@@ -416,7 +416,7 @@ export const ProductCapabilities: React.FC = () => {
                   Transparent feature claims
                 </h4>
                 <p className="text-[13px] text-[#5A5852] leading-relaxed">
-                  LedgerLens AI clearly separates live working features from future roadmap items. We do not claim integrations, cross-document matching, or batch pipelines until they are fully implemented.
+                  MyLedgerLens clearly separates live working features from future roadmap items. We do not claim integrations, cross-document matching, or batch pipelines until they are fully implemented.
                 </p>
               </div>
             </div>

@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite",
     "server": "node server/index.mjs",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/prerender.mjs",
     "preview": "vite preview",
     "test": "node --test test/*.test.mjs",
     "test:live": "node test/live_security_gate.mjs && node test/security_constraints_gate.mjs && node test/live_phase2_gate.mjs && node test/live_server_e2e_gate.mjs"

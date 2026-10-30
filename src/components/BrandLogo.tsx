@@ -76,10 +76,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       {showWordmark && (
         <div className="flex items-baseline gap-1.5 leading-none">
           <span className={`${textSize} font-semibold tracking-[-0.03em] text-[#111318]`}>
-            Ledger<span className="font-normal text-[#525866]">Lens</span>
-          </span>
-          <span className="font-mono text-[10px] tracking-widest font-semibold uppercase text-[#1D4ED8] bg-[#1D4ED8]/10 border border-[#1D4ED8]/20 px-1 py-0.5 rounded-[2px]">
-            AI
+            MyLedger<span className="font-normal text-[#525866]">Lens</span>
           </span>
           {subtitle && (
             <span className="hidden sm:inline-block font-mono text-[10px] tracking-wider uppercase text-[#525866] ml-1 pl-2 border-l border-[#E2DFD7]">

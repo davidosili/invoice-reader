@@ -75,7 +75,7 @@ export const Footer: React.FC = () => {
                     isAboutPage ? "text-[#111318] font-semibold" : "hover:text-[#111318]"
                   }`}
                 >
-                  About LedgerLens AI
+                  About MyLedgerLens
                 </Link>
               </li>
               <li>
@@ -165,7 +165,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between text-[12px] text-[#525866] gap-4">
-          <p>© {new Date().getFullYear()} LedgerLens AI. All rights reserved.</p>
+          <p>{`© ${new Date().getFullYear()} MyLedgerLens. All rights reserved.`}</p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <a
               href="https://linkedin.com/in/davidosili"

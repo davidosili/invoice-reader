@@ -29,14 +29,14 @@ export const SupabaseSetupNotice: React.FC = () => {
             Supabase Backend Configuration Required
           </h2>
           <p className="text-[13px] text-[#5A5852]">
-            LedgerLens AI application console requires an active Supabase project with Row Level Security.
+            MyLedgerLens application console requires an active Supabase project with Row Level Security.
           </p>
         </div>
       </div>
 
       <div className="mt-5 space-y-4 text-[14px] text-[#111318] leading-relaxed">
         <p>
-          To maintain data integrity and security, LedgerLens AI does not simulate mock authentication or store
+          To maintain data integrity and security, MyLedgerLens does not simulate mock authentication or store
           invoice documents in transient browser memory.
         </p>
 

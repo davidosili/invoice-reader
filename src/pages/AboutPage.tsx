@@ -21,25 +21,25 @@ export const AboutPage: React.FC = () => {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   useEffect(() => {
-    document.title = "About LedgerLens AI | AI-Powered Invoice Intelligence";
+    document.title = "About MyLedgerLens | AI-Powered Invoice Intelligence";
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute(
         'content',
-        "Meet the founder of LedgerLens AI and learn how AI-powered invoice extraction, deterministic validation, and human review help structure business document data."
+        "Meet the founder of MyLedgerLens and learn how AI-powered invoice extraction, deterministic validation, and human review help structure business document data."
       );
     }
 
     const ogTitle = document.querySelector('meta[property="og:title"]');
     if (ogTitle) {
-      ogTitle.setAttribute('content', 'About LedgerLens AI | AI-Powered Invoice Intelligence');
+      ogTitle.setAttribute('content', 'About MyLedgerLens | AI-Powered Invoice Intelligence');
     }
 
     const ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogDesc) {
       ogDesc.setAttribute(
         'content',
-        'Meet the founder of LedgerLens AI and learn how AI-powered invoice extraction, deterministic validation, and human review help structure business document data.'
+        'Meet the founder of MyLedgerLens and learn how AI-powered invoice extraction, deterministic validation, and human review help structure business document data.'
       );
     }
 
@@ -95,7 +95,7 @@ export const AboutPage: React.FC = () => {
     {
       title: 'AI-powered extraction',
       description:
-        'LedgerLens AI uses Google Gemini 2.5 Flash to interpret supported invoice documents and extract structured information, including supplier details, invoice numbers, dates, line items, taxes, and totals.',
+        'MyLedgerLens uses Google Gemini 2.5 Flash to interpret supported invoice documents and extract structured information, including supplier details, invoice numbers, dates, line items, taxes, and totals.',
       icon: Sparkles,
       technicalTag: 'Multimodal Gemini 2.5 Flash',
     },
@@ -140,7 +140,7 @@ export const AboutPage: React.FC = () => {
                 REGISTER // ABOUT
               </span>
               <span className="text-[11px] font-mono font-bold tracking-wider uppercase text-[#1D4ED8]">
-                About LedgerLens AI
+                About MyLedgerLens
               </span>
             </div>
 
@@ -149,7 +149,7 @@ export const AboutPage: React.FC = () => {
             </h1>
 
             <p className="text-[17px] sm:text-[19px] text-[#5A5852] leading-relaxed">
-              LedgerLens AI helps businesses transform unstructured financial paperwork
+              MyLedgerLens helps businesses transform unstructured financial paperwork
               into organized, verifiable information. By combining AI-assisted extraction with structured validation
               and human review, our vision is to make document-heavy workflows simpler and more reliable.
             </p>
@@ -157,7 +157,7 @@ export const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      {/* 2. The Problem LedgerLens AI Addresses */}
+      {/* 2. The Problem MyLedgerLens Addresses */}
       <section className="py-16 md:py-20 border-b border-[#E2DFD7] bg-[#FAFAF8]">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
@@ -201,10 +201,10 @@ export const AboutPage: React.FC = () => {
               PRODUCT &amp; TECHNICAL ARCHITECTURE
             </p>
             <h2 className="text-[26px] sm:text-[34px] font-bold text-[#111318] tracking-tight leading-[1.2]">
-              The technology behind LedgerLens AI
+              The technology behind MyLedgerLens
             </h2>
             <p className="mt-3 text-[15px] sm:text-[16px] text-[#5A5852] leading-relaxed">
-              LedgerLens AI processes documents through a multi-stage architecture that combines semantic visual
+              MyLedgerLens processes documents through a multi-stage architecture that combines semantic visual
               extraction, deterministic arithmetic verification, and transparent human oversight.
             </p>
           </div>
@@ -280,7 +280,7 @@ export const AboutPage: React.FC = () => {
               From document upload to review-ready data
             </h2>
             <p className="mt-3 text-[15px] sm:text-[16px] text-[#5A5852] leading-relaxed">
-              LedgerLens AI is at the working MVP stage, with an invoice-processing workflow designed to extract
+              MyLedgerLens is at the working MVP stage, with an invoice-processing workflow designed to extract
               document data, identify potential inconsistencies, and support human review before approval.
             </p>
           </div>
@@ -402,7 +402,7 @@ export const AboutPage: React.FC = () => {
             <div className="lg:col-span-8 space-y-6">
               <div className="p-6 rounded-[2px] bg-[#FAFAF8] border border-[#E2DFD7]">
                 <p className="text-[16px] sm:text-[18px] text-[#111318] leading-relaxed font-medium">
-                  "LedgerLens AI is being built by David Osili, a solo founder focused on making business document
+                  "MyLedgerLens is being built by David Osili, a solo founder focused on making business document
                   processing more reliable, structured, and accessible. The product combines AI-powered information
                   extraction with deterministic validation and human review, helping businesses turn unstructured
                   invoices into usable financial data."
@@ -415,7 +415,7 @@ export const AboutPage: React.FC = () => {
                     Hands-On Engineering
                   </h4>
                   <p>
-                    David designs and engineers the end-to-end technical stack of LedgerLens AI—from the React/TypeScript
+                    David designs and engineers the end-to-end technical stack of MyLedgerLens—from the React/TypeScript
                     front-end application and Supabase multi-tenant backend to the Gemini serverless integration and
                     deterministic arithmetic validation rules.
                   </p>
@@ -448,7 +448,7 @@ export const AboutPage: React.FC = () => {
               Cloud infrastructure and development
             </h2>
             <p className="mt-3 text-[15px] sm:text-[16px] text-[#5A5852] leading-relaxed">
-              LedgerLens AI is built on practical cloud infrastructure and AI-powered document processing.
+              MyLedgerLens is built on practical cloud infrastructure and AI-powered document processing.
             </p>
           </div>
 
@@ -508,7 +508,7 @@ export const AboutPage: React.FC = () => {
               Architecture Portability & Future Ecosystem Support
             </h4>
             <p>
-              As LedgerLens AI scales from its working MVP toward wider commercial deployment, the core extraction
+              As MyLedgerLens scales from its working MVP toward wider commercial deployment, the core extraction
               and validation pipeline is intentionally designed for high portability. Technical capabilities and storage
               layers are structured to leverage mainstream enterprise cloud ecosystems, including Google Cloud and
               Amazon Web Services (AWS), as workload volume and compute requirements grow.
@@ -529,7 +529,7 @@ export const AboutPage: React.FC = () => {
                 EXPERIENCE THE WORKFLOW
               </p>
               <h2 className="text-[24px] sm:text-[32px] font-bold text-[#111318] tracking-tight leading-snug mb-3">
-                See how LedgerLens AI works
+                See how MyLedgerLens works
               </h2>
               <p className="text-[14px] text-[#5A5852] leading-relaxed">
                 Explore the working MVP to see how intelligent extraction, deterministic checks, and human review

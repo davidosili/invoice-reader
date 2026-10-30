@@ -17,15 +17,15 @@ export const ProductIntro: React.FC = () => {
               </p>
             </div>
             <h2 className="text-[30px] sm:text-[38px] font-bold text-[#111318] tracking-tight leading-[1.15] mb-6">
-              LedgerLens AI
+              MyLedgerLens
             </h2>
             <div className="space-y-4 text-[15px] text-[#5A5852] leading-relaxed">
               <p className="text-[17px] text-[#111318] font-medium leading-relaxed">
-                LedgerLens AI is an AI-native document intelligence platform that helps businesses
+                MyLedgerLens is an AI-native document intelligence platform that helps businesses
                 turn unstructured financial paperwork into structured, reviewable information.
               </p>
               <p>
-                LedgerLens AI has a working invoice-processing workflow that uses AI to extract structured information, applies validation checks, and supports human review of potential discrepancies.
+                MyLedgerLens has a working invoice-processing workflow that uses AI to extract structured information, applies validation checks, and supports human review of potential discrepancies.
               </p>
               <p>
                 The platform unites AI-powered document comprehension with deterministic business logic:
@@ -40,7 +40,7 @@ export const ProductIntro: React.FC = () => {
                 Built to support professionals, not replace them.
               </p>
               <p className="text-[13px] text-[#5A5852]">
-                LedgerLens AI is intentionally designed to augment existing finance, operations, and bookkeeping
+                MyLedgerLens is intentionally designed to augment existing finance, operations, and bookkeeping
                 teams. It automates tedious mechanical transcription while keeping authorized human decision-makers
                 in complete control of financial approvals.
               </p>

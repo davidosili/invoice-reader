@@ -139,7 +139,7 @@ function sanitizeAuthError(err, fallbackMessage = 'Authentication failed. Please
     return 'Too many sign-in attempts. For security reasons, please wait a few minutes before trying again.';
   }
   if (lower.includes('failed to fetch') || lower.includes('networkerror') || lower.includes('network error')) {
-    return 'Unable to connect to LedgerLens AI services. Please check your internet connection or try again shortly.';
+    return 'Unable to connect to MyLedgerLens services. Please check your internet connection or try again shortly.';
   }
   if (
     lower.includes('pgrst') ||

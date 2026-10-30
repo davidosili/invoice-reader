@@ -19,7 +19,7 @@ export const DifferentiationSection: React.FC = () => {
             More than text extraction. A smarter document workflow.
           </h2>
           <p className="mt-4 text-[15px] text-[#5A5852] leading-relaxed">
-            Generic OCR tools dump unverified text strings into raw database tables. LedgerLens AI is founded on
+            Generic OCR tools dump unverified text strings into raw database tables. MyLedgerLens is founded on
             the principle that in finance, accuracy without verification is an operational liability.
           </p>
         </div>

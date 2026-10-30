@@ -27,7 +27,7 @@ export const ServiceUnavailable: React.FC = () => {
       </h1>
 
       <p className="mt-3 text-[13px] text-[#525866] leading-relaxed max-w-lg mx-auto">
-        The LedgerLens AI application console is undergoing scheduled infrastructure maintenance.
+        The MyLedgerLens application console is undergoing scheduled infrastructure maintenance.
         Existing workspace documents and metadata remain securely archived and unaffected.
       </p>
 
@@ -60,7 +60,7 @@ export const ServiceUnavailable: React.FC = () => {
       </div>
 
       <div className="mt-6 pt-4 border-t border-[#E2DFD7] text-[11px] font-mono text-[#525866] flex items-center justify-between">
-        <span>LedgerLens AI Operations Status</span>
+        <span>MyLedgerLens Operations Status</span>
         <span className="text-[#1D4ED8] bg-[#1D4ED8]/10 px-2 py-0.5 rounded-[2px] border border-[#1D4ED8]/20">
           Maintenance Gateway
         </span>

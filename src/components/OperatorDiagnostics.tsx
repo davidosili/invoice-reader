@@ -50,7 +50,7 @@ export const OperatorDiagnostics: React.FC = () => {
 
       <ol className="space-y-2 text-[12px] text-[#525866] list-decimal list-inside pl-1">
         <li>
-          The product owner configures <strong>one central Supabase project</strong> for the LedgerLens SaaS.
+          The product owner configures <strong>one central Supabase project</strong> for the MyLedgerLens SaaS.
         </li>
         <li>
           Deploy environment variables <code className="text-[#111318] font-mono">VITE_SUPABASE_URL</code> and{' '}
