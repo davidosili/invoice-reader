@@ -14,6 +14,8 @@ import {
   Server,
   Layers,
   Play,
+  Cloud,
+  ScanLine,
 } from 'lucide-react';
 import { DemoVideoModal } from '../components/DemoVideoModal';
 
@@ -442,62 +444,189 @@ export const AboutPage: React.FC = () => {
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mb-12">
             <p className="text-[11px] font-bold tracking-wider uppercase text-[#1D4ED8] font-mono mb-2">
-              INFRASTRUCTURE &amp; CLOUD
+              INFRASTRUCTURE &amp; CLOUD ARCHITECTURE
             </p>
             <h2 className="text-[26px] sm:text-[34px] font-bold text-[#111318] tracking-tight leading-[1.2]">
-              Cloud infrastructure and development
+              Cloud infrastructure and enterprise scale roadmap
             </h2>
             <p className="mt-3 text-[15px] sm:text-[16px] text-[#5A5852] leading-relaxed">
-              MyLedgerLens is built on practical cloud infrastructure and AI-powered document processing.
+              MyLedgerLens combines an active working MVP foundation with a structured enterprise roadmap designed to scale high-throughput extraction workloads natively on Microsoft Azure.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {/* Current MVP Stack Sub-header */}
+          <div className="flex items-center gap-2 mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#1B4938]" />
+            <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-[#1B4938]">
+              CURRENT WORKING FOUNDATION // LIVE IN MVP
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             {/* Multimodal AI */}
-            <div className="bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] p-6">
-              <div className="w-8 h-8 rounded-[2px] bg-[#FAFAF8] border border-[#DDD7CD] flex items-center justify-center text-[#111318] mb-4">
-                <Cpu className="w-4 h-4 text-[#1D4ED8]" />
+            <div className="bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] p-6 flex flex-col justify-between">
+              <div>
+                <div className="w-8 h-8 rounded-[2px] bg-[#FAFAF8] border border-[#DDD7CD] flex items-center justify-center text-[#111318] mb-4">
+                  <Cpu className="w-4 h-4 text-[#1D4ED8]" />
+                </div>
+                <h3 className="text-[16px] font-bold text-[#111318] mb-2 font-sans">
+                  Multimodal AI Processing
+                </h3>
+                <p className="text-[13px] text-[#5A5852] leading-relaxed mb-4">
+                  Powered by Google Gemini 2.5 Flash for high-speed document understanding, vision processing, and structured schema extraction during initial MVP validation.
+                </p>
               </div>
-              <h3 className="text-[16px] font-bold text-[#111318] mb-2 font-sans">
-                Multimodal AI Processing
-              </h3>
-              <p className="text-[13px] text-[#5A5852] leading-relaxed mb-4">
-                Powered by Google Gemini 2.5 Flash for high-speed document understanding, vision processing, and structured schema extraction.
-              </p>
-              <div className="text-[10px] font-mono text-[#111318] bg-[#FAFAF8] border border-[#DDD7CD] px-2 py-0.5 rounded-[2px] inline-block font-medium">
-                GOOGLE GEMINI API
+              <div>
+                <div className="text-[10px] font-mono text-[#111318] bg-[#FAFAF8] border border-[#DDD7CD] px-2 py-0.5 rounded-[2px] inline-block font-medium">
+                  GOOGLE GEMINI API
+                </div>
               </div>
             </div>
 
             {/* Relational Backend & Storage */}
-            <div className="bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] p-6">
-              <div className="w-8 h-8 rounded-[2px] bg-[#FAFAF8] border border-[#DDD7CD] flex items-center justify-center text-[#111318] mb-4">
-                <Database className="w-4 h-4 text-[#1D4ED8]" />
+            <div className="bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] p-6 flex flex-col justify-between">
+              <div>
+                <div className="w-8 h-8 rounded-[2px] bg-[#FAFAF8] border border-[#DDD7CD] flex items-center justify-center text-[#111318] mb-4">
+                  <Database className="w-4 h-4 text-[#1D4ED8]" />
+                </div>
+                <h3 className="text-[16px] font-bold text-[#111318] mb-2 font-sans">
+                  PostgreSQL & Object Storage
+                </h3>
+                <p className="text-[13px] text-[#5A5852] leading-relaxed mb-4">
+                  Built on Supabase managed infrastructure with multi-tenant Row-Level Security (RLS) policies and encrypted document bucket isolation.
+                </p>
               </div>
-              <h3 className="text-[16px] font-bold text-[#111318] mb-2 font-sans">
-                PostgreSQL & Object Storage
-              </h3>
-              <p className="text-[13px] text-[#5A5852] leading-relaxed mb-4">
-                Built on Supabase managed infrastructure with multi-tenant Row-Level Security (RLS) policies and encrypted document bucket isolation.
-              </p>
-              <div className="text-[10px] font-mono text-[#111318] bg-[#FAFAF8] border border-[#DDD7CD] px-2 py-0.5 rounded-[2px] inline-block font-medium">
-                SUPABASE PLATFORM
+              <div>
+                <div className="text-[10px] font-mono text-[#111318] bg-[#FAFAF8] border border-[#DDD7CD] px-2 py-0.5 rounded-[2px] inline-block font-medium">
+                  SUPABASE PLATFORM
+                </div>
               </div>
             </div>
 
             {/* Hosting & Serverless Functions */}
-            <div className="bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] p-6">
-              <div className="w-8 h-8 rounded-[2px] bg-[#FAFAF8] border border-[#DDD7CD] flex items-center justify-center text-[#111318] mb-4">
-                <Server className="w-4 h-4 text-[#1D4ED8]" />
+            <div className="bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] p-6 flex flex-col justify-between">
+              <div>
+                <div className="w-8 h-8 rounded-[2px] bg-[#FAFAF8] border border-[#DDD7CD] flex items-center justify-center text-[#111318] mb-4">
+                  <Server className="w-4 h-4 text-[#1D4ED8]" />
+                </div>
+                <h3 className="text-[16px] font-bold text-[#111318] mb-2 font-sans">
+                  Serverless Edge Deployment
+                </h3>
+                <p className="text-[13px] text-[#5A5852] leading-relaxed mb-4">
+                  Deployed via Vercel edge infrastructure with serverless execution boundaries, automated branch builds, and strict security headers.
+                </p>
               </div>
-              <h3 className="text-[16px] font-bold text-[#111318] mb-2 font-sans">
-                Serverless Edge Deployment
-              </h3>
-              <p className="text-[13px] text-[#5A5852] leading-relaxed mb-4">
-                Deployed via Vercel edge infrastructure with serverless execution boundaries, automated branch builds, and strict security headers.
-              </p>
-              <div className="text-[10px] font-mono text-[#111318] bg-[#FAFAF8] border border-[#DDD7CD] px-2 py-0.5 rounded-[2px] inline-block font-medium">
-                VERCEL INFRASTRUCTURE
+              <div>
+                <div className="text-[10px] font-mono text-[#111318] bg-[#FAFAF8] border border-[#DDD7CD] px-2 py-0.5 rounded-[2px] inline-block font-medium">
+                  VERCEL INFRASTRUCTURE
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Microsoft Azure Scale Roadmap Section */}
+          <div className="bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] p-6 sm:p-8 mb-8 relative shadow-sm">
+            <span className="absolute top-1 left-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+            <span className="absolute top-1 right-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#E2DFD7] gap-2 mb-6">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-2 h-2 rounded-full bg-[#1D4ED8]" />
+                  <span className="text-[10px] font-mono text-[#1D4ED8] font-bold tracking-wider uppercase">
+                    ENTERPRISE SCALE // MICROSOFT AZURE ROADMAP
+                  </span>
+                </div>
+                <h3 className="text-[20px] sm:text-[24px] font-bold text-[#111318] font-sans">
+                  Target Microsoft Azure Architecture &amp; AI Growth Plan
+                </h3>
+              </div>
+              <span className="text-[10px] font-mono text-[#1D4ED8] bg-[#EFF6FF] px-2.5 py-0.5 rounded-[2px] border border-[#1D4ED8]/30 font-semibold self-start sm:self-auto uppercase">
+                TARGET CLOUD PLATFORM
+              </span>
+            </div>
+
+            <p className="text-[14px] text-[#5A5852] leading-relaxed mb-6">
+              As MyLedgerLens transitions from pilot validation to high-volume commercial accounts-payable workflows, our architecture is engineered to run compute-intensive workloads natively on Microsoft Azure's enterprise AI and cloud infrastructure.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Azure AI Document Intelligence */}
+              <div className="bg-[#FAFAF8] border border-[#E2DFD7] rounded-[2px] p-5 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-8 h-8 rounded-[2px] bg-[#FFFFFF] border border-[#DDD7CD] flex items-center justify-center text-[#111318]">
+                      <ScanLine className="w-4 h-4 text-[#1D4ED8]" />
+                    </div>
+                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-[2px] bg-[#FFFFFF] text-[#5A5852] border border-[#DDD7CD] font-medium uppercase">
+                      OCR &amp; LAYOUT
+                    </span>
+                  </div>
+
+                  <h4 className="text-[15px] font-bold text-[#111318] mb-2 font-sans">
+                    Azure AI Document Intelligence
+                  </h4>
+
+                  <p className="text-[13px] text-[#5A5852] leading-relaxed mb-4">
+                    Targeted for enterprise OCR, layout analysis, and specialized pre-built invoice and receipt extraction models. Delivers pixel-accurate bounding box coordinates and robust tabular parsing across dense, variable-format supplier manifests.
+                  </p>
+                </div>
+
+                <div className="text-[10px] font-mono text-[#1D4ED8] bg-[#EFF6FF] border border-[#1D4ED8]/20 px-2 py-0.5 rounded-[2px] inline-block font-medium">
+                  AZURE DOCUMENT INTELLIGENCE
+                </div>
+              </div>
+
+              {/* Azure OpenAI Service */}
+              <div className="bg-[#FAFAF8] border border-[#E2DFD7] rounded-[2px] p-5 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-8 h-8 rounded-[2px] bg-[#FFFFFF] border border-[#DDD7CD] flex items-center justify-center text-[#111318]">
+                      <Sparkles className="w-4 h-4 text-[#1D4ED8]" />
+                    </div>
+                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-[2px] bg-[#FFFFFF] text-[#5A5852] border border-[#DDD7CD] font-medium uppercase">
+                      GPT-4o REASONING
+                    </span>
+                  </div>
+
+                  <h4 className="text-[15px] font-bold text-[#111318] mb-2 font-sans">
+                    Azure OpenAI Service
+                  </h4>
+
+                  <p className="text-[13px] text-[#5A5852] leading-relaxed mb-4">
+                    Deploying private Azure OpenAI GPT-4o models for complex line-item cross-examination, semantic discrepancy explanations, and multi-lingual bill reconciliation—backed by strict enterprise data governance and zero model training on customer payloads.
+                  </p>
+                </div>
+
+                <div className="text-[10px] font-mono text-[#1D4ED8] bg-[#EFF6FF] border border-[#1D4ED8]/20 px-2 py-0.5 rounded-[2px] inline-block font-medium">
+                  AZURE OPENAI (GPT-4o)
+                </div>
+              </div>
+
+              {/* Azure Storage & App Services */}
+              <div className="bg-[#FAFAF8] border border-[#E2DFD7] rounded-[2px] p-5 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-8 h-8 rounded-[2px] bg-[#FFFFFF] border border-[#DDD7CD] flex items-center justify-center text-[#111318]">
+                      <Cloud className="w-4 h-4 text-[#1D4ED8]" />
+                    </div>
+                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-[2px] bg-[#FFFFFF] text-[#5A5852] border border-[#DDD7CD] font-medium uppercase">
+                      ENTERPRISE CLOUD
+                    </span>
+                  </div>
+
+                  <h4 className="text-[15px] font-bold text-[#111318] mb-2 font-sans">
+                    Azure Blob Storage &amp; App Services
+                  </h4>
+
+                  <p className="text-[13px] text-[#5A5852] leading-relaxed mb-4">
+                    Dedicated document isolation with Customer-Managed Keys (CMK), immutable compliance audit logs, and containerized Azure App Services / Azure Container Apps for elastic, horizontal batch throughput with sovereign regional data residency.
+                  </p>
+                </div>
+
+                <div className="text-[10px] font-mono text-[#1D4ED8] bg-[#EFF6FF] border border-[#1D4ED8]/20 px-2 py-0.5 rounded-[2px] inline-block font-medium">
+                  AZURE BLOB &amp; APP SERVICES
+                </div>
               </div>
             </div>
           </div>
@@ -505,13 +634,10 @@ export const AboutPage: React.FC = () => {
           {/* Cloud Development Commitment & Portability */}
           <div className="bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] p-6 text-[13px] text-[#5A5852] leading-relaxed">
             <h4 className="text-[15px] font-bold text-[#111318] mb-2 font-sans">
-              Architecture Portability & Future Ecosystem Support
+              Architecture Portability &amp; Microsoft Azure Commitment
             </h4>
             <p>
-              As MyLedgerLens scales from its working MVP toward wider commercial deployment, the core extraction
-              and validation pipeline is intentionally designed for high portability. Technical capabilities and storage
-              layers are structured to leverage mainstream enterprise cloud ecosystems, including Google Cloud and
-              Amazon Web Services (AWS), as workload volume and compute requirements grow.
+              As MyLedgerLens scales toward commercial availability across wholesale distribution networks and independent bookkeeping firms, Microsoft Azure serves as our primary target enterprise cloud ecosystem. Transitioning high-throughput workloads to Azure AI Document Intelligence and Azure OpenAI enables enterprise SLA guarantees, strict regulatory data residency, and seamless accounts-payable integration for institutional clients.
             </p>
           </div>
         </div>
