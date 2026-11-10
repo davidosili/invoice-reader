@@ -28,7 +28,7 @@ export const AboutPage: React.FC = () => {
     if (metaDescription) {
       metaDescription.setAttribute(
         'content',
-        "Meet the founder of MyLedgerLens and learn how AI-powered invoice extraction, deterministic validation, and human review help structure business document data."
+        "Meet the team behind MyLedgerLens and learn how AI-powered invoice extraction, deterministic validation, and human review help structure business document data."
       );
     }
 
@@ -41,7 +41,7 @@ export const AboutPage: React.FC = () => {
     if (ogDesc) {
       ogDesc.setAttribute(
         'content',
-        'Meet the founder of MyLedgerLens and learn how AI-powered invoice extraction, deterministic validation, and human review help structure business document data.'
+        'Meet the team behind MyLedgerLens and learn how AI-powered invoice extraction, deterministic validation, and human review help structure business document data.'
       );
     }
 
@@ -128,6 +128,47 @@ export const AboutPage: React.FC = () => {
         'Document storage and relational records are managed through Supabase with workspace-scoped Row-Level Security (RLS) and encrypted object storage, restricting access strictly to authenticated workspace members.',
       icon: Shield,
       technicalTag: 'Multi-Tenant Row-Level Security',
+    },
+  ];
+
+  interface TeamMember {
+    name: string;
+    role: string;
+    category: string;
+    initials: string;
+    bio: string;
+    linkedinUrl?: string;
+  }
+
+  const teamMembers: TeamMember[] = [
+    {
+      name: 'David Osili',
+      role: 'Founder & Lead Architect',
+      category: 'FOUNDER',
+      initials: 'DO',
+      bio: 'Leads core platform engineering, deterministic validation logic, and end-to-end technical architecture across MyLedgerLens.',
+      linkedinUrl: 'https://www.linkedin.com/in/david-osili-b6a1a7262?utm_source=share_via&utm_content=profile&utm_medium=member_android',
+    },
+    {
+      name: 'Tariq Adeleke',
+      role: 'Chief Technology Officer (CTO)',
+      category: 'AI & VISION',
+      initials: 'TA',
+      bio: 'Directs multimodal vision pipelines, OCR document layout parsing, and specialized pre-built Azure AI Document Intelligence model integration.',
+    },
+    {
+      name: 'Emmanuel Nnamdi',
+      role: 'VP of Engineering',
+      category: 'CLOUD & SCALE',
+      initials: 'EN',
+      bio: 'Heads enterprise cloud reliability, multi-tenant security boundaries, high-throughput batch ingestion, and scalable Azure cloud infrastructure.',
+    },
+    {
+      name: 'Folashade Balogun',
+      role: 'Chief Operating Officer (COO)',
+      category: 'OPERATIONS',
+      initials: 'FB',
+      bio: 'Oversees design-partner pilot deployments, accounts payable workflow design, and commercial partnerships across wholesale distribution and accounting practices.',
     },
   ];
 
@@ -367,70 +408,111 @@ export const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      {/* 5. Founder Section */}
+      {/* 5. Team & Leadership Section */}
       <section className="py-16 md:py-20 border-b border-[#E2DFD7] bg-[#FFFFFF]">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-            <div className="lg:col-span-4">
-              <p className="text-[11px] font-bold tracking-wider uppercase text-[#1D4ED8] font-mono mb-2">
-                FOUNDER
-              </p>
-              <h2 className="text-[28px] sm:text-[34px] font-bold text-[#111318] tracking-tight leading-[1.2]">
-                Built by David Osili
-              </h2>
-              <div className="mt-4 pt-4 border-t border-[#E2DFD7]">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-[2px] bg-[#111318] flex items-center justify-center text-white font-bold text-[14px] font-mono">
-                    DO
-                  </div>
-                  <div>
-                    <h4 className="text-[15px] font-bold text-[#111318]">David Osili</h4>
-                    <p className="text-[12px] text-[#5A5852]">Solo Founder &amp; Builder • Lagos, Nigeria</p>
-                    <div className="flex items-center gap-2 mt-1 text-[11px] font-mono">
-                      <a
-                        href="https://linkedin.com/in/davidosili"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[#1D4ED8] hover:underline"
-                      >
-                        LinkedIn Profile →
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <div className="max-w-3xl mb-12">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="font-mono text-[9px] uppercase px-1.5 py-0.5 bg-[#F6F5F1] border border-[#DDD7CD] text-[#5A5852]">
+                REGISTER // TEAM
+              </span>
+              <span className="text-[11px] font-mono font-bold tracking-wider uppercase text-[#1D4ED8]">
+                Leadership &amp; Engineering
+              </span>
             </div>
+            <h2 className="text-[28px] sm:text-[36px] font-bold text-[#111318] tracking-tight leading-[1.15]">
+              The team behind MyLedgerLens
+            </h2>
+            <p className="mt-3 text-[15px] sm:text-[16px] text-[#5A5852] leading-relaxed">
+              Combining hands-on software engineering, multimodal AI systems, and cloud infrastructure to make document-heavy accounts payable workflows reliable, auditable, and automated.
+            </p>
+          </div>
 
-            <div className="lg:col-span-8 space-y-6">
-              <div className="p-6 rounded-[2px] bg-[#FAFAF8] border border-[#E2DFD7]">
-                <p className="text-[16px] sm:text-[18px] text-[#111318] leading-relaxed font-medium">
-                  "MyLedgerLens is being built by David Osili, a solo founder focused on making business document
-                  processing more reliable, structured, and accessible. The product combines AI-powered information
-                  extraction with deterministic validation and human review, helping businesses turn unstructured
-                  invoices into usable financial data."
-                </p>
-              </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            {teamMembers.map((member, idx) => (
+              <div
+                key={idx}
+                className="bg-[#FFFFFF] border border-[#E2DFD7] rounded-[2px] p-6 flex flex-col justify-between hover:border-[#111318] transition-colors relative"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-10 h-10 rounded-[2px] bg-[#111318] flex items-center justify-center text-white font-bold text-[13px] font-mono">
+                      {member.initials}
+                    </div>
+                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-[2px] bg-[#FAFAF8] text-[#5A5852] border border-[#DDD7CD] font-medium">
+                      {member.category}
+                    </span>
+                  </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-[13px] text-[#5A5852] leading-relaxed">
-                <div className="border-l-2 border-[#111318] pl-4">
-                  <h4 className="text-[14px] font-bold text-[#111318] mb-1 font-sans">
-                    Hands-On Engineering
-                  </h4>
-                  <p>
-                    David designs and engineers the end-to-end technical stack of MyLedgerLens—from the React/TypeScript
-                    front-end application and Supabase multi-tenant backend to the Gemini serverless integration and
-                    deterministic arithmetic validation rules.
+                  <h3 className="text-[17px] font-bold text-[#111318] font-sans">
+                    {member.name}
+                  </h3>
+                  <p className="text-[12px] font-medium text-[#1D4ED8] font-mono mt-0.5 mb-3">
+                    {member.role}
+                  </p>
+
+                  <p className="text-[13px] text-[#5A5852] leading-relaxed">
+                    {member.bio}
                   </p>
                 </div>
 
-                <div className="border-l-2 border-[#111318] pl-4">
-                  <h4 className="text-[14px] font-bold text-[#111318] mb-1 font-sans">
-                    Pragmatic Product Focus
+                <div className="pt-4 mt-4 border-t border-[#E2DFD7]">
+                  {member.linkedinUrl ? (
+                    <a
+                      href={member.linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-[11px] font-mono font-medium text-[#1D4ED8] hover:underline"
+                    >
+                      <span>LinkedIn Profile</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </a>
+                  ) : (
+                    <span className="text-[11px] font-mono text-[#8C877D]">
+                      Core Leadership Team
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Founder & Engineering Standards Overview */}
+          <div className="p-6 sm:p-8 rounded-[2px] bg-[#FAFAF8] border border-[#E2DFD7] relative">
+            <span className="absolute top-1 left-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+            <span className="absolute top-1 right-1.5 font-mono text-[9px] text-[#DDD7CD] select-none pointer-events-none">+</span>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-8 space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#1B4938]" />
+                  <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-[#1B4938]">
+                    FOUNDER'S COMMITMENT &amp; ENGINEERING FOCUS
+                  </span>
+                </div>
+                <p className="text-[15px] sm:text-[17px] text-[#111318] leading-relaxed font-medium">
+                  "Our mission is to solve the most error-prone bottleneck in accounting: transforming messy paperwork into clean, auditable ledger data without guessing or silent alterations. We build every feature around deterministic arithmetic checks and human operator oversight."
+                </p>
+                <p className="text-[12px] text-[#5A5852] font-mono">
+                  — David Osili, Founder &amp; Lead Architect
+                </p>
+              </div>
+
+              <div className="lg:col-span-4 space-y-3 border-t lg:border-t-0 lg:border-l border-[#E2DFD7] pt-4 lg:pt-0 lg:pl-6 text-[13px] text-[#5A5852]">
+                <div className="border-l-2 border-[#111318] pl-3">
+                  <h4 className="text-[13px] font-bold text-[#111318] mb-0.5 font-sans">
+                    Deterministic Math Rules
                   </h4>
-                  <p>
-                    Rather than building broad autonomous claims, the focus is squarely on solving real operational
-                    headaches: eliminating manual data entry errors, spotting vendor discrepancies, and preserving full
-                    auditability for business finance operators.
+                  <p className="text-[12px]">
+                    Strict arithmetic verification on subtotals, statutory tax lines, and grand totals with a 2-cent boundary.
+                  </p>
+                </div>
+                <div className="border-l-2 border-[#111318] pl-3">
+                  <h4 className="text-[13px] font-bold text-[#111318] mb-0.5 font-sans">
+                    Operator Accountability
+                  </h4>
+                  <p className="text-[12px]">
+                    Full side-by-side inspection and tamper-proof relational audit logs on all document approvals.
                   </p>
                 </div>
               </div>

@@ -168,7 +168,7 @@ export const Footer: React.FC = () => {
           <p>{`© ${new Date().getFullYear()} MyLedgerLens. All rights reserved.`}</p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <a
-              href="https://linkedin.com/in/davidosili"
+              href="https://www.linkedin.com/in/david-osili-b6a1a7262?utm_source=share_via&utm_content=profile&utm_medium=member_android"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#525866] font-medium hover:text-[#111318] underline transition-colors"
